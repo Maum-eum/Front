@@ -8,11 +8,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        "base-white"  : "#F5F5F5",
-        "black"       : "#000000",
-        "blue"        : "#007BFF",
-        "green"       : "#34D000",
-        "point-green" : "#2DB400",
+        "base-white"    : "#F5F5F5",
+        "black"         : "#000000",
+        "blue"          : "#007BFF",
+        "point-gray"    : "#BDBDBD",
+        "green"         : "#34D000",
+        "red"           : "#E71C1C",
+        "disabled-gray" : "#5C5C5C",
+        "point-green"   : "#2DB400",
       },
       fontFamily:{
         'gtr-B' : ['gtr-B'],
