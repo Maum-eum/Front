@@ -7,6 +7,10 @@ import Main from './pages/Main';
 //
 import ManagerSignUp from './pages/manager/SignUp';
 
+//유저회원가입
+import SignupStep1 from './pages/caregiver/SignupStep1'; // 추가된 부분
+import SignupStep2Required from './pages/caregiver/SignupStep2Required';
+
 export default function Router() {
 
     //const navi = useNavigate();
@@ -15,6 +19,10 @@ export default function Router() {
         <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Main />} />
             <Route path="/MSignUp" element={<ManagerSignUp />} />
+
+             {/* 요양보호사 */}
+            <Route path="/signup/step1" element={<SignupStep1 />} /> 
+            <Route path="/signup/step2/required" element={<SignupStep2Required />} />
         </Routes>
     );
 }
