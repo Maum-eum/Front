@@ -1,7 +1,7 @@
 import React from "react";
 
 import Steps from "../../components/commons/steps";
-import Btn from "../../components/commons/btn";
+import Btn from "../../components/commons/Btn";
 
 const ManagerSignUp: React.FC = () => {
   return (
