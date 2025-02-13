@@ -6,9 +6,9 @@ type StepsProps = {
 
 const Steps: React.FC<StepsProps> = ({ step = 1 }) => {
   return (
-    <div className="flex font-pre-M text-base justify-center items-center gap-4">
+    <div className="flex font-pre-M text-base justify-center items-center gap-4 w-full">
       {/* 1단계 */}
-      <div className={clsx("w-14 h-14 rounded-full flex justify-center items-center text-white", 
+      <div className={clsx("w-12 h-12 rounded-full flex justify-center items-center text-white", 
         step === 1 ? "bg-green" : "bg-disabled-gray"
       )}>
         <p>1단계</p>
@@ -19,7 +19,7 @@ const Steps: React.FC<StepsProps> = ({ step = 1 }) => {
       <div className="w-2 h-2 bg-disabled-gray rounded-full"></div>
 
       {/* 2단계 */}
-      <div className={clsx("w-14 h-14 rounded-full flex justify-center items-center text-white", 
+      <div className={clsx("w-12 h-12 rounded-full flex justify-center items-center text-white", 
         step === 2 ? "bg-green" : "bg-disabled-gray"
       )}>
         <p>2단계</p>
@@ -30,7 +30,7 @@ const Steps: React.FC<StepsProps> = ({ step = 1 }) => {
       <div className="w-2 h-2 bg-disabled-gray rounded-full"></div>
 
       {/* 3단계 */}
-      <div className={clsx("w-14 h-14 rounded-full flex justify-center items-center text-white", 
+      <div className={clsx("w-12 h-12 rounded-full flex justify-center items-center text-white", 
         step === 3 ? "bg-green" : "bg-disabled-gray"
       )}>
         <p>3단계</p>
