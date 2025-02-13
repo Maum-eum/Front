@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 type BtnProps = {
-  text: string;
+  text?: string;
   color?: "green" | "red" | "white" | "blue" | "disabled";
   onClick?: () => void;
   className?: string;

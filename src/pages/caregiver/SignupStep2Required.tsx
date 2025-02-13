@@ -1,4 +1,4 @@
-import Steps from "../../components/commons/steps";
+import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import { useNavigate } from "react-router-dom";
