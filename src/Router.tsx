@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
 
 //
-import ManagerSignUp from './pages/manager/SignUp';
+import ManagerSignUp from './pages/admin/SignUp';
 
 //유저회원가입
 import SignupStep1 from './pages/caregiver/SignupStep1'; 
@@ -20,7 +20,9 @@ export default function Router() {
     return (
         <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Main />} />
-            <Route path="/MSignUp" element={<ManagerSignUp />} />
+
+            {/* 관리자 */}
+            <Route path="/admin/SignUp" element={<ManagerSignUp />} />
 
              {/* 요양보호사 */}
             <Route path="/signup/step1" element={<SignupStep1 />} /> 
