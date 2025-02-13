@@ -4,16 +4,14 @@ type BtnProps = {
   text?: string;
   color?: "green" | "red" | "white" | "blue" | "disabled";
   onClick?: () => void;
-  className?: string;
 };
 
-const Btn: React.FC<BtnProps> = ({ text = "다음", color = "green", onClick, className }) => {
+const Btn: React.FC<BtnProps> = ({ text = "다음", color = "green", onClick }) => {
   return (
     <button
       className={clsx(
         "w-full sm:w-80 h-14 sm:h-16 rounded-lg font-gtr-B text-button",
         "mt-2 flex justify-center items-center mx-auto", 
-        className,
         {
           "border-2 bg-blue text-white border-blue": color === "blue",
           "border-2 bg-disabled-gray text-white border-disabled-gray": color === "disabled",
