@@ -30,6 +30,12 @@ export default {
         'pre-R' : ['pre-R'],
         'pre-SB' : ['pre-SB'],
         'pre-T' : ['pre-T'],
+      },
+      fontSize: {
+        'title': '24px',   // 페이지 제목 (24pt)
+        'item': '20px',    // 항목 (20pt)
+        'content': '16px', // 내용 (16pt)
+        'button': '20px',  // 버튼 (20pt)
       }
     },
   },
