@@ -4,6 +4,7 @@ import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
+import CheckList from "../../components/admin/CheckList";
 
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +13,7 @@ const AddElder: React.FC = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
-  const [addElderdata, setAddElderdata] = useState({
+  const [ElderData, setElderData] = useState({
     center_id:  "",
     name:       "",
     birth:      "",
@@ -23,9 +24,13 @@ const AddElder: React.FC = () => {
     inmate:     false,
   });
 
+  // const [ServiceData, setServiceData] = useState({
+
+  // });
+
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAddElderdata((prev) => ({ ...prev, [name]: value }))
+    setElderData((prev) => ({ ...prev, [name]: value }))
   }
   
   
@@ -51,7 +56,7 @@ const AddElder: React.FC = () => {
                 type="text"
                 name="username"
                 placeholder="아이디를 입력해주세요."
-                value={addElderdata.name}
+                value={ElderData.name}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">생년월일</label> 
@@ -59,7 +64,7 @@ const AddElder: React.FC = () => {
                 type="text"
                 name="text"
                 placeholder="생년월일를 입력해주세요."
-                value={addElderdata.birth}
+                value={ElderData.birth}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">성별</label>
@@ -89,7 +94,7 @@ const AddElder: React.FC = () => {
                 type="text"
                 name="text"
                 placeholder="몸무게를 입력해주세요."
-                value={addElderdata.weight}
+                value={ElderData.weight}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label> 
@@ -97,7 +102,7 @@ const AddElder: React.FC = () => {
                 type="text"
                 name="username"
                 placeholder="장기 요양 등급을 입력해주세요."
-                value={addElderdata.rate}
+                value={ElderData.rate}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
@@ -122,20 +127,67 @@ const AddElder: React.FC = () => {
 
         {/* 3단계 */}
         {step === 3 && (
-          <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
+          <div className="w-full h-dvh p-4 flex flex-col items-center justify-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6">어르신 필요 서비스 항목</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 필요 서비스 항목</h1> 
 
             <Steps step={step}/>
-
+            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">어르신이 필요한 서비스를 <span className="text-red">모두 선택</span>해 주세요.</h2> 
             {/* 입력 폼 */}
-            <div className="w-full max-w-xs sm:max-w-sm">
-
+            <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
+              <CheckList
+                name="식사 보조"
+                options={[
+                  "식사 차리기",
+                  "구토물 정리",
+                  "음식물 조리 및 설거지",
+                  "경관식 보조"
+                ]}
+              />
+              <CheckList
+                name="배변 보조"
+                options={[
+                  "화장실 이동 지원",
+                  "유치도뇨 / 방광루 / 장루 관리 및 처리 지원",
+                  "배뇨, 배변 도움 후 처리 지원",
+                  "기저귀 교환"
+                ]}
+              />
+              <CheckList
+                name="이동 보조"
+                options={[
+                  "침대 <-> 휠체어 이동 보조",
+                  "보행 도움 (부축)",
+                  "보조 기구 이동 보조 (휠체어, 지팡이)",
+                  "신체 기능의 유지 및 증진 도움"
+                ]}
+              />
+              <CheckList
+                name="일상 생활"
+                options={[
+                  "컨디션 외 도움",
+                  "세면 도움",
+                  "구강 청결 도움",
+                  "몸 단장 도움"
+                ]}
+              />
+              <CheckList
+                name="치매 증상"
+                options={[
+                  "집 밖을 배회",
+                  "단기 기억 장애",
+                  "가족을 알아보지 못함",
+                  "길을 잃거나 자주 가던 곳을 헤맴",
+                  "사람을 의심하는 망상",
+                  "어린아이 같은 행동",
+                  "때리거나 욕설 등 공격적인 행동"
+                ]}
+              />
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
               <Btn text="이전" color="white" onClick={() => setStep(2)} /> 
-              <Btn text="가입 대기" onClick={() => {console.log(addElderdata)}} />
+              <Btn text="가입 대기" onClick={() => {console.log(ElderData)}} />
             </div>
           </div>
         )}
