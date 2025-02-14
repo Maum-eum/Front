@@ -24,7 +24,7 @@ const SignupStep2Required = () => {
         <div className="flex items-center justify-between flex-nowrap">
           <label className="text-item font-bold text-black w-1/3 flex-shrink-0">이름</label>
           <div className="w-full">
-            <Input type="text" placeholder="이름을 입력해주세요." className="w-full h-12 p-3 border-2  rounded-lg bg-white" />
+            <Input type="text" placeholder="이름을 입력해주세요." />
           </div>
         </div>
 
@@ -32,7 +32,7 @@ const SignupStep2Required = () => {
         <div className="flex items-center justify-between flex-nowrap">
           <label className="text-item font-bold text-black w-1/3 flex-shrink-0">연락처</label>
           <div className="w-full">
-            <Input type="tel" placeholder="010-1234-5678" className="w-full h-12 p-3 border-2  rounded-lg bg-white" />
+            <Input type="tel" placeholder="010-1234-5678" />
           </div>
         </div>
 
@@ -40,7 +40,7 @@ const SignupStep2Required = () => {
         <div className="flex items-center justify-between flex-nowrap">
           <label className="text-item font-bold text-black w-1/3 flex-shrink-0">주소</label>
           <div className="w-full">
-            <Input type="text" placeholder="주소수정해야됨" className="w-full h-12 p-3 border-2 rounded-lg bg-white" />
+            <Input type="text" placeholder="주소수정해야됨" />
           </div>
         </div>
 
