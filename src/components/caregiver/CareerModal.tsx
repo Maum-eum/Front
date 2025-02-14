@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Btn from "./commons/Btn";
-import Input from "./commons/Input";
+import Btn from "../commons/Btn";
+import Input from "../commons/Input";
 
 type CareerModalProps = {
   isOpen: boolean;
@@ -25,7 +25,6 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
         <Input
           type="text"
           placeholder="예) 김딩딩 노인보조"
-          className="w-full h-12 p-3 border border-gray-300 rounded-md bg-white text-black placeholder-gray-500"
           value={place}
           onChange={(e) => setPlace(e.target.value)}
         />
@@ -35,7 +34,6 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
         <Input
           type="text"
           placeholder="예) 식사보조, 이동보조"
-          className="w-full h-12 p-3 border border-gray-300 rounded-md bg-white text-black placeholder-gray-500"
           value={details}
           onChange={(e) => setDetails(e.target.value)}
         />
@@ -45,8 +43,6 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
         <Input
           type="text"
           placeholder="예) 2023.09 - 2024.01"
-          className="w-full h-12 p-3 border border-gray-300 rounded-md bg-white text-black placeholder-gray-500"
-          value={period}
           onChange={(e) => setPeriod(e.target.value)}
         />
 
@@ -55,13 +51,11 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
           <Btn
             text="이전으로"
             color="white"
-            className="w-full h-14 text-lg"
             onClick={onClose} // ✅ 클릭 시 모달 닫기
           />
           <Btn
             text="완료"
             color="green"
-            className="w-full h-14 text-lg"
             onClick={() => {
               onSave({ place, period, details });
               onClose();

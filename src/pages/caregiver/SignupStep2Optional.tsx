@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
-import CareerModal from "../../components/CareerModal"; // ✅ 모달 컴포넌트 추가
+import CareerModal from "../../components/caregiver/CareerModal"; // ✅ 모달 컴포넌트 추가
 import { useNavigate } from "react-router-dom";
 
 const SignupStep2Optional = () => {

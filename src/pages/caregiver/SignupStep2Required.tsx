@@ -82,7 +82,28 @@ const SignupStep2Required = () => {
             </label>
           </div>
         </div>
+
+
+      <div>
+          <label className="block text-item font-bold text-black mb-2">구직 여부</label>
+          <div className="flex gap-4">
+            <label className="flex items-center text-item">
+              <input type="radio" name="employmentStatus" className="mr-2" /> 구직중
+            </label>
+            <label className="flex items-center text-item">
+              <input type="radio" name="employmentStatus" className="mr-2" /> 비구직중
+            </label>
+          </div>
+        </div>
       </div>
+    
+      
+      
+
+
+      
+
+      
 
       <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
         <Btn text="이전으로" color="white" onClick={() => navigate("/signup/step1")} />
