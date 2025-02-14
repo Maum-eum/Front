@@ -4,7 +4,7 @@ import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
-import CheckList from "../../components/admin/CheckList";
+import CheckList from "../../components/commons/CheckList";
 
 import { useNavigate } from "react-router-dom";
 
