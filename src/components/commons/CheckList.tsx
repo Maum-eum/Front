@@ -9,12 +9,12 @@ type CheckListProps = {
   name: string;
   options: string[];
   selectedValues?: Record<string, SelectedOpts>;
-  onChange?: (selected: Record<string, SelectedOpts>) => void;
+  onChange?: (selected: Record<string,SelectedOpts>) => void;
 };
 
 const OPT_CYCLE: SelectedOpts[] = ["불가능", "가능", "조율"];
 
-const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {}, onChange }) => {
+const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {}, onChange = () => {} }) => {
   const [selected, setSelected] = useState<Record<string, SelectedOpts>>(selectedValues);
   const [isOpen, setIsOpen] = useState(false);
 
