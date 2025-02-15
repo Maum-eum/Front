@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CaregiverInfoModal from "../../components/CaregiverInfoModal"; // ✅ 모달 컴포넌트 추가
+import ToggleBtn from "../../components/commons/ToggleBtn";
 
 type CaregiverProps = {
   id: string;
@@ -59,8 +60,7 @@ const Main = () => {
           <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg"></div>
           <div>
             {/* 구직 상태 토글 */}
-            {caregiverInfo.status ? <div>구직 중</div> : <div>비구직 중</div>}
-
+            <ToggleBtn status={caregiverInfo.status} onClick={handleChangeJobSearch} />
             {/* 요양보호사 정보 변경 (팝업)*/}
             <button
               onClick={() => setIsModalOpen(true)}
@@ -85,7 +85,7 @@ const Main = () => {
           className="text-button border bg-white rounded-lg"
         >
           <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg"></div>
-          <div>일정 목록</div>{" "}
+          <div>일정 목록</div>
         </button>
       </div>
       <label className="text-item font-bold">구인 요청이 있어요~</label>
