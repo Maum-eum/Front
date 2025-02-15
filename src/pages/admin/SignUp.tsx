@@ -41,7 +41,6 @@ const AdminSignUp: React.FC = () => {
     )
   };
   
-  
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 모바일 환경에서만 보이는 UI */}

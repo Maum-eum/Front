@@ -6,8 +6,7 @@ export interface SignUpParams {
     centerName: string;
 };
 
-export interface SignUpResponseData {
-    data: Record<string, string> | null;
-    status: number;
-    message: string;
-};
+export interface SignUpResponse {
+    adminId: number;
+    createAt: string;
+}
