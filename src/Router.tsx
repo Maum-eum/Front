@@ -11,9 +11,8 @@ import AddElder from './pages/admin/AddElder';
 
 //유저회원가입
 import SignupStep1 from './pages/caregiver/SignupStep1'; 
-import SignupStep2Required from './pages/caregiver/SignupStep2Required';
-import SignupStep2Optional from './pages/caregiver/SignupStep2Optional'; 
 import SignupStep3 from './pages/caregiver/SignupStep3'; 
+
 
 export default function Router() {
 
@@ -30,8 +29,6 @@ export default function Router() {
 
              {/* 요양보호사 */}
             <Route path="/signup/step1" element={<SignupStep1 />} /> 
-            <Route path="/signup/step2/required" element={<SignupStep2Required />} />
-            <Route path="/signup/step2/optional" element={<SignupStep2Optional />} /> 
             <Route path="/signup/step3" element={<SignupStep3 />} /> 
         </Routes>
     );
