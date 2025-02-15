@@ -3,7 +3,7 @@ import clsx from "clsx";
 import dropdown from "../../assets/image/dropdown.png";
 import dropdown_open from "../../assets/image/dropdown-red.png";
 
-type SelectedOpts = "불가능" | "가능" | "조율 가능";
+type SelectedOpts = "불가능" | "가능" | "조율";
 
 type CheckListProps = {
   name: string;
@@ -12,7 +12,7 @@ type CheckListProps = {
   onChange?: (selected: Record<string, SelectedOpts>) => void;
 };
 
-const OPT_CYCLE: SelectedOpts[] = ["불가능", "가능", "조율 가능"];
+const OPT_CYCLE: SelectedOpts[] = ["불가능", "가능", "조율"];
 
 const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {}, onChange }) => {
   const [selected, setSelected] = useState<Record<string, SelectedOpts>>(selectedValues);
@@ -45,22 +45,22 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
               <div
                 key={item}
                 className={clsx(
-                  "w-full flex flex-col gap p-1 m-1 border border-disabled-gray rounded-lg",
+                  "w-full flex gap p-1 m-1 rounded-lg items-center border",
                   {
-                    "bg-blue": status === "가능" ,
-                    "bg-yellow-200": status === "조율 가능",
-                    "bg-point-gray": status === "불가능",
+                    "border-green bg-pale-green"   : status === "가능" ,
+                    "border-yellow bg-pale-yellow" : status === "조율",
+                    "border-red bg-pale-red"       : status === "불가능",
                   }
                 )}
                 onClick={() => toggleSelect(item)}>
-                <span className="ml-1 text-sm">{item}</span>
+                <span className="ml-1  flex-1">{item}</span>
                 <span
                   className={clsx(
-                    "px-2 text-xs rounded-md",
+                    "p-2 text-xs rounded-md w-12 text-center",
                     {
-                      "bg-blue": status === "가능",
-                      "bg-yellow-200": status === "조율 가능",
-                      "bg-point-gray": status === "불가능",
+                      "bg-green"  : status === "가능",
+                      "bg-yellow" : status === "조율",
+                      "bg-red"    : status === "불가능",
                     }
                   )}
                 >

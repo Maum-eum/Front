@@ -13,9 +13,13 @@ export default {
         "blue"          : "#007BFF",
         "point-gray"    : "#BDBDBD",
         "green"         : "#34D000",
-        "red"           : "#E71C1C",
         "disabled-gray" : "#5C5C5C",
         "point-green"   : "#2DB400",
+        "pale-green"    : "#90FF86",
+        "pale-yellow"   : "#FFE695",
+        "pale-red"      : "#FFBDBD",
+        "yellow"        : "#FFB53F",
+        "red"           : "#FF5858"
       },
       fontFamily:{
         'gtr-B' : ['gtr-B'],

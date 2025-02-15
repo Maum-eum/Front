@@ -45,26 +45,26 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
               <div
                 key={item}
                 className={clsx(
-                  "w-full flex flex-col gap p-1 m-1 border border-disabled-gray rounded-lg",
+                  "w-full flex gap p-1 m-1 rounded-lg items-center border",
                   {
-                    "bg-blue": status === "필요",
-                    "bg-point-gray": status === "불필요",
+                    "border-green bg-pale-green"   : status === "필요" ,
+                    "border-red bg-pale-red"       : status === "불필요",
                   }
                 )}
                 onClick={() => toggleSelect(item)}>
-                <span className="ml-1 text-sm">{item}</span>
+                <span className="ml-1  flex-1">{item}</span>
                 <span
                   className={clsx(
-                    "px-2 text-xs rounded-md",
+                    "p-2 text-xs rounded-md w-12 text-center",
                     {
-                      "bg-blue": status === "필요",
-                      "bg-point-gray": status === "불필요",
+                      "bg-green"  : status === "필요",
+                      "bg-red"    : status === "불필요",
                     }
                   )}
                 >
                   {status}
                 </span>
-              </div>
+              </div>              
             )
           })}
         </div>
