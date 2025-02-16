@@ -12,18 +12,14 @@ const SignupStep1 = () => {
   const [subStep, setSubStep] = useState(1); //  step 2 내부의 하위 단계
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [introduction, setIntroduction] = useState(""); //  한줄소개 상태
-
-  
   const [isCertModalOpen, setIsCertModalOpen] = useState(false); //  자격증 모달 상태
   const [certification, setCertification] = useState<{ name: string; level: string }>({
     name: "",
     level: "",
   });
 
-
   //경력
   const [experiences, setExperiences] = useState<{ place: string; period: string; details: string }[]>([]);
-
 
   //  모달에서 경력 추가 함수
   const handleAddExperience = (newExperience: { place: string; period: string; details: string }) => {
@@ -149,35 +145,31 @@ const SignupStep1 = () => {
             </label>
           </div>
         </div>
-
-
         </div>
-
-        
       )}
 
      {/* ✅ Step 2 (선택 입력 사항) */}
-{step === 2 && subStep === 2 && (
-  <div className="w-full max-w-xs sm:max-w-sm">
-    <h2 className="text-item font-bold text-black my-4 text-center">선택 입력 사항</h2>
+      {step === 2 && subStep === 2 && (
+        <div className="w-full max-w-xs sm:max-w-sm">
+          <h2 className="text-item font-bold text-black my-4 text-center">선택 입력 사항</h2>
 
-    {/* 한줄소개 */}
-    <label className="block text-item font-bold text-black mb-2">한줄소개</label>
-    <textarea
-      className="w-full h-24 p-3 border-2 rounded-lg bg-white text-content sm:text-lg focus:ring-2 focus:ring-green-400"
-      placeholder="간단한 자기소개를 입력해주세요."
-      value={introduction}
-      onChange={(e) => setIntroduction(e.target.value)}
-    />
+          {/* 한줄소개 */}
+          <label className="block text-item font-bold text-black mb-2">한줄소개</label>
+          <textarea
+            className="w-full h-24 p-3 border-2 rounded-lg bg-white text-content sm:text-lg focus:ring-2 focus:ring-green-400"
+            placeholder="간단한 자기소개를 입력해주세요."
+            value={introduction}
+            onChange={(e) => setIntroduction(e.target.value)}
+          />
 
-    {/* 경력사항 */}
-    <div className="w-full mt-6 border-t border-gray-300 pt-4">
-      <div className="flex justify-between items-center pb-2 mb-4">
-        <h3 className="text-item font-bold text-black">경력사항</h3>
-        <button onClick={() => setIsModalOpen(true)} className="text-[15px] text-disabled-gray font-bold">
-          + 추가하기
-        </button>
-      </div>
+          {/* 경력사항 */}
+          <div className="w-full mt-6 border-t border-gray-300 pt-4">
+            <div className="flex justify-between items-center pb-2 mb-4">
+              <h3 className="text-item font-bold text-black">경력사항</h3>
+              <button onClick={() => setIsModalOpen(true)} className="text-[15px] text-disabled-gray font-bold">
+                + 추가하기
+              </button>
+            </div>
 
        {/* ✅ 경력이 없을 경우 안내 메시지 표시 */}
        {experiences.length === 0 ? (
