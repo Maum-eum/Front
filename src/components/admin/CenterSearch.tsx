@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { searchCenter } from "../../api/admin/searchCenter";
+import { searchCenter } from "../../api/admin/signup";
 import Input from "../commons/Input";
 import { SearchCenterData } from "../../types/admin/searchCenterData";
 

@@ -25,9 +25,10 @@ const Main: React.FC = () => {
       (res) => {
         const userId = res.data.data.userId;
         const role = res.data.data.role;
+        const centerId = res.data.data.centerId;
         const token = res.headers.authorization;
 
-        setAdminInfo(userId, role, token);
+        setAdminInfo(userId, role, centerId, token);
         console.log(res.data.data);
       },
       (err) => {

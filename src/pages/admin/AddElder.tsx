@@ -4,7 +4,8 @@ import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
-import CheckList from "../../components/admin/CheckList";
+// import CheckList from "../../components/admin/CheckList";
+// import { addElder } from "../../api/admin/elder";
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,26 +15,48 @@ const AddElder: React.FC = () => {
   const [step, setStep] = useState(1);
 
   const [ElderData, setElderData] = useState({
-    center_id:  "",
     name:       "",
+    centerName: "",
     birth:      "",
-    gender:     "",
+    gender:     0,
     rate:       "",
-    img:        "",
+    imgUrl:     "",
     weight:     "",
-    inmate:     false,
   });
-
-  // const [ServiceData, setServiceData] = useState({
-
-  // });
 
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setElderData((prev) => ({ ...prev, [name]: value }))
+  
+    let newValue: string | number = value;
+  
+    // ✅ 몸무게(`weight`) 필드일 경우 숫자로 변환
+    if (name === "weight") {
+      newValue = value.replace(/[^0-9.]/g, ""); // 숫자와 소수점만 허용
+      if ((newValue.match(/\./g) || []).length > 1) return; // 소수점 1개만 허용
+    }
+  
+    setElderData((prev) => ({ ...prev, [name]: newValue }));
   }
-  
-  
+
+  const elderGenderChange = (selected: number) => {
+    setElderData((prev) => ({ ...prev, gender: selected }));
+  }
+
+  // const handleAddElder = async () => {
+  //   await addElder(
+  //     {
+  //       centerId: 1,
+  //       data: ElderData
+  //     },
+  //     (res) => {
+  //       console.log(res)
+  //     },
+  //     (err) => {
+  //       console.log(err.response?.data)
+  //     }
+  //   )
+  // }
+
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 모바일 환경에서만 보이는 UI */}
@@ -54,21 +77,21 @@ const AddElder: React.FC = () => {
               <label className="block text-item sm:text-2xl font-bold text-black mb-2">어르신 성함</label> 
               <Input
                 type="text"
-                name="username"
-                placeholder="아이디를 입력해주세요."
+                name="name"
+                placeholder="성함을 입력해주세요."
                 value={ElderData.name}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">생년월일</label> 
               <Input
                 type="text"
-                name="text"
+                name="birth"
                 placeholder="생년월일를 입력해주세요."
                 value={ElderData.birth}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">성별</label>
-              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]}/>
+              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderGenderChange}/>
 
             </div>
 
@@ -92,7 +115,7 @@ const AddElder: React.FC = () => {
               <label className="block text-item sm:text-xl font-bold text-black mt-3 mb-2">몸무게(Kg)</label> 
               <Input
                 type="text"
-                name="text"
+                name="weight"
                 placeholder="몸무게를 입력해주세요."
                 value={ElderData.weight}
                 onChange={elderDataChange}
@@ -100,7 +123,7 @@ const AddElder: React.FC = () => {
               <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label> 
               <Input
                 type="text"
-                name="username"
+                name="rate"
                 placeholder="장기 요양 등급을 입력해주세요."
                 value={ElderData.rate}
                 onChange={elderDataChange}
@@ -128,13 +151,14 @@ const AddElder: React.FC = () => {
         {/* 3단계 */}
         {step === 3 && (
           <div className="w-full h-dvh p-4 flex flex-col items-center justify-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
+            <p>추후 변동예정</p>
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 필요 서비스 항목</h1> 
+            {/* <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 필요 서비스 항목</h1>  */}
 
             <Steps step={step}/>
-            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">어르신이 필요한 서비스를 <span className="text-red">모두 선택</span>해 주세요.</h2> 
+            {/* <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">어르신이 필요한 서비스를 <span className="text-red">모두 선택</span>해 주세요.</h2>  */}
             {/* 입력 폼 */}
-            <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
+            {/* <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
               <CheckList
                 name="식사 보조"
                 options={[
@@ -183,11 +207,12 @@ const AddElder: React.FC = () => {
                   "때리거나 욕설 등 공격적인 행동"
                 ]}
               />
-            </div>
+            </div> */}
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
               <Btn text="이전" color="white" onClick={() => setStep(2)} /> 
-              <Btn text="가입 대기" onClick={() => {console.log(ElderData)}} />
+              {/* <Btn text="등록" onClick={handleAddElder} /> */}
+              <Btn text="등록" onClick={() => console.log(ElderData)} />
             </div>
           </div>
         )}

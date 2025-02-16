@@ -11,5 +11,6 @@ export interface LoginParams {
 
 export interface LoginResponse {
   userId: number;
+  centerId: number;
   role:   string;
 }

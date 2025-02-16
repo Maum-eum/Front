@@ -5,7 +5,8 @@ type AdminInfo = {
   userId: number;
   role: string;
   accessToken: string;
-  setAdminInfo: (userId: number, role: string, accessToken: string) => void;
+  center_id: number;
+  setAdminInfo: (userId: number, role: string, center_id: number, accessToken: string) => void;
   logout: () => void;
 }
 
@@ -14,9 +15,10 @@ export const useAdminStore = create(
     (set) => ({
       userId: 0,
       role: "",
+      center_id: 0,
       accessToken: "",
-      setAdminInfo: (userId, role, accessToken) => set({userId, role, accessToken}),
-      logout: () => set({userId: 0, role: "", accessToken: ""})
+      setAdminInfo: (userId, role, center_id, accessToken) => set({userId, role, center_id, accessToken}),
+      logout: () => set({userId: 0, role: "", center_id:0, accessToken: ""})
     }),
     {
       name: "ADMIN_STORE",
