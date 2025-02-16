@@ -14,30 +14,30 @@ const categories = [
 
 const SignupStep3 = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [selectedServices, setSelectedServices] = useState<Record<string, "불가능" | "가능" | "조율 가능">>({});
+  const [step, setStep] = useState(1); // ✅ step 1: 서비스 선택, step 2: 근무 조건 입력
+  const [selectedServices, setSelectedServices] = useState<Record<string, "불가능" | "가능" | "조율">>({});
   const [wage, setWage] = useState("13,000");
   const [schedule, setSchedule] = useState<{ [key: string]: { 오전: string; 오후: string } }>({
     월: { 오전: "", 오후: "" },
   });
 
-  const handleServiceChange = (updated: Record<string, "불가능" | "가능" | "조율 가능">) => {
+  const handleServiceChange = (updated: Record<string, "불가능" | "가능" | "조율">) => {
     setSelectedServices((prev) => ({ ...prev, ...updated }));
   };
 
   const handleNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+    if (step === 1) {
+      setStep(2); // ✅ 다음 단계(근무 조건 입력)로 이동
     } else {
       console.log("근무 조건 등록 완료!", { selectedServices, schedule, wage });
     }
   };
 
   const handlePrev = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+    if (step === 2) {
+      setStep(1); // ✅ 서비스 선택으로 돌아가기
     } else {
-      navigate("/signup/step1"); // ✅ 첫 단계에서 이전을 누르면 이전 페이지로 이동
+      navigate("/signup/step1"); // ✅ 이전 페이지로 이동
     }
   };
 
@@ -46,21 +46,35 @@ const SignupStep3 = () => {
       <h1 className="text-title font-bold text-black mb-6">근무 조건 등록</h1>
       <Steps step={3} />
 
-      <p className="text-center text-[18px] font-bold text-black mt-6">
-        {currentStep < 4 ? "제공 가능한 서비스를" : "근무 조건을"} <span className="text-red-500">모두 선택</span>해 주세요
-      </p>
+      {/* 🔥 Step 1: 서비스 선택 */}
+      {step === 1 && (
+        <>
+          <p className="text-center text-[18px] font-bold text-black mt-6">
+            제공 가능한 서비스를 <span className="text-red-500">모두 선택</span>해 주세요
+          </p>
 
-      {/* 🔥 Step 0~3: 서비스 선택 / Step 4: 근무 스케줄 & 시급 */}
-      <div className="w-full max-w-xs sm:max-w-sm mt-6">
-        {currentStep < 4 ? (
-          <CheckList
-            name={categories[currentStep].title}
-            options={categories[currentStep].services}
-            selectedValues={selectedServices}
-            onChange={handleServiceChange}
-          />
-        ) : (
-          <>
+          <div className="w-full max-w-xs sm:max-w-sm mt-6 space-y-6">
+            {categories.map((category) => (
+              <CheckList
+                key={category.title}
+                name={category.title}
+                options={category.services}
+                selectedValues={selectedServices}
+                onChange={handleServiceChange}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* 🔥 Step 2: 근무 조건 입력 */}
+      {step === 2 && (
+        <>
+          <p className="text-center text-[18px] font-bold text-black mt-6">
+            근무 조건을 <span className="text-red-500">입력</span>해 주세요
+          </p>
+
+          <div className="w-full max-w-xs sm:max-w-sm mt-8">
             {/* 근무 지역 */}
             <div className="w-full mb-6">
               <h3 className="text-item font-bold text-black mb-2">근무 지역</h3>
@@ -102,14 +116,14 @@ const SignupStep3 = () => {
                 onChange={(e) => setWage(e.target.value)}
               />
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
 
       {/* 버튼 */}
       <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-4 mt-auto">
-        <Btn text="이전" color="white" onClick={handlePrev} /> {/* ✅ 이전 버튼 동작 추가 */}
-        <Btn text={currentStep < 4 ? "다음" : "근무 조건 등록 완료"} color="green" onClick={handleNext} />
+        <Btn text="이전" color="white" onClick={handlePrev} />
+        <Btn text={step === 1 ? "다음" : "근무 조건 등록 완료"} color="green" onClick={handleNext} />
       </div>
     </div>
   );
