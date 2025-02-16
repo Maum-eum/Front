@@ -23,13 +23,23 @@ const Main: React.FC = () => {
     await Login(
       loginData,
       (res) => {
+
         const userId = res.data.data.userId;
         const role = res.data.data.role;
-        const centerId = res.data.data.centerId;
         const token = res.headers.authorization;
 
-        setAdminInfo(userId, role, centerId, token);
-        console.log(res.data.data);
+        if (role === "ROLE_ADMIN") {
+          const centerId = res.data.data.centerId;
+          const centerName = res.data.data.centerName;
+          const name = res.data.data.name;
+
+          setAdminInfo( token, userId, role, name, centerId, centerName );
+          navigate("/admin/main");
+        }
+        else {
+          console.log(res)
+        }
+
       },
       (err) => {
         console.log(err.response?.data)
