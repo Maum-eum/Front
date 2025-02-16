@@ -17,7 +17,7 @@ const Input: React.FC<InputProps> = ({ type = "text", name, placeholder, value, 
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={clsx(`w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0`)} // ✅ 테두리 회색으로 변경
+      className={clsx(`w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0`)}
     />
   );
 };

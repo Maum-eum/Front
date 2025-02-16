@@ -17,11 +17,18 @@ export const publicApi: AxiosInstance = axios.create({
 export const privateApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
-      'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
       'access': `${localStorage.getItem('accessToken')}`,
     },
   });
+
+  export const formDataApi: AxiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'access': `${localStorage.getItem('accessToken')}`,
+    },
+  }); 
   
 //   privateApi.interceptors.request.use(
 //     (config) => {
@@ -62,13 +69,7 @@ export const privateApi: AxiosInstance = axios.create({
 //   );
   
   
-//   export const formDataApi: AxiosInstance = axios.create({
-//     baseURL: baseURL,
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//       'access': `${localStorage.getItem('accessToken')}`,
-//     },
-//   });
+
   
 //   formDataApi.interceptors.request.use(
 //     (config) => {

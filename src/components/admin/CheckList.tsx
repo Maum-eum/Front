@@ -3,29 +3,35 @@ import clsx from "clsx";
 import dropdown from "../../assets/image/dropdown.png";
 import dropdown_open from "../../assets/image/dropdown-red.png";
 
-type SelectedOpts = "불필요" | "필요";
+type option = {
+  label: string;
+  name: string;
+  value: boolean;
+}
 
 type CheckListProps = {
   name: string;
-  options: string[];
-  selectedValues?: Record<string, SelectedOpts>;
-  onChange?: (selected: Record<string, SelectedOpts>) => void;
+  options: option[];
+  onChange?: (selected: option) => void;
 };
 
-const OPT_CYCLE: SelectedOpts[] = ["불필요", "필요"];
 
-const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {}, onChange }) => {
-  const [selected, setSelected] = useState<Record<string, SelectedOpts>>(selectedValues);
+const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
+  const [selected, setSelected] = useState<option[]>(options)
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleSelect = (value: string) => {
-    const currentIndex = OPT_CYCLE.indexOf(selected[value] || "불필요");
-    const nextIndex = (currentIndex + 1) % OPT_CYCLE.length;
-    const newStatus = OPT_CYCLE[nextIndex];
-    const newSelected = { ...selected, [value]: newStatus };
+  const toggleSelect = (opt: option) => {
 
-    setSelected(newSelected);
-    if (onChange) onChange(newSelected);
+    const newSelected = selected.map((item) => {
+      if(item.name === opt.name) {
+        item.value = !item.value;
+      }
+      return item
+    });
+    
+    setSelected(newSelected)
+
+    if (onChange) onChange(opt);
   };
 
 
@@ -40,29 +46,29 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
       {isOpen && (
         <div className="flex flex-col w-full items-center mt-1">
           {options.map((item) => {
-            const status = selected[item] || "불필요";
+            const status = item.value;
             return (
               <div
-                key={item}
+                key={item.name}
                 className={clsx(
                   "w-full flex gap p-1 m-1 rounded-lg items-center border",
                   {
-                    "border-green bg-pale-green"   : status === "필요" ,
-                    "border-red bg-pale-red"       : status === "불필요",
+                    "border-green bg-pale-green"   :  status ,
+                    "border-red bg-pale-red"       :  !status,
                   }
                 )}
                 onClick={() => toggleSelect(item)}>
-                <span className="ml-1  flex-1">{item}</span>
+                <span className="ml-1  flex-1">{item.label}</span>
                 <span
                   className={clsx(
                     "p-2 text-xs rounded-md w-12 text-center",
                     {
-                      "bg-green"  : status === "필요",
-                      "bg-red"    : status === "불필요",
+                      "bg-green"  : status ,
+                      "bg-red"    : !status,
                     }
                   )}
                 >
-                  {status}
+                  {status ? "필요": "불필요"}
                 </span>
               </div>              
             )
