@@ -42,7 +42,7 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
         <label className="block text-item font-bold text-black mt-4 mb-2">일한 기간</label>
         <Input
           type="text"
-          placeholder="예) 2023.09 - 2024.01"
+          placeholder="예) 12개월"
           onChange={(e) => setPeriod(e.target.value)}
         />
 
