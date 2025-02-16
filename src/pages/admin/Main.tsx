@@ -1,6 +1,6 @@
 import React from "react";
 import { useAdminStore } from "../../stores/admin/adminStore";
-// import { useNavigate } from "react-router-dom";  
+// import { useNavigate } from "react-router-dom";
 import ElderList from "../../components/admin/ElderList";
 import MatchingList from "../../components/admin/MatchingList";
 
@@ -15,8 +15,10 @@ const Main: React.FC = () => {
     rate       : "3등급",
     imgUrl     : "",
     weight     : 58,
+    //빌드 오류 수정용으로 더미에 없는 속성 추가했습니다.
+    inmateTypes: ["Type1", "Type2"],
   }]
-  
+
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 모바일 환경에서만 보이는 UI */}
