@@ -4,12 +4,14 @@ import CaregiverInfoModal from "../../components/CaregiverInfoModal"; // ✅ 모
 import ToggleBtn from "../../components/commons/ToggleBtn";
 import EmptyImg from "../../assets/image/empty.png";
 import { useCaregiverStore } from "../../store/caregiverStore";
+import Alert from "../../components/commons/Alert";
 
 const Main = () => {
   const navigate = useNavigate();
 
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlertOpen, setAlertOpen] = useState(false);
 
   /* 요양보호사 정보 store */
   const store = useCaregiverStore();
@@ -24,6 +26,27 @@ const Main = () => {
     }[];
   }>({
     requestedList: [
+      {
+        id: "person1",
+        name: "햄부기",
+        title: "[메인 구합니다]",
+        times: "월, 16:00 - 18:00",
+        works: "이동보조",
+      },
+      {
+        id: "person1",
+        name: "햄부기",
+        title: "[메인 구합니다]",
+        times: "월, 16:00 - 18:00",
+        works: "이동보조",
+      },
+      {
+        id: "person1",
+        name: "햄부기",
+        title: "[메인 구합니다]",
+        times: "월, 16:00 - 18:00",
+        works: "이동보조",
+      },
       {
         id: "person1",
         name: "햄부기",
@@ -49,6 +72,7 @@ const Main = () => {
       console.log("success");
       return true;
     } else {
+      setAlertOpen(true);
       console.log("fail");
       return false;
     }
@@ -65,7 +89,6 @@ const Main = () => {
           <span className="text-red">{store.name}</span>
           <span className="text-black">] 요양보호사님의 공간</span>
         </h1>
-
         {/* 요양보호사 프로필 */}
         <div className="text-content w-full h-42 sm:h-56 flex flex-wrap shadow bg-white rounded-lg mb-6 p-5">
           {/* 프로필 이미지 (임시 박스) */}
@@ -82,7 +105,6 @@ const Main = () => {
             </button>
           </div>
         </div>
-
         {/* 메뉴 (화면 이동) */}
         <div className="w-full flex mb-6">
           <button
@@ -100,7 +122,6 @@ const Main = () => {
             <div className="text-button font-bold text-white">일정 목록</div>
           </button>
         </div>
-
         {/* 근무 요청 알림 */}
         <label className="text-item font-bold mb-3">근무 요청이 있어요~</label>
         <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
@@ -123,7 +144,6 @@ const Main = () => {
             </div>
           ))}
         </div>
-
         {/* 조율 중인 요청 */}
         <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
         <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
@@ -147,7 +167,6 @@ const Main = () => {
           ))}
         </div>
       </div>
-
       {/* 모달 추가 */}
       {isModalOpen && (
         <CaregiverInfoModal
@@ -156,6 +175,11 @@ const Main = () => {
           onSave={handleChangeCaregiverInfo} // ✅ 모달에서 받은 데이터 추가
         />
       )}
+      {/* 알림 추가 */}
+      <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
+        <div>알림창 컴포넌트 테스트</div>
+      </Alert>
+      ;
     </div>
   );
 };

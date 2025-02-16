@@ -39,9 +39,9 @@ export const useCaregiverStore = create<CaregiverInfo>()(
     (set) => ({
       userId: 0,
       accessToken: null,
-      name: "noname",
+      name: "",
       img: null,
-      employmentStatus: true,
+      employmentStatus: null,
       // requestList: null,
 
       setName: (name) => set({ name }),
