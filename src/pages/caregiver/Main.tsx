@@ -16,47 +16,6 @@ const Main = () => {
   /* 요양보호사 정보 store */
   const store = useCaregiverStore();
 
-  const [caregiverInfo, setCaregiverInfo] = useState<{
-    requestedList: {
-      id: string;
-      name: string;
-      title: string;
-      times: string;
-      works: string;
-    }[];
-  }>({
-    requestedList: [
-      {
-        id: "person1",
-        name: "햄부기",
-        title: "[메인 구합니다]",
-        times: "월, 16:00 - 18:00",
-        works: "이동보조",
-      },
-      {
-        id: "person1",
-        name: "햄부기",
-        title: "[메인 구합니다]",
-        times: "월, 16:00 - 18:00",
-        works: "이동보조",
-      },
-      {
-        id: "person1",
-        name: "햄부기",
-        title: "[메인 구합니다]",
-        times: "월, 16:00 - 18:00",
-        works: "이동보조",
-      },
-      {
-        id: "person1",
-        name: "햄부기",
-        title: "[메인 구합니다]",
-        times: "월, 16:00 - 18:00",
-        works: "이동보조",
-      },
-    ],
-  });
-
   /* 요양보호사 정보 변경 */
   const handleChangeCaregiverInfo = () => {
     // setCaregiverInfo(newCaregiverInfo);
@@ -125,46 +84,86 @@ const Main = () => {
         {/* 근무 요청 알림 */}
         <label className="text-item font-bold mb-3">근무 요청이 있어요~</label>
         <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-          {caregiverInfo.requestedList.map((requestInfo) => (
-            <div className="flex flex-col h-auto shadow bg-white rounded-lg p-5">
-              <div className="flex flex-wrap mb-5">
-                {/* 프로필 이미지 (임시 박스) */}
-                <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg"></div>
-                {/* 구인 요청한 어르신 성함 */}
-                <span className="text-content font-bold px-4">{requestInfo.name}</span>
-              </div>
-              <div className="flex flex-wrap">
-                <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2">
-                  {requestInfo.times}
+          {store.requests ? (
+            store.requests.map((request) => (
+              <div className="flex flex-col h-auto shadow bg-white rounded-lg p-5">
+                <div className="flex flex-wrap mb-5">
+                  {/* 프로필 이미지 (임시 박스) */}
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg">
+                    {request.img}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-content font-bold px-4">[{request.centerName}]센터</span>
+                    <span className="text-content font-bold px-4">[{request.name}] 어르신</span>
+                  </div>
                 </div>
-                <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2">
-                  {requestInfo.works}
+                <div className="flex flex-wrap">
+                  {request.inmateTypes &&
+                    request.inmateTypes.map((type) => (
+                      <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                        {type}
+                      </div>
+                    ))}
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    장기요양등급{request.rate.charAt(0)}급
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.gender ? "남" : "여"}
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.birth.slice(0, 4)}년생
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.desiredHourlyWage}원
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>요청 리스트가 없습니다! 조금만 기다리시거나, 근무 조건을 수정해 보세요. </div>
+          )}
         </div>
         {/* 조율 중인 요청 */}
         <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
         <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-          {caregiverInfo.requestedList.map((requestInfo) => (
-            <div className="flex flex-col h-auto shadow bg-white rounded-lg p-5">
-              <div className="flex flex-wrap mb-5">
-                {/* 프로필 이미지 (임시 박스) */}
-                <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg"></div>
-                {/* 구인 요청한 어르신 성함 */}
-                <span className="text-content font-bold px-4">{requestInfo.name}</span>
-              </div>
-              <div className="flex flex-wrap">
-                <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2">
-                  {requestInfo.times}
+          {store.attuneRequests ? (
+            store.attuneRequests.map((request) => (
+              <div className="flex flex-col h-auto shadow bg-white rounded-lg p-5">
+                <div className="flex flex-wrap mb-5">
+                  {/* 프로필 이미지 (임시 박스) */}
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 border bg-green rounded-lg">
+                    {request.img}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-content font-bold px-4">[{request.centerName}]센터</span>
+                    <span className="text-content font-bold px-4">[{request.name}] 어르신</span>
+                  </div>
                 </div>
-                <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2">
-                  {requestInfo.works}
+                <div className="flex flex-wrap">
+                  {request.inmateTypes &&
+                    request.inmateTypes.map((type) => (
+                      <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                        {type}
+                      </div>
+                    ))}
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    장기요양등급{request.rate.charAt(0)}급
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.gender ? "남" : "여"}
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.birth.slice(0, 4)}년생
+                  </div>
+                  <div className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2">
+                    {request.desiredHourlyWage}원
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>조율 중인 리스트가 없습니다! </div>
+          )}
         </div>
       </div>
       {/* 모달 추가 */}
