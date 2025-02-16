@@ -24,8 +24,8 @@ const EditProfile = () => {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const [experiences, setExperiences] = useState([
-    { place: "꿈나무 복지관", period: "2023.09 - 2024.01", details: "식사 보조, 이동 보조, 일상 생활 보조" },
-    { place: "김물루 노인보조", period: "2023.12 - 2025.02", details: "식사 보조, 이동 보조, 일상 생활 보조" },
+    { id: 1, place: "꿈나무 복지관", period: "2023.09 - 2024.01", details: "식사 보조, 이동 보조, 일상 생활 보조" },
+    { id: 2, place: "김물루 노인보조", period: "2023.12 - 2025.02", details: "식사 보조, 이동 보조, 일상 생활 보조" },
   ]);
 
   // 프로필 이미지 변경 핸들러
@@ -42,8 +42,13 @@ const EditProfile = () => {
 
   // 경력 추가 핸들러
   const handleAddExperience = (newExperience: { place: string; period: string; details: string }) => {
-    setExperiences([...experiences, newExperience]);
+    setExperiences([...experiences, { id: Date.now(), ...newExperience }]);
     setIsModalOpen(false);
+  };
+
+  // 경력 삭제 핸들러
+  const handleDeleteExperience = (id: number) => {
+    setExperiences(experiences.filter((exp) => exp.id !== id));
   };
 
   return (
@@ -53,20 +58,15 @@ const EditProfile = () => {
 
       <div className="w-full max-w-xs sm:max-w-sm bg-white p-6 rounded-lg shadow-md">
         {/* 프로필 이미지 업로드 */}
-        <div className="flex flex-col items-center mb-4">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300">
+        <div className="flex flex-col items-center mb-6">
+          <label htmlFor="profile-upload" className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300 cursor-pointer">
             {profileImage ? (
               <img src={profileImage} alt="프로필" className="w-full h-full object-cover rounded-full" />
             ) : (
               <span className="text-gray-500 text-sm">사진 추가</span>
             )}
-            <input
-              type="file"
-              accept="image/*"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={handleImageChange}
-            />
-          </div>
+          </label>
+          <input id="profile-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
           <p className="text-sm text-gray-500 mt-2">프로필 사진 추가</p>
         </div>
 
@@ -83,13 +83,10 @@ const EditProfile = () => {
 
           {/* 자격증 */}
           <label className="block text-item font-bold text-black">자격증</label>
-          <div
-            className="w-full p-3 border-2 rounded-lg bg-white cursor-pointer"
-            onClick={() => setIsCertModalOpen(true)}
-          >
+          <div className="w-full p-3 border-2 rounded-lg bg-white cursor-pointer" onClick={() => setIsCertModalOpen(true)}>
             {certification.name} {certification.level}
           </div>
-
+          
           {/* 차량 소유 여부 */}
           <label className="block text-item font-bold text-black">차량 소유</label>
           <div className="flex gap-4">
@@ -101,7 +98,7 @@ const EditProfile = () => {
             </label>
           </div>
 
-          {/* 치매 교육 이수 */}
+          {/* 치매 교육 이수 여부 */}
           <label className="block text-item font-bold text-black">치매 교육 이수</label>
           <div className="flex gap-4">
             <label className="flex items-center">
@@ -111,10 +108,29 @@ const EditProfile = () => {
               <input type="radio" name="dementia" value="미이수" checked={dementiaTraining === "미이수"} onChange={() => setDementiaTraining("미이수")} /> 미이수
             </label>
           </div>
-
           {/* 한줄소개 */}
           <label className="block text-item font-bold text-black">한줄소개</label>
           <textarea className="w-full p-3 border-2 rounded-lg bg-white" value={introduction} onChange={(e) => setIntroduction(e.target.value)} />
+
+          {/* 경력 사항 */}
+          <div className="mt-6">
+            <div className="flex justify-between items-center">
+              <h2 className="font-bold text-item text-black">경력사항</h2>
+              <button className="text-gray-500 text-sm font-bold" onClick={() => setIsModalOpen(true)}>+ 추가하기</button>
+            </div>
+            <div className="mt-2 space-y-4">
+              {experiences.map((exp) => (
+                <div key={exp.id} className="flex justify-between">
+                  <div>
+                    <p className="font-bold text-black text-item">{exp.place}</p>
+                    <p className="text-sm text-gray-500">{exp.period}</p>
+                    <p className="text-sm text-black">{exp.details}</p>
+                  </div>
+                  <button className="text-red-500 text-sm font-bold" onClick={() => handleDeleteExperience(exp.id)}>삭제</button>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* 버튼 */}
           <div className="flex flex-col gap-2 mt-6">
