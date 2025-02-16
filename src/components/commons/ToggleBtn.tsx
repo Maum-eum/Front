@@ -16,14 +16,12 @@ const ToggleBtn = ({ status, onClick }: ToggleBtnProps) => {
   return (
     <button
       onClick={onToggle}
-      className={`w-40 h-8 rounded-full flex items-center transition duration-300 px-1 relative ${isOn ? "bg-green" : "bg-red"}`}
+      className={`w-32 h-8 sm:w-56 sm:h-10 rounded-full flex items-center transition duration-300 ${isOn ? "bg-green px-1" : "bg-red px-1"}`}
     >
       <div
-        className={`w-6 h-6 bg-white rounded-full transform transition duration-300 ${isOn ? "translate-x-0" : "translate-x-32"}`}
+        className={`w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full transform transition duration-300 ${isOn ? "translate-x-0" : "translate-x-30 sm:translate-x-48"}`}
       ></div>
-      <div className="absolute inset-0 flex items-center justify-center text-white">
-        {isOn ? "구직 중" : "비구직 중"}
-      </div>
+      <div className="w-[70px] sm:w-[150px] text-white">{isOn ? "구직 중" : "휴식 중"}</div>
     </button>
   );
 };
