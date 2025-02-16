@@ -9,8 +9,20 @@ export interface LoginParams {
   password: string;
 }
 
-export interface LoginResponse {
+interface BaseLoginResponse {
   userId: number;
-  centerId: number;
-  role:   string;
+  role: "ROLE_ADMIN" | "ROLE_CAREGIVER";
 }
+
+interface AdminLoginResponse extends BaseLoginResponse {
+  role: "ROLE_ADMIN";
+  name: string;
+  centerId: number;
+  centerName: string;
+}
+
+interface CaregiverLoginResponse extends BaseLoginResponse {
+  role: "ROLE_CAREGIVER";
+}
+
+export type LoginResponse = AdminLoginResponse | CaregiverLoginResponse;

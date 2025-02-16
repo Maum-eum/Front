@@ -17,7 +17,7 @@ const AdminSignUp: React.FC = () => {
     connect:  "",
     username: "",
     password: "",
-    centerName: "",
+    centerName: "행복 요양 센터",
   });
 
   const signUpdataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +30,7 @@ const AdminSignUp: React.FC = () => {
   };
 
   const handleSignUp = async () => {
+    console.log(signUpData)
     await signUp(
       signUpData,
       (res) => {
