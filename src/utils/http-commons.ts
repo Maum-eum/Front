@@ -5,6 +5,10 @@ const BASE_URL = 'https://api.gyeotae.site';
 
 export const noneApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
+  },
   });
 
 export const publicApi: AxiosInstance = axios.create({

@@ -1,20 +1,19 @@
 export interface elderInfo {
   name                   : string;
   centerName             : string;
+  inmateTypes            : string[];
   gender                 : number;
   birth                  : string;
   rate                   : string;
-  imgUrl                 : string;
   weight                 : number | string;
-  inmateTypes            : string[];
   address                : string;
-  isTemporarySave        : boolean;
   isNormal               : boolean;
   hasShortTermMemoryLoss : boolean;
   wandersOutside         : boolean;
   actsLikeChild          : boolean;
   hasDelusions           : boolean;
   hasAggressiveBehavior  : boolean;
+  // isTemporarySave        : boolean;
 }
 
 export interface ServiceOption {
@@ -61,20 +60,20 @@ export interface elderService {
 }
 
 export interface ServiceTime {
-  dayOfWeek: string,
-  startTime: string,
-  endTime:   string
+  dayOfWeek: string;
+  startTime: string;
+  endTime:   string;
 }
 
 export interface AddElderParams {
-  centerId: number,
-  data: elderInfo
+  centerId: number;
+  data: FormData;
 }
 
 export interface AddElderServiceParams {
   centerId: number;
   elderId: number;
-  data: elderService
+  data: elderService;
 }
 
 

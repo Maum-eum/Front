@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { privateApi } from '../../utils/http-commons';
-import { AddElderParams, AddElderResponse, AddElderServiceParams, elderInfo } from '../../types/admin/elderType';
+import { privateApi, formDataApi } from '../../utils/http-commons';
+import { AddElderResponse, AddElderParams, AddElderServiceParams, elderInfo } from '../../types/admin/elderType';
 import { ApiResponseDefault } from '../../types/commons';
 
 
@@ -9,7 +9,7 @@ export const addElder = async (
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
+  await formDataApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
 };
 
 export const addElderService = async (

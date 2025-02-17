@@ -5,8 +5,9 @@ import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
 import CheckList from "../../components/admin/CheckList";
-import { addElder, addElderService } from "../../api/admin/elder";
-import { elderInfo, elderService, ServiceOption, AddElderServiceParams } from "../../types/admin/elderType";
+import CheckBox from "../../components/admin/CheckBox";
+import { addElder } from "../../api/admin/elder";
+import { elderInfo, elderService, ServiceOption } from "../../types/admin/elderType";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../stores/admin/adminStore";
 
@@ -84,11 +85,9 @@ const AddElder: React.FC = () => {
     birth                  : "",
     gender                 : 0,
     rate                   : "RATE1",
-    imgUrl                 : "",
     weight                 : "",
     inmateTypes            : [""],
     address                : "",
-    isTemporarySave        : false,
     isNormal               : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
@@ -96,12 +95,12 @@ const AddElder: React.FC = () => {
     hasDelusions           : false,
     hasAggressiveBehavior  : false,
   });
-
-  const [profileImage, setProfileImage] = useState<string>(elderData.imgUrl);
+  const [profileImage, setProfileImage] = useState<string>("");
+  const [profileFile, setProfileFile] = useState<File | null>(null);
 
   const [serviceData, setServiceData] = useState<elderService>({
     careTypes: [],
-    recruitLocation: 2000,
+    location_id: 0,
     selfFeeding:               false, //스스로식사가능
     mealPreparation:           false, //식사준비
     mealAssistance :           false, //식사보조(구토물정리)
@@ -160,7 +159,7 @@ const AddElder: React.FC = () => {
   }
 
   // 치매/서비스 항목 처리
-  const handleElderService = (type: string, selected: ServiceOption) => {
+  const handleElderCheckList = (type: string, selected: ServiceOption) => {
     const name = selected.name;
     const value = selected.value
     if (type === "치매") {
@@ -173,34 +172,47 @@ const AddElder: React.FC = () => {
     }
   }
 
+  const handleElderCheckBox = (selected: string[]) => {
+
+    const newData = {...serviceData, careTypes: selected}
+    setServiceData(newData)
+  }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setProfileFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string
         setProfileImage(result);
-        setElderData({...elderData, imgUrl: result})
       };
       reader.readAsDataURL(file);
     }
   };
 
-
   const handleAddElder = async () => {
+    const form = new FormData();
+    form.append("data", JSON.stringify(elderData));
+    if (profileFile) {
+      form.append("profileImg", profileFile, profileFile.name);
+    } else {
+      form.append("profileImg", "");
+    }
     await addElder(
       {
         centerId: centerId,
-        data: elderData
+        data: form
       },
       (res) => {
-        const elderId = res.data.data.elderId;
-        const data = {
-          centerId: centerId,
-          elderId: elderId,
-          data: serviceData
-        }
-        handleAddElderService(data)
+        console.log(res)
+        // const elderId = res.data.data.elderId;
+        // const data = {
+        //   centerId: centerId,
+        //   elderId: elderId,
+        //   data: serviceData
+        // }
+        // handleAddElderService(data)
       },
       (err) => {
         console.log(err.response?.data)
@@ -208,17 +220,17 @@ const AddElder: React.FC = () => {
     )
   }
 
-  const handleAddElderService = async (data:AddElderServiceParams) => {
-    await addElderService(
-      data,
-      (res) => {
-        console.log(res)
-      },
-      (err) => {
-        console.log(err.response?.data)
-      }
-    )
-  }
+  // const handleAddElderService = async (data:AddElderServiceParams) => {
+  //   await addElderService(
+  //     data,
+  //     (res) => {
+  //       console.log(res)
+  //     },
+  //     (err) => {
+  //       console.log(err.response?.data)
+  //     }
+  //   )
+  // }
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -333,41 +345,47 @@ const AddElder: React.FC = () => {
             <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">어르신이 필요한 서비스를 <span className="text-red">모두 선택</span>해 주세요.</h2> 
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
+              <CheckBox
+                name="서비스 타입"
+                options={["방문요양", "요양원", "입주요양", "방문목욕", "병원", "병원동행", "주야간보호"]}
+                selectedopt={serviceData.careTypes}
+                onChange={handleElderCheckBox}
+              />
               <CheckList
                 type="치매"
                 name={categories[0].title}
                 options={categories[0].options}
-                onChange={handleElderService}
-              />
+                onChange={handleElderCheckList}
+              /> 
               <CheckList
                 type="서비스"
                 name={categories[1].title}
                 options={categories[1].options}
-                onChange={handleElderService}
+                onChange={handleElderCheckList}
               />
               <CheckList
                 type="서비스"              
                 name={categories[2].title}
                 options={categories[2].options}
-                onChange={handleElderService}
+                onChange={handleElderCheckList}
               />
               <CheckList
                 type="서비스"              
                 name={categories[3].title}
                 options={categories[3].options}
-                onChange={handleElderService}
+                onChange={handleElderCheckList}
               />
               <CheckList
                 type="서비스"              
                 name={categories[4].title}
                 options={categories[4].options}
-                onChange={handleElderService}
+                onChange={handleElderCheckList}
               />
               <CheckList
                 type="서비스"              
                 name={categories[5].title}
                 options={categories[5].options}
-                onChange={handleElderService}
+                onChange={handleElderCheckList}
               />
             </div>
 
