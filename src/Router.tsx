@@ -10,8 +10,10 @@ import AdminMain from './pages/admin/Main';
 import AddElder from './pages/admin/AddElder';
 
 //유저회원가입
-import SignupStep1 from './pages/caregiver/SignupStep1'; 
+import SignupTest from './pages/caregiver/SignupTest';
 import SignupStep3 from './pages/caregiver/SignupStep3'; 
+
+
 
 //유저
 import EditProfile from './pages/caregiver/EditProfile';
@@ -30,8 +32,9 @@ export default function Router() {
             <Route path="/admin/addElder"      element={<AddElder />} />
 
              {/* 요양보호사 */}
-            <Route path="/signup/step1" element={<SignupStep1 />} /> 
+           
             <Route path="/signup/step3" element={<SignupStep3 />} /> 
+            <Route path="/caregiver/signup" element={<SignupTest />} /> 
             <Route path="/caregiver/edit/profile" element={<EditProfile />} /> 
         </Routes>
     );
