@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { privateApi } from '../../utils/http-commons';
-import { AddElderParams, AddElderResponse } from '../../types/admin/elderType';
+import { privateApi, formDataApi } from '../../utils/http-commons';
+import { AddElderResponse, AddElderParams, AddElderServiceParams, elderInfo } from '../../types/admin/elderType';
 import { ApiResponseDefault } from '../../types/commons';
 
 
@@ -9,15 +9,15 @@ export const addElder = async (
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
+  await formDataApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
 };
 
 export const addElderService = async (
-  params: AddElderParams,
+  params: AddElderServiceParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.post(`/admin/${params.centerId}/recruit/`, params.data).then(Response).catch(Error);
+  await privateApi.post(`/admin/${params.centerId}/care/${params.elderId}`, params.data).then(Response).catch(Error);
 };
 
 // export const modifyElder = async (
@@ -28,13 +28,13 @@ export const addElderService = async (
 //   await privateApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
 // };
 
-// export const getElderList = async (
-//   params: AddElderParams,
-//   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
-//   Error: (Error: AxiosError<null>) => void
-// ) => {
-//   await privateApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
-// };
+export const getElderList = async (
+  params: number,
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo[]>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.get(`/admin/${params}/elders`).then(Response).catch(Error);
+};
 
 // export const getElderDetail = async (
 //   params: AddElderParams,

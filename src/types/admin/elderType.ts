@@ -1,20 +1,19 @@
 export interface elderInfo {
   name                   : string;
   centerName             : string;
+  inmateTypes            : string[];
   gender                 : number;
   birth                  : string;
   rate                   : string;
-  imgUrl                 : string;
   weight                 : number | string;
-  inmateTypes            : string[];
   address                : string;
-  isTemporarySave        : boolean;
   isNormal               : boolean;
   hasShortTermMemoryLoss : boolean;
   wandersOutside         : boolean;
   actsLikeChild          : boolean;
   hasDelusions           : boolean;
   hasAggressiveBehavior  : boolean;
+  // isTemporarySave        : boolean;
 }
 
 export interface ServiceOption {
@@ -24,9 +23,11 @@ export interface ServiceOption {
 }
 
 export interface elderService {
-  elderId: number;
   // 방문요양, 요양원, 입주요양, 병원, 방문목욕, 병원동행, 주야간보호
   careTypes: string[];
+
+  // 지역
+  location_id:              number;
 
   selfFeeding:               boolean; //스스로식사가능
   mealPreparation:           boolean; //식사준비
@@ -55,23 +56,26 @@ export interface elderService {
   cognitiveStimulation:      boolean; //인지 자극 활동
 
   desiredHourlyWage:         number;  //희망 시급
-
   flexibleSchedule:          boolean; //유연한 일정 가능
-
-  // detailRequiredService :    string,  //요청하는 세부 서비스
-  // recruitTimes:              ServiceTime[]
 }
 
 export interface ServiceTime {
-  dayOfWeek: string,
-  startTime: string,
-  endTime:   string
+  dayOfWeek: string;
+  startTime: string;
+  endTime:   string;
 }
 
 export interface AddElderParams {
-  centerId: number,
-  data: elderInfo
+  centerId: number;
+  data: FormData;
 }
+
+export interface AddElderServiceParams {
+  centerId: number;
+  elderId: number;
+  data: elderService;
+}
+
 
 export interface AddElderResponse {
   elderId : number;

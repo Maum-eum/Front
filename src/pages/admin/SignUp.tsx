@@ -17,7 +17,7 @@ const AdminSignUp: React.FC = () => {
     connect:  "",
     username: "",
     password: "",
-    centerName: "행복 요양 센터",
+    centerName: "",
   });
 
   const signUpdataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +33,9 @@ const AdminSignUp: React.FC = () => {
     console.log(signUpData)
     await signUp(
       signUpData,
-      (res) => {
-        console.log(res)
+      () => {
+        console.log(signUpData)
+        navigate("/");
       },
       (err) => {
         console.log(err.response?.data)

@@ -17,6 +17,14 @@ const Main: React.FC = () => {
     weight     : 58,
     //빌드 오류 수정용으로 더미에 없는 속성 추가했습니다.
     inmateTypes: ["Type1", "Type2"],
+    address                : "",
+    isTemporarySave        : false,
+    isNormal               : false,
+    hasShortTermMemoryLoss : false,
+    wandersOutside         : false,
+    actsLikeChild          : false,
+    hasDelusions           : false,
+    hasAggressiveBehavior  : false,
   }]
 
   return (

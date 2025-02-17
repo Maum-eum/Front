@@ -10,7 +10,7 @@ type CenterSearchProps = {
 const CenterSearch: React.FC<CenterSearchProps> = ({ onSelect }) => {
   const [keyWord, setKeyWord] = useState("");
 
-  const [centerInfo, setCenterInfo] = useState<Record<string, string | boolean>>({
+  const [centerInfo, setCenterInfo] = useState<Record<string, string | boolean | null>>({
     centerName: "",
     hasBathCar: false,
     rate: "",
@@ -27,9 +27,8 @@ const CenterSearch: React.FC<CenterSearchProps> = ({ onSelect }) => {
     await searchCenter(
       keyWord,
       (res) => {
-        const data = [];
-        data.push(res.data.data)
-        setResults(data);
+        console.log(res.data.data)
+        setResults(res.data.data)
         setIsOpen(true);
       },
       (err) => {
@@ -69,7 +68,7 @@ const CenterSearch: React.FC<CenterSearchProps> = ({ onSelect }) => {
         <div className="rounded-tl-lg p-1 pl-3 bg-pale-green">센터명</div>
         <div className="p-1 pl-3">{centerInfo.centerName}</div>
         <div className="p-1 pl-3 bg-pale-green">목욕 차량</div>
-        <div className="p-1 pl-3">{centerInfo.hasBathCar}</div>
+        <div className="p-1 pl-3">{centerInfo.hasBathCar ? "보유" : "미보유"}</div>
         <div className="p-1 pl-3 bg-pale-green">등급</div>
         <div className="p-1 pl-3">{centerInfo.rate}</div>
         <div className="p-1 pl-3 bg-pale-green">주소</div>
