@@ -17,7 +17,7 @@ const AdminSignUp: React.FC = () => {
     connect:  "",
     username: "",
     password: "",
-    centerName: "",
+    centerName: "test",
   });
 
   const signUpdataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
