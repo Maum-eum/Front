@@ -22,10 +22,18 @@ const SignupTest = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await signUpCaregiver({ ...signupData, profileImg, certificateRequestDTOList, experienceRequestDTOList });
+      const response = await signUpCaregiver({
+        ...signupData,
+        profileImg,
+        certificateRequestDTOList,
+        experienceRequestDTOList,
+      });
+  
       console.log("회원가입 성공:", response);
       alert("회원가입 성공!");
-      navigate("/login");
+      
+      navigate("/"); // ✅ 회원가입 완료 후 메인 페이지로 이동
+  
     } catch (error) {
       console.error("회원가입 실패:", error);
       alert("회원가입 실패 ㅠㅠ");
@@ -33,6 +41,7 @@ const SignupTest = () => {
       setLoading(false);
     }
   };
+  
 
   // ✅ 경력 추가 함수
   const addExperience = (newExperience: { title: string; duration: number; description: string }) => {
@@ -51,7 +60,27 @@ const SignupTest = () => {
     setSignupData({ certificateRequestDTOList: [...certificateRequestDTOList, newCertificate] });
   };
 
+  // ✅ 자격증 수정 함수
+  const updateCertificate = (updatedCertificate: { certNum: string; certType: string; certRate: string }) => {
+    setSignupData({
+      certificateRequestDTOList: [updatedCertificate], // 기존 값 덮어쓰기 (배열 유지)
+    });
+  };
 
+
+  const handlePrev = () => {
+    setSignupData({ ...signupData }); // ✅ 현재 상태를 저장해서 유지
+    console.log("📌 이전으로 이동 - 유지되는 데이터:", signupData);
+    
+    if (step === 2 && subStep === 2) {
+      setSubStep(1); // Step 2의 하위 단계에서 필수 정보 입력으로 이동
+    } else if (step === 2 && subStep === 1) {
+      setStep(1); // Step 2에서 Step 1로 이동
+    } else {
+      navigate("/"); // 처음 화면으로 이동
+    }
+  };
+  
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8">
       <h2 className="text-title font-bold text-black text-center mb-4">회원가입</h2>
@@ -69,13 +98,23 @@ const SignupTest = () => {
           <input type="file" className="mt-2 w-full text-sm" accept="image/*" 
             onChange={(e) => setSignupData({ profileImg: e.target.files?.[0] || null })} />
 
-          {/* ✅ 아이디 입력 */}
+         {/* ✅ 아이디 입력 */}
           <label className="block text-item font-bold text-black mt-6">아이디</label>
-          <Input type="text" placeholder="아이디를 입력해주세요." onChange={(e) => setSignupData({ username: e.target.value })} />
+          <Input
+            type="text"
+            placeholder="아이디를 입력해주세요."
+            value={signupData.username} // ✅ Zustand에서 가져온 값 유지
+            onChange={(e) => setSignupData({ username: e.target.value })}
+          />
 
           {/* ✅ 비밀번호 입력 */}
           <label className="block text-item font-bold text-black mt-4">비밀번호</label>
-          <Input type="password" placeholder="비밀번호를 입력해주세요." onChange={(e) => setSignupData({ password: e.target.value })} />
+          <Input
+            type="password"
+            placeholder="비밀번호를 입력해주세요."
+            value={signupData.password} // ✅ Zustand에서 가져온 값 유지
+            onChange={(e) => setSignupData({ password: e.target.value })}
+          />
 
           <div className="flex flex-col gap-2 mt-6">
             <Btn text="취소하기" color="white" onClick={() => navigate("/")} />
@@ -89,19 +128,38 @@ const SignupTest = () => {
           <h2 className="text-title font-bold text-black text-center">필수 입력 사항</h2>
 
           {/* ✅ 입력 필드 (왼쪽 라벨 + 오른쪽 입력창) */}
+                    {/* ✅ 이름 입력 */}
           <div className="flex items-center justify-between">
             <label className="text-item font-bold text-black w-1/3">이름</label>
-            <Input type="text" placeholder="이름을 입력해주세요." onChange={(e) => setSignupData({ name: e.target.value })} />
+            <Input
+              type="text"
+              placeholder="이름을 입력해주세요."
+              value={signupData.name} // ✅ Zustand 상태와 연결
+              onChange={(e) => setSignupData({ name: e.target.value })}
+            />
           </div>
 
+          {/* ✅ 연락처 입력 */}
           <div className="flex items-center justify-between">
             <label className="text-item font-bold text-black w-1/3">연락처</label>
-            <Input type="text" placeholder="010-1234-5678" onChange={(e) => setSignupData({ contact: e.target.value })} />
+            <Input
+              type="text"
+              placeholder="010-1234-5678"
+              value={signupData.contact} // ✅ Zustand 상태와 연결
+              onChange={(e) => setSignupData({ contact: e.target.value })}
+            />
           </div>
 
+
+          {/* ✅ 주소 입력 */}
           <div className="flex items-center justify-between">
             <label className="text-item font-bold text-black w-1/3">주소</label>
-            <Input type="text" placeholder="주소를 입력해주세요." onChange={(e) => setSignupData({ address: e.target.value })} />
+            <Input
+              type="text"
+              placeholder="주소를 입력해주세요."
+              value={signupData.address} // ✅ Zustand에서 유지
+              onChange={(e) => setSignupData({ address: e.target.value })}
+            />
           </div>
 
           {/* ✅ 자격증 추가 */}
@@ -117,30 +175,75 @@ const SignupTest = () => {
                 onClick={() => setIsCertModalOpen(true)}
               />
             </div>
-          </div>
+            </div>
+                  
+
           {/* ✅ 차량 소유 여부 */}
           <label className="text-item font-bold text-black">차량 소유</label>
           <div className="flex gap-4">
-            <label><input type="radio" name="car" onClick={() => setSignupData({ car: true })} /> 소유</label>
-            <label><input type="radio" name="car" onClick={() => setSignupData({ car: false })} /> 미소유</label>
+            <label>
+              <input
+                type="radio"
+                name="car"
+                checked={signupData.car === true} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ car: true })}
+              /> 소유
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="car"
+                checked={signupData.car === false} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ car: false })}
+              /> 미소유
+            </label>
           </div>
 
           {/* ✅ 치매 교육 이수 여부 */}
           <label className="text-item font-bold text-black">치매 교육 이수</label>
           <div className="flex gap-4">
-            <label><input type="radio" name="education" onClick={() => setSignupData({ education: true })} /> 이수</label>
-            <label><input type="radio" name="education" onClick={() => setSignupData({ education: false })} /> 미이수</label>
+            <label>
+              <input
+                type="radio"
+                name="education"
+                checked={signupData.education === true} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ education: true })}
+              /> 이수
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="education"
+                checked={signupData.education === false} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ education: false })}
+              /> 미이수
+            </label>
           </div>
 
           {/* ✅ 구직 여부 */}
           <label className="text-item font-bold text-black">구직 여부</label>
           <div className="flex gap-4">
-            <label><input type="radio" name="employmentStatus" onClick={() => setSignupData({ employmentStatus: true })} /> 구직중</label>
-            <label><input type="radio" name="employmentStatus" onClick={() => setSignupData({ employmentStatus: false })} /> 비구직중</label>
+            <label>
+              <input
+                type="radio"
+                name="employmentStatus"
+                checked={signupData.employmentStatus === true} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ employmentStatus: true })}
+              /> 구직중
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="employmentStatus"
+                checked={signupData.employmentStatus === false} // ✅ Zustand 상태 유지
+                onChange={() => setSignupData({ employmentStatus: false })}
+              /> 비구직중
+            </label>
           </div>
 
           <div className="flex flex-col gap-2 mt-6">
-            <Btn text="이전으로" color="white" onClick={() => setStep(1)} />
+          <Btn text="이전으로" color="white" onClick={handlePrev} />
             <Btn text="다음" color="green" onClick={() => setSubStep(2)} />
           </div>
         </div>
@@ -151,8 +254,14 @@ const SignupTest = () => {
         <div className="w-full max-w-xs sm:max-w-sm p-6">
           <h2 className="text-title font-bold text-black text-center">선택 입력 사항</h2>
 
-          <label className="text-item font-bold text-black">한줄 소개</label>
-          <textarea className="w-full border p-2 rounded-lg" placeholder="한줄 소개 입력" onChange={(e) => setSignupData({ intro: e.target.value })} />
+         {/* ✅ 한줄 소개 */}
+        <label className="text-item font-bold text-black">한줄 소개</label>
+        <textarea
+          className="w-full border p-2 rounded-lg"
+          placeholder="한줄 소개 입력"
+          value={signupData.intro} // ✅ Zustand에서 유지
+          onChange={(e) => setSignupData({ intro: e.target.value })} // ✅ Zustand에 저장
+        />
 
           {/* ✅ 경력 사항 */}
           <div className="mt-4">
@@ -184,9 +293,17 @@ const SignupTest = () => {
         </div>
       )}
 
+
       {/* ✅ 모달 */}
       {isModalOpen && <CareerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={addExperience} />}
-      {isCertModalOpen && <CertificationModal isOpen={isCertModalOpen} onClose={() => setIsCertModalOpen(false)} onSave={addCertificate} />}
+      {isCertModalOpen && (
+      <CertificationModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        onSave={addCertificate}
+        existingCertificate={certificateRequestDTOList.length > 0 ? certificateRequestDTOList[0] : null} // 기존 데이터 전달
+      />
+)}
     </div>
   );
 };
