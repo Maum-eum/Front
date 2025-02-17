@@ -66,7 +66,7 @@ const Main: React.FC = () => {
         onChange={loginDataChange}
       />
       <Btn text="로그인" onClick={handleLogin} />
-      <Btn text="요양보호사 회원가입" onClick={() => navigate("/signup/step1")} />
+      <Btn text="요양보호사 회원가입" onClick={() => navigate("/caregiver/signup/")} />
       <Btn text="관리자 회원가입" onClick={() => navigate("/admin/SignUp")} />
     </div>
   )

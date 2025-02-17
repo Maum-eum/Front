@@ -141,8 +141,7 @@ const EditProfile = () => {
       </div>
 
       {/* 모달 */}
-      {isModalOpen && <CareerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleAddExperience} />}
-      {isCertModalOpen && <CertificationModal isOpen={isCertModalOpen} onClose={() => setIsCertModalOpen(false)} onSave={(data) => setCertification(data)} />}
+     
     </div>
   );
 };

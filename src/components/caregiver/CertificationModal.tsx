@@ -1,63 +1,59 @@
-import React, { useState } from "react";
-import Btn from "../commons/Btn";
-import Input from "../commons/Input";
+import { useState } from "react";
 
-type CertificationModalProps = {
+interface CertificationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (certification: { number: string; name: string; level: string }) => void;
-};
+  onSave: (certificate: { certNum: string; certType: string; certRate: string }) => void;
+}
 
 const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose, onSave }) => {
-  const [certNumber, setCertNumber] = useState("");
-  const [certName, setCertName] = useState("");
-  const [certLevel, setCertLevel] = useState("");
+  const [certificate, setCertificate] = useState({
+    certNum: "",
+    certType: "",
+    certRate: "",
+  });
 
   if (!isOpen) return null;
 
+  const handleSave = () => {
+    if (!certificate.certNum || !certificate.certType || !certificate.certRate) {
+      alert("모든 필드를 입력해주세요!");
+      return;
+    }
+    onSave(certificate);
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg w-[335px] sm:w-[400px] shadow-lg">
-        <h2 className="text-title font-bold text-black mb-6 text-center">자격증 추가</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg w-80">
+        <h2 className="text-lg font-bold text-black mb-4">자격증 추가</h2>
 
-        {/* 자격증 번호 */}
-        <label className="block text-item font-bold text-black mb-2">자격증 번호</label>
-        <Input
+        <input
           type="text"
-          placeholder="ex) CERT-12345"
-          value={certNumber}
-          onChange={(e) => setCertNumber(e.target.value)}
+          placeholder="자격증 번호 (ex. CERT-12345)"
+          className="border p-2 w-full mb-2"
+          value={certificate.certNum}
+          onChange={(e) => setCertificate({ ...certificate, certNum: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="자격증 이름 (ex. 요양보호사)"
+          className="border p-2 w-full mb-2"
+          value={certificate.certType}
+          onChange={(e) => setCertificate({ ...certificate, certType: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="자격증 급수 (ex. 1급)"
+          className="border p-2 w-full"
+          value={certificate.certRate}
+          onChange={(e) => setCertificate({ ...certificate, certRate: e.target.value })}
         />
 
-        {/* 자격증 이름 */}
-        <label className="block text-item font-bold text-black mt-4 mb-2">자격증 이름</label>
-        <Input
-          type="text"
-          placeholder="예) 요양보호사"
-          value={certName}
-          onChange={(e) => setCertName(e.target.value)}
-        />
-
-        {/* 자격증 급수 */}
-        <label className="block text-item font-bold text-black mt-4 mb-2">자격증 급수</label>
-        <Input
-          type="text"
-          placeholder="예) 1급"
-          value={certLevel}
-          onChange={(e) => setCertLevel(e.target.value)}
-        />
-
-        {/* 버튼 영역 */}
-        <div className="flex flex-col gap-3 mt-6">
-          <Btn text="이전으로" color="white" onClick={onClose} />
-          <Btn
-            text="완료"
-            color="green"
-            onClick={() => {
-              onSave({ number: certNumber, name: certName, level: certLevel });
-              onClose();
-            }}
-          />
+        <div className="flex gap-2 mt-4">
+          <button onClick={onClose} className="bg-gray-300 text-black px-4 py-2 w-1/2 rounded">이전으로</button>
+          <button onClick={handleSave} className="bg-green-500 text-green px-4 py-2 w-1/2 rounded">완료</button>
         </div>
       </div>
     </div>
