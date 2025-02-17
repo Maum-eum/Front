@@ -4,44 +4,27 @@ interface CertificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (certificate: { certNum: string; certType: string; certRate: string }) => void;
-  existingCertificate?: { certNum: string; certType: string; certRate: string } | null;
 }
 
-// ✅ 자격증 종류 ENUM
+// ✅ 자격증 ENUM 설정
 const CERT_TYPES = ["요양보호사", "간호조무사", "사회복지사"];
+const CERT_RATES = { "1급": "LEVEL1", "2급": "LEVEL2" } as const;
 
-// ✅ 자격증 급수 변환 ENUM
-const CERT_RATES = {
-  "1급": "LEVEL1",
-  "2급": "LEVEL2",
-} as const;
-
-const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose, onSave, existingCertificate }) => {
-  const [certificate, setCertificate] = useState({
+const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose, onSave }) => {
+  const defaultCertificate = {
     certNum: "",
     certType: CERT_TYPES[0], // 기본값: 요양보호사
     certRate: "1급", // 기본값: 1급
-  });
+  };
 
-  // ✅ 모달이 열릴 때 기존 데이터 불러오기
+  const [certificate, setCertificate] = useState(defaultCertificate);
+
+  // ✅ 모달이 열릴 때마다 초기화 (기존 데이터 유지 X)
   useEffect(() => {
     if (isOpen) {
-      if (existingCertificate) {
-        setCertificate({
-          certNum: existingCertificate.certNum || "",
-          certType: existingCertificate.certType || CERT_TYPES[0],
-          certRate: existingCertificate.certRate === "LEVEL1" ? "1급" : "2급",
-        });
-      } else {
-        setCertificate({
-          certNum: "",
-          certType: CERT_TYPES[0],
-          certRate: "1급",
-        });
-      }
+      setCertificate(defaultCertificate);
     }
-  }, [isOpen, existingCertificate]); // ✅ 기존 데이터 유지
-  
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -64,7 +47,7 @@ const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg w-80">
-        <h2 className="text-lg font-bold text-black mb-4">자격증 추가 / 수정</h2>
+        <h2 className="text-lg font-bold text-black mb-4">자격증 추가</h2>
 
         {/* ✅ 자격증 번호 입력 */}
         <input

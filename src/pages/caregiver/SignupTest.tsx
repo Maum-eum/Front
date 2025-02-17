@@ -55,19 +55,12 @@ const SignupTest = () => {
     });
   };
 
-  // ✅ 자격증 추가 함수
+  // ✅ 자격증 추가 함수 (페이지에도 즉시 반영)
   const addCertificate = (newCertificate: { certNum: string; certType: string; certRate: string }) => {
-    setSignupData({ certificateRequestDTOList: [...certificateRequestDTOList, newCertificate] });
+    setSignupData({ certificateRequestDTOList: [newCertificate] }); // ✅ 기존 값 덮어쓰기
   };
 
-  // ✅ 자격증 수정 함수
-  const updateCertificate = (updatedCertificate: { certNum: string; certType: string; certRate: string }) => {
-    setSignupData({
-      certificateRequestDTOList: [updatedCertificate], // 기존 값 덮어쓰기 (배열 유지)
-    });
-  };
-
-
+  
   const handlePrev = () => {
     setSignupData({ ...signupData }); // ✅ 현재 상태를 저장해서 유지
     console.log("📌 이전으로 이동 - 유지되는 데이터:", signupData);
@@ -171,12 +164,17 @@ const SignupTest = () => {
                 readOnly
                 className="w-full p-3 border-2 rounded-lg bg-white cursor-pointer"
                 placeholder="자격증을 입력해주세요."
-                value={certificateRequestDTOList.length > 0 ? `${certificateRequestDTOList[0].certType} ${certificateRequestDTOList[0].certRate}` : ""}
+                value={
+                  certificateRequestDTOList.length > 0
+                    ? `${certificateRequestDTOList[0].certType} ${
+                        certificateRequestDTOList[0].certRate === "LEVEL1" ? "1급" : "2급"
+                      }`
+                    : ""
+                }
                 onClick={() => setIsCertModalOpen(true)}
               />
             </div>
-            </div>
-                  
+          </div>
 
           {/* ✅ 차량 소유 여부 */}
           <label className="text-item font-bold text-black">차량 소유</label>
@@ -297,13 +295,14 @@ const SignupTest = () => {
       {/* ✅ 모달 */}
       {isModalOpen && <CareerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={addExperience} />}
       {isCertModalOpen && (
-      <CertificationModal
-        isOpen={isCertModalOpen}
-        onClose={() => setIsCertModalOpen(false)}
-        onSave={addCertificate}
-        existingCertificate={certificateRequestDTOList.length > 0 ? certificateRequestDTOList[0] : null} // 기존 데이터 전달
-      />
+  <CertificationModal
+    isOpen={isCertModalOpen}
+    onClose={() => setIsCertModalOpen(false)}
+    onSave={addCertificate} // ✅ 기존 데이터 없이 새로운 값만 추가
+  />
 )}
+
+
     </div>
   );
 };
