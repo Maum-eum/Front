@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-
+import dropdown from "../../assets/image/dropdown.png";
+import dropdown_open from "../../assets/image/dropdown-red.png";
 
 type CheckListProps = {
   name: string;
@@ -12,7 +13,7 @@ type CheckListProps = {
 
 const CheckBox: React.FC<CheckListProps> = ({ name, options, selectedopt, onChange }) => {
   const [selected, setSelected] = useState<string[]>(selectedopt)
-
+  const [isOpen, setIsOpen] = useState(false);
   const toggleSelect = (opt: string) => {
     const isSelected = selected.some((item) => item === opt);
 
@@ -32,10 +33,12 @@ const CheckBox: React.FC<CheckListProps> = ({ name, options, selectedopt, onChan
   return (
     <div className="w-full font-pre-SB">
       
-      <div className="w-full p-2 border border-green rounded-lg flex items-center">
+      <div className="w-full p-2 border border-green rounded-lg flex items-center" onClick={() => setIsOpen(!isOpen)}>
+        <img src={isOpen ? dropdown_open : dropdown} className="w-4 h-2 mx-2 text-green"/>
         <span className="text-gray text-content ml-1">{name}</span>
       </div>
-      <div className="grid grid-cols-2 items-center mt-1">
+      {isOpen && (
+        <div className="grid grid-cols-2 items-center mt-1">
           {options.map((item) => {
             const status = selected.includes(item);
             return (
@@ -54,6 +57,7 @@ const CheckBox: React.FC<CheckListProps> = ({ name, options, selectedopt, onChan
             )
           })}
         </div>
+      )}
     </div>
   );
 };

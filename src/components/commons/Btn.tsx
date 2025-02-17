@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 type BtnProps = {
   text?: string;
-  color?: "green" | "red" | "white" | "blue" | "disabled";
+  color?: "green" | "red" | "white" | "blue" | "disabled" | "pale-green";
   onClick?: () => void;
 };
 
@@ -15,6 +15,7 @@ const Btn: React.FC<BtnProps> = ({ text = "다음", color = "green", onClick }) 
         {
           "border-2 bg-blue text-white border-blue": color === "blue",
           "border-2 bg-disabled-gray text-white border-disabled-gray": color === "disabled",
+          "border-2 bg-pale-green text-white border-green": color === "pale-green",
           "border-2 bg-green text-white border-green": color === "green",
           "border-2 bg-red text-white border-red": color === "red",
           "border bg-white text-green border-gray-300": color === "white",

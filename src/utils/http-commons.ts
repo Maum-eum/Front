@@ -28,7 +28,7 @@ export const privateApi: AxiosInstance = axios.create({
   export const formDataApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 

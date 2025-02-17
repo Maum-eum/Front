@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useAdminStore } from "../../stores/admin/adminStore";
 // import { useNavigate } from "react-router-dom";
 import ElderList from "../../components/admin/ElderList";
 import MatchingList from "../../components/admin/MatchingList";
+import { getElderList } from "../../api/admin/elder";
 
 const Main: React.FC = () => {
 //   const navigate = useNavigate();
-  const { centerName, name } = useAdminStore();
+  const { centerName, name, centerId } = useAdminStore();
+
   const dummy = [{
     name       : "박노인",
     centerName : "행복 요양 센터",
@@ -26,6 +28,22 @@ const Main: React.FC = () => {
     hasDelusions           : false,
     hasAggressiveBehavior  : false,
   }]
+
+  const handleGetElderList = useCallback(async () => {
+    await getElderList(
+      centerId,
+      (res) => {
+        console.log(res.data.data)
+      },
+      (err) => {
+        console.log(err)
+      }
+    );
+  }, [centerId]);
+
+  useEffect(() => {
+    handleGetElderList();
+  }, [handleGetElderList]);
 
   return (
     <div className="flex flex-col items-center justify-center">
