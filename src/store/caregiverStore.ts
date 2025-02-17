@@ -1,32 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { CaregiverRequestInfo } from "../types/caregiver/caregiverRequestType";
 
-{
-  /* 요양보호사에게 요청된 근무 조건 */
-}
-type CaregiverRequests = {
-  elderId: number;
-  name: string;
-  centerName: string | null;
-  gender: number;
-  birth: string;
-  inmateTypes: string[];
-  rate: string;
-  img: string | null;
-  desiredHourlyWage: number;
-};
-
-{
-  /* 요양보호사 간단 정보 */
-}
+/* 요양보호사 간단 정보 */
 type CaregiverInfo = {
   userId: number;
   accessToken: string | null;
   name: string;
   img: string | null;
   employmentStatus: boolean | null;
-  requests: CaregiverRequests[] | null;
-  attuneRequests: CaregiverRequests[] | null;
+  requests: CaregiverRequestInfo[] | null;
+  attuneRequests: CaregiverRequestInfo[] | null;
 
   setUserId: (userId: number) => void;
   setAccessToken: (accessToken: string | null) => void;
@@ -36,8 +20,8 @@ type CaregiverInfo = {
 
   setUserInfo: (userId: number, accessToken: string | null) => void;
   setCaregiverInfo: (name: string, img: string | null, employmentStatus: boolean | null) => void;
-  setRequests: (requests: CaregiverRequests[] | null) => void;
-  setAttuneRequests: (requests: CaregiverRequests[] | null) => void;
+  setRequests: (requests: CaregiverRequestInfo[] | null) => void;
+  setAttuneRequests: (requests: CaregiverRequestInfo[] | null) => void;
 
   logout: () => void;
 };

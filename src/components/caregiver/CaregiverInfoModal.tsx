@@ -1,4 +1,4 @@
-import Btn from "./commons/Btn";
+import Btn from "../commons/Btn";
 
 type CaregiverInfoModalProps = {
   isOpen: boolean;
