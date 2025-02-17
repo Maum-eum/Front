@@ -1,4 +1,5 @@
 /* 요양보호사 요청/조율 근무 조회 */
+// 지역도 추가할 예정
 export interface CaregiverRequestInfo {
   elderId: number;
   name: string;

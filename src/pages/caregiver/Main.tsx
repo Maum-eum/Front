@@ -7,6 +7,7 @@ import { useCaregiverStore } from "../../store/caregiverStore";
 import Alert from "../../components/commons/Alert";
 import CaregiverRequestCard from "../../components/caregiver/CaregiverRequestCard";
 import ImageBtn from "../../components/commons/ImageBtn";
+import ScrollListBox from "../../components/commons/ScrollListBox";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -58,17 +59,23 @@ const Main = () => {
         </h1>
         {/* 요양보호사 프로필 */}
         <div className="text-content w-full h-42 sm:h-56 flex flex-wrap gap-3 shadow bg-white rounded-lg mb-6 p-5">
-          {/* 프로필 이미지 (임시 박스) */}
-          <div className="w-24 h-24 sm:w-48 sm:h-full border bg-green rounded-lg"></div>
+          {store.img ? (
+            <img
+              src={store.img}
+              className="w-24 h-24 sm:w-48 sm:h-full border rounded-lg object-cover"
+            />
+          ) : (
+            <div className="w-24 h-24 sm:w-48 sm:h-full border rounded-lg bg-empty-green"></div>
+          )}
           <div className="flex-1 flex flex-col justify-between items-center">
             {/* 구직 상태 토글 */}
             <ToggleBtn status={store.employmentStatus} onClick={handleChangeEmploymentStatus} />
             {/* 요양보호사 정보 변경 (팝업) */}
             <button
-              className="w-32 sm:w-80 h-12 border rounded-lg"
+              className="w-32 sm:w-80 h-12 border rounded-lg active:bg-point-pink"
               onClick={() => setIsModalOpen(true)}
             >
-              정보 변경
+              <div className="font-bold">정보 변경</div>
             </button>
           </div>
         </div>
@@ -90,27 +97,33 @@ const Main = () => {
         {/* 근무 요청 알림 */}
         <label className="text-item font-bold mb-3">근무 요청이 있어요</label>
         {store.requests && store.requests.length > 0 ? (
-          <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-            {store.requests.map((request) => (
-              <CaregiverRequestCard request={request} onClick={handleClickRequest} />
-            ))}
-          </div>
+          <ScrollListBox>
+            <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
+              {store.requests.map((request) => (
+                <CaregiverRequestCard request={request} onClick={handleClickRequest} />
+              ))}
+            </div>
+          </ScrollListBox>
         ) : (
           <div className="w-full text-center p-10 flex flex-col">
-            <span>요청 리스트가 없습니다!</span>
-            <span>더 많은 조건을 수용하면, 요청 받을 확률이 올라가요!</span>
+            <span>비어 있어요!</span>
+            <span>더 많은 조건을 열어두면, 요청 받을 확률이 올라가요!</span>
           </div>
         )}
         {/* 조율 중인 요청 */}
         <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
         {store.attuneRequests && store.attuneRequests.length > 0 ? (
-          <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-            {store.attuneRequests.map((attuneRequests) => (
-              <CaregiverRequestCard request={attuneRequests} onClick={handleClickAttuneRequest} />
-            ))}
-          </div>
+          <ScrollListBox>
+            <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
+              {store.attuneRequests.map((attuneRequests) => (
+                <CaregiverRequestCard request={attuneRequests} onClick={handleClickAttuneRequest} />
+              ))}
+            </div>
+          </ScrollListBox>
         ) : (
-          <div className="w-full text-center p-10">조율 중인 리스트가 없습니다!</div>
+          <ScrollListBox>
+            <div className="w-full h-full flex items-center justify-center p-10">비어 있어요!</div>
+          </ScrollListBox>
         )}
       </div>
       {/* 모달 추가 */}

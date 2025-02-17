@@ -15,7 +15,7 @@ const ToggleBtn = ({ status, onClick }: ToggleBtnProps) => {
   return (
     <button
       onClick={onToggle}
-      className={`w-32 h-8 sm:w-56 sm:h-10 rounded-full flex items-center transition duration-300 px-1 ${isOn ? "bg-green" : "bg-red"}`}
+      className={`w-32 h-8 sm:w-56 sm:h-10 rounded-full flex items-center transition duration-300 px-1 ${isOn ? "bg-green" : "bg-disabled-gray"}`}
     >
       <div
         className={`w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full transform transition duration-300 ${isOn ? "translate-x-[95px] sm:translate-x-[183px]" : "translate-x-0"}`}
