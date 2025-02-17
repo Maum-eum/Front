@@ -1,44 +1,61 @@
-/* 요양보호사 요청/조율 근무 조회 */
-// 지역도 추가할 예정
-export interface CaregiverRequestInfo {
+/* 요양보호사 근무 요청 응답 */
+export interface RecruitRequest {
+  matchId: number;
+  RecruitStatus: string; // ***********
+}
+
+/* 요양보호사 매칭 현황 리스트 조회 */
+export interface MatchedListResponse {
+  matchedRequests: MatchedStatus[];
+}
+
+export interface MatchedStatus {
   elderId: number;
-  name: string;
-  centerName: string | null;
-  gender: number;
-  birth: string;
-  inmateTypes: string[];
-  rate: string;
-  img: string | null;
+  elderName: string;
+  mealAssistance: boolean;
+  toiletAssistance: boolean;
+  moveAssistance: boolean;
+  dailyLivingAssistance: boolean;
+  selfFeeding: boolean;
+  mealPreparation: boolean;
+  cookingAssistance: boolean;
+  enteralNutritionSupport: boolean;
+  selfToileting: boolean;
+  occasionalToiletingAssist: boolean;
+  diaperCare: boolean;
+  catheterOrStomaCare: boolean;
+  independentMobility: boolean;
+  mobilityAssist: boolean;
+  wheelchairAssist: boolean;
+  immobile: boolean;
+  cleaningLaundryAssist: boolean;
+  bathingAssist: boolean;
+  hospitalAccompaniment: boolean;
+  exerciseSupport: boolean;
+  emotionalSupport: boolean;
+  cognitiveStimulation: boolean;
+  times: WorkTimes[];
+}
+
+export interface WorkTimes {
+  dayOfWeek: string; // ***********
+  startTime: number;
+  endTime: number;
+}
+
+/* 요양보호사 근무 요청 리스트 조회 */
+export interface RequestsListResponse {
+  requests: WorkRequest[];
+}
+export interface WorkRequest {
+  elderId: number;
+  recruitConditionId: number;
+  centerId: number;
+  centerName: string;
+  imgUrl: string | null;
   desiredHourlyWage: number;
+  rate: string; // ***********
+  age: number;
+  sexual: string; // ***********
+  careTypes: string[]; // ***********
 }
-
-/* 요양보호사 자격증 정보 조회 */
-export interface CaregiverCertificateResponse {
-  certNum: string;
-  certType: string;
-  certRate: string;
-}
-
-/* 요양보호사 경력 정보 조회 */
-export interface CaregiverExperienceResponse {
-  duration: number;
-  title: string;
-  description: string;
-}
-
-/* 요양보호사 정보 조회 */
-export interface CaregiverInfo {
-  name: string;
-  contact: string;
-  car: boolean;
-  education: boolean;
-  img: string;
-  intro: string;
-  address: string;
-  employmentStatus: boolean | null;
-  certificateResponseDTOList: CaregiverCertificateResponse[];
-  experienceResponseDTOList: CaregiverExperienceResponse[];
-}
-
-/* 일정 정보 조회 */
-export interface SchedulesInfo {}

@@ -1,7 +1,6 @@
-import { CaregiverRequestInfo } from "../../types/caregiver/caregiverRequestType";
-
+import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 type CaregiverRequestCardProps = {
-  request: CaregiverRequestInfo;
+  request: WorkRequest;
   onClick: () => void;
 };
 
@@ -12,9 +11,9 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
       onClick={onClick}
     >
       <div className="flex flex-wrap mb-5">
-        {request.img ? (
+        {request.imgUrl ? (
           <img
-            src={request.img}
+            src={request.imgUrl}
             className="w-24 h-24 sm:w-28 sm:h-28 border rounded-lg object-cover"
           />
         ) : (
@@ -23,14 +22,9 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
 
         <div className="flex flex-col justify-start ml-4">
           <div className="flex">
-            <span className="text-content font-bold">[</span>
+            <span className="text-content font-bold">#{request.recruitConditionId}번 [</span>
             <span className="text-content font-bold text-red">{request.centerName}</span>
             <span className="text-content font-bold">] 센터</span>
-          </div>
-          <div className="flex">
-            <span className="text-content font-bold">[</span>
-            <span className="text-content font-bold text-red">{request.name}</span>
-            <span className="text-content font-bold">] 어르신</span>
           </div>
         </div>
       </div>
@@ -39,10 +33,10 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
         {/* 공통 className 적용 부분 */}
         {[
           `${request.desiredHourlyWage}원`,
-          `${2000 - Number(request.birth.slice(0, 4))}세`,
-          `${request.gender === 1 ? "남" : "여"}`,
-          `${request.rate.charAt(0)}급`,
-          // ...request.inmateTypes,
+          `${request.age}세`,
+          `${request.sexual}`,
+          `${request.rate}급`,
+          // ...request.careTypes,
         ].map((text, index) => (
           <div
             key={index}

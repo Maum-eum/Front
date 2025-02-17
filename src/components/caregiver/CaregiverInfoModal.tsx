@@ -18,13 +18,11 @@ const CaregiverInfoModal: React.FC<CaregiverInfoModalProps> = ({ isOpen, onClose
           <Btn
             text="이전으로"
             color="white"
-            className="w-full h-14 text-lg"
             onClick={onClose} // ✅ 클릭 시 모달 닫기
           />
           <Btn
             text="완료"
             color="green"
-            className="w-full h-14 text-lg"
             onClick={() => {
               onSave();
               onClose();

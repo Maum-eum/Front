@@ -95,36 +95,46 @@ const Main = () => {
           />
         </div>
         {/* 근무 요청 알림 */}
-        <label className="text-item font-bold mb-3">근무 요청이 있어요</label>
-        {store.requests && store.requests.length > 0 ? (
-          <ScrollListBox>
-            <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {store.requests.map((request) => (
-                <CaregiverRequestCard request={request} onClick={handleClickRequest} />
-              ))}
-            </div>
-          </ScrollListBox>
-        ) : (
-          <div className="w-full text-center p-10 flex flex-col">
-            <span>비어 있어요!</span>
-            <span>더 많은 조건을 열어두면, 요청 받을 확률이 올라가요!</span>
-          </div>
+        {store.requests && store.requests.length > 0 && (
+          <>
+            <label className="text-item font-bold mb-3">근무 요청이 있어요</label>
+            <ScrollListBox>
+              <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
+                {store.requests.map((request) => (
+                  <CaregiverRequestCard request={request} onClick={handleClickRequest} />
+                ))}
+              </div>
+            </ScrollListBox>
+          </>
         )}
         {/* 조율 중인 요청 */}
-        <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
-        {store.attuneRequests && store.attuneRequests.length > 0 ? (
-          <ScrollListBox>
-            <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {store.attuneRequests.map((attuneRequests) => (
-                <CaregiverRequestCard request={attuneRequests} onClick={handleClickAttuneRequest} />
-              ))}
-            </div>
-          </ScrollListBox>
-        ) : (
-          <ScrollListBox>
-            <div className="w-full h-full flex items-center justify-center p-10">비어 있어요!</div>
-          </ScrollListBox>
+        {store.attuneRequests && store.attuneRequests.length > 0 && (
+          <>
+            <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
+            <ScrollListBox>
+              <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
+                {store.attuneRequests.map((attuneRequests) => (
+                  <CaregiverRequestCard
+                    request={attuneRequests}
+                    onClick={handleClickAttuneRequest}
+                  />
+                ))}
+              </div>
+            </ScrollListBox>
+          </>
         )}
+        {/* 아무 요청도 없을 경우 */}
+        {!(store.attuneRequests && store.attuneRequests.length > 0) &&
+          !(store.requests && store.requests.length > 0) && (
+            <div className="w-full h-full flex flex-col items-center justify-center p-10">
+              <label className="text-item font-bold mb-6">이런...</label>
+              <img className="w-20 h-20 mb-2" src={EmptyImg} />
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                <span>도착한 요청이 없네요.</span>
+                <span>근무 조건으로 요청 확률을 올려 볼까요?</span>
+              </div>
+            </div>
+          )}
       </div>
       {/* 모달 추가 */}
       {isModalOpen && (

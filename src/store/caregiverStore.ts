@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { CaregiverRequestInfo } from "../types/caregiver/caregiverRequestType";
+import { WorkRequest } from "../types/caregiver/caregiverRequestType";
 
 /* 요양보호사 간단 정보 */
 type CaregiverInfo = {
@@ -9,8 +9,8 @@ type CaregiverInfo = {
   name: string;
   img: string | null;
   employmentStatus: boolean | null;
-  requests: CaregiverRequestInfo[] | null;
-  attuneRequests: CaregiverRequestInfo[] | null;
+  requests: WorkRequest[] | null;
+  attuneRequests: WorkRequest[] | null;
 
   setUserId: (userId: number) => void;
   setAccessToken: (accessToken: string | null) => void;
@@ -20,8 +20,8 @@ type CaregiverInfo = {
 
   setUserInfo: (userId: number, accessToken: string | null) => void;
   setCaregiverInfo: (name: string, img: string | null, employmentStatus: boolean | null) => void;
-  setRequests: (requests: CaregiverRequestInfo[] | null) => void;
-  setAttuneRequests: (requests: CaregiverRequestInfo[] | null) => void;
+  setRequests: (requests: WorkRequest[] | null) => void;
+  setAttuneRequests: (requests: WorkRequest[] | null) => void;
 
   logout: () => void;
 };
@@ -35,61 +35,30 @@ export const useCaregiverStore = create<CaregiverInfo>()(
       img: "https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg",
       employmentStatus: false,
       requests: [
-        {
-          elderId: 2,
-          name: "김뽀삐",
-          centerName: "한마음",
-          gender: 1,
-          birth: "1962.10.11",
-          inmateTypes: ["방문요양", "방문목욕", "입주요양"],
-          rate: "1RATE",
-          img: "https://cdn.news.hidoc.co.kr/news/photo/202205/27398_65437_0638.jpg",
-          desiredHourlyWage: 40000,
-        },
-        {
-          elderId: 2,
-          name: "김뽀삐",
-          centerName: "한마음",
-          gender: 1,
-          birth: "1962.10.11",
-          inmateTypes: ["방문요양"],
-          rate: "1RATE",
-          img: null,
-          desiredHourlyWage: 40000,
-        },
-        {
-          elderId: 2,
-          name: "김뽀삐",
-          centerName: "한마음",
-          gender: 1,
-          birth: "1962.10.11",
-          inmateTypes: ["방문요양"],
-          rate: "1RATE",
-          img: null,
-          desiredHourlyWage: 40000,
-        },
-        {
-          elderId: 2,
-          name: "김뽀삐",
-          centerName: "한마음",
-          gender: 1,
-          birth: "1962.10.11",
-          inmateTypes: ["방문요양", "방문목욕", "입주요양"],
-          rate: "1RATE",
-          img: null,
-          desiredHourlyWage: 4000,
-        },
-        {
-          elderId: 2,
-          name: "김뽀삐",
-          centerName: "한마음",
-          gender: 1,
-          birth: "1962.10.11",
-          inmateTypes: ["방문요양", "방문목욕", "입주요양"],
-          rate: "1RATE",
-          img: null,
-          desiredHourlyWage: 4000,
-        },
+        // {
+        //   recruitConditionId: 1,
+        //   elderId: 1,
+        //   centerId: 1,
+        //   centerName: "한마음",
+        //   imgUrl: null,
+        //   desiredHourlyWage: 40000,
+        //   rate: "1RATE",
+        //   age: 11,
+        //   sexual: "qwe",
+        //   careTypes: ["방문요양", "방문목욕", "입주요양"],
+        // },
+        // {
+        //   recruitConditionId: 1,
+        //   elderId: 1,
+        //   centerId: 1,
+        //   centerName: "한마음",
+        //   imgUrl: null,
+        //   desiredHourlyWage: 40000,
+        //   rate: "1RATE",
+        //   age: 11,
+        //   sexual: "qwe",
+        //   careTypes: ["방문요양", "방문목욕", "입주요양"],
+        // },
       ],
       attuneRequests: [],
 
