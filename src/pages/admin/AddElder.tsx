@@ -5,14 +5,25 @@ import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
 import CheckList from "../../components/admin/CheckList";
-// import { addElder } from "../../api/admin/elder";
-import { elderInfo, elderService } from "../../types/admin/elderType";
+import { addElder } from "../../api/admin/elder";
+import { elderInfo, elderService, ServiceOption } from "../../types/admin/elderType";
 import { useNavigate } from "react-router-dom";
 
 const categories = [
   {
+    title: "치매 증상",
+    options: [
+      { label: "정상", name: "isNormal", value: false },
+      { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: false },
+      { label: "집 밖을 배회", name: "wandersOutside", value: false },
+      { label: "어린아이 같은 행동", name: "actsLikeChild", value: false },
+      { label: "사람을 의심하는 망상", name: "hasDelusions", value: false },
+      { label: "때리거나 욕설 등 공격적인 행동", name: "hasAggressiveBehavior", value: false },
+    ]
+  },
+  {
     title: "식사 보조",
-    services: [
+    options: [
       { label: "스스로 식사 가능", name: "selfFeeding", value: false },
       { label: "식사 준비", name: "mealPreparation", value: false },
       { label: "식사 보조 (구토물 정리)", name: "mealAssistance", value: false },
@@ -21,7 +32,7 @@ const categories = [
   },
   {
     title: "배변 보조",
-    services: [
+    options: [
       { label: "자기 배변 가능", name: "selfToileting", value: false },
       { label: "화장실 이용 보조", name: "toiletAssistance", value: false },
       { label: "간헐적 배변 보조", name: "occasionalToiletingAssist", value: false },
@@ -31,7 +42,7 @@ const categories = [
   },
   {
     title: "이동 지원",
-    services: [
+    options: [
       { label: "자기 이동 가능", name: "independentMobility", value: false },
       { label: "이동 보조 (침대→휠체어 등)", name: "moveAssistance", value: false },
       { label: "이동 지원 (부축)", name: "mobilityAssist", value: false },
@@ -41,7 +52,7 @@ const categories = [
   },
   {
     title: "일상 생활 지원",
-    services: [
+    options: [
       { label: "일상생활 보조", name: "dailyLivingAssistance", value: false },
       { label: "요리 보조", name: "cookingAssistance", value: false },
       { label: "청소·세탁 지원", name: "cleaningLaundryAssist", value: false },
@@ -51,7 +62,7 @@ const categories = [
   },
   {
     title: "건강 및 정서 지원",
-    services: [
+    options: [
       { label: "운동 지원", name: "exerciseSupport", value: false },
       { label: "정서적 지원", name: "emotionalSupport", value: false },
       { label: "인지 자극 활동", name: "cognitiveStimulation", value: false },
@@ -59,29 +70,36 @@ const categories = [
   },
 ];
 
-type option = {
-  label: string;
-  name: string;
-  value: boolean;
-}
+
 
 const AddElder: React.FC = () => {
 //   const navigate = useNavigate();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+
   const [ElderData, setElderData] = useState<elderInfo>({
-    name:       "",
-    centerName: "",
-    birth:      "",
-    gender:     0,
-    rate:       "",
-    imgUrl:     "",
-    weight:     "",
-    inmateTypes: [""],
+    name                   : "",
+    centerName             : "",
+    birth                  : "",
+    gender                 : 0,
+    rate                   : "",
+    imgUrl                 : "",
+    weight                 : "",
+    inmateTypes            : [""],
+    address                : "",
+    isTemporarySave        : false,
+    isNormal               : false,
+    hasShortTermMemoryLoss : false,
+    wandersOutside         : false,
+    actsLikeChild          : false,
+    hasDelusions           : false,
+    hasAggressiveBehavior  : false,
   });
 
+  const [profileImage, setProfileImage] = useState<string>(ElderData.imgUrl);
+
   const [serviceData, setServiceData] = useState<elderService>({
+    elderId: 0,
     careTypes: [],
 
     selfFeeding:               false, //스스로식사가능
@@ -114,10 +132,8 @@ const AddElder: React.FC = () => {
   
     flexibleSchedule:          false, //유연한 일정 가능
   });
-  // const [dementiData, setDementiData] = useState({});
 
-
-
+  // Input 데이터 처리
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
   
@@ -132,6 +148,7 @@ const AddElder: React.FC = () => {
     setElderData((prev) => ({ ...prev, [name]: newValue }));
   }
 
+  // Radio 버튼 처리
   const elderRadioDataChange = (selected: number | string[]) => {
     if (typeof selected === "number") {
       setElderData((prev) => ({ ...prev, gender: selected }));
@@ -141,40 +158,51 @@ const AddElder: React.FC = () => {
     }
   }
 
-  const handleElderService = (selected: option) => {
-    console.log(selected)
+  // 치매/서비스 항목 처리
+  const handleElderService = (type: string, selected: ServiceOption) => {
     const name = selected.name;
     const value = selected.value
-    const newServiceData = {...serviceData, [name]: value}
-    setServiceData(newServiceData)
+    if (type === "치매") {
+      const newData = {...ElderData, [name]: value}
+      setElderData(newData)
+    }
+    else if(type === "서비스") {
+      const newServiceData = {...serviceData, [name]: value}
+      setServiceData(newServiceData)
+    }
   }
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result as string);
+        const result = reader.result as string
+        setProfileImage(result);
+        setElderData({...ElderData, imgUrl: result})
       };
       reader.readAsDataURL(file);
     }
   };
 
 
-  // const handleAddElder = async () => {
-  //   await addElder(
-  //     {
-  //       centerId: 1,
-  //       data: ElderData
-  //     },
-  //     (res) => {
-  //       console.log(res)
-  //     },
-  //     (err) => {
-  //       console.log(err.response?.data)
-  //     }
-  //   )
-  // }
+  const handleAddElder = async () => {
+    await addElder(
+      {
+        centerId: 1,
+        data: ElderData
+      },
+      (res) => {
+        console.log(res.data.data.elderId)
+        const elderId = res.data.data.elderId;
+        setServiceData({...serviceData, elderId: elderId})
+        
+      },
+      (err) => {
+        console.log(err.response?.data)
+      }
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center">
@@ -290,48 +318,47 @@ const AddElder: React.FC = () => {
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
               <CheckList
+                type="치매"
                 name={categories[0].title}
-                options={categories[0].services}
+                options={categories[0].options}
                 onChange={handleElderService}
               />
               <CheckList
+                type="서비스"
                 name={categories[1].title}
-                options={categories[1].services}
+                options={categories[1].options}
                 onChange={handleElderService}
               />
               <CheckList
+                type="서비스"              
                 name={categories[2].title}
-                options={categories[2].services}
+                options={categories[2].options}
                 onChange={handleElderService}
               />
               <CheckList
+                type="서비스"              
                 name={categories[3].title}
-                options={categories[3].services}
+                options={categories[3].options}
                 onChange={handleElderService}
               />
               <CheckList
+                type="서비스"              
                 name={categories[4].title}
-                options={categories[4].services}
+                options={categories[4].options}
                 onChange={handleElderService}
               />
-              {/* <CheckList
-                name="치매 증상"
-                options={[
-                  "집 밖을 배회",
-                  "단기 기억 장애",
-                  "가족을 알아보지 못함",
-                  "길을 잃거나 자주 가던 곳을 헤맴",
-                  "사람을 의심하는 망상",
-                  "어린아이 같은 행동",
-                  "때리거나 욕설 등 공격적인 행동"
-                ]}
-              /> */}
+              <CheckList
+                type="서비스"              
+                name={categories[5].title}
+                options={categories[5].options}
+                onChange={handleElderService}
+              />
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
               <Btn text="이전" color="white" onClick={() => setStep(2)} /> 
-              {/* <Btn text="등록" onClick={handleAddElder} /> */}
-              <Btn text="등록" onClick={() => console.log(serviceData)} />
+              <Btn text="등록" onClick={handleAddElder} />
+              {/* <Btn text="등록" onClick={() => console.log(serviceData)} /> */}
             </div>
           </div>
         )}

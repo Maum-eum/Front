@@ -12,6 +12,14 @@ export const addElder = async (
   await privateApi.post(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
 };
 
+export const addElderService = async (
+  params: AddElderParams,
+  Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.post(`/admin/${params.centerId}/recruit/`, params.data).then(Response).catch(Error);
+};
+
 // export const modifyElder = async (
 //   params: AddElderParams,
 //   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
