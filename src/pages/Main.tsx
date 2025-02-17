@@ -23,7 +23,7 @@ const Main: React.FC = () => {
     await Login(
       loginData,
       (res) => {
-
+        console.log(res)
         const userId = res.data.data.userId;
         const role = res.data.data.role;
         const token = res.headers.authorization;

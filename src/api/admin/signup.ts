@@ -15,8 +15,8 @@ export const signUp = async (
 
 export const searchCenter = async (
   params: string,
-  Response: (Response: AxiosResponse<ApiResponseDefault<SearchCenterData>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<SearchCenterData[]>>) => void,
   Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
 ) => {
-  await noneApi.get(`/center/search?centerName=${params}`,).then(Response).catch(Error);
+  await noneApi.get(`/center/search?keyword=${params}`,).then(Response).catch(Error);
 };
