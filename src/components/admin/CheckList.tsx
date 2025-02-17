@@ -10,13 +10,14 @@ type option = {
 }
 
 type CheckListProps = {
+  type: string;
   name: string;
   options: option[];
-  onChange?: (selected: option) => void;
+  onChange?: (type: string, selected: option) => void;
 };
 
 
-const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
+const CheckList: React.FC<CheckListProps> = ({ type, name, options, onChange }) => {
   const [selected, setSelected] = useState<option[]>(options)
   const [isOpen, setIsOpen] = useState(false);
 
@@ -31,7 +32,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
     
     setSelected(newSelected)
 
-    if (onChange) onChange(opt);
+    if (onChange) onChange(type, opt);
   };
 
 

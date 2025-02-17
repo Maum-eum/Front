@@ -15,6 +15,7 @@ const Main: React.FC = () => {
     rate       : "3등급",
     imgUrl     : "",
     weight     : 58,
+    inmateTypes: []
   }]
   
   return (
