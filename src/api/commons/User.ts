@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { noneApi, privateApi } from '../../utils/http-commons';
-import { LoginParams, LoginResponse, ApiResponseDefault } from '../../types/commons';
+import { LoginParams, LoginResponse, ApiResponseDefault } from '../../types/commons/commons';
 
 
 export const Login = async (

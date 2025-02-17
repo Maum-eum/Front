@@ -6,14 +6,14 @@ const BASE_URL = '/api';
 export const noneApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
   });
-  
+
 export const publicApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 });
-  
+
 export const privateApi: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -22,7 +22,7 @@ export const privateApi: AxiosInstance = axios.create({
       'access': `${localStorage.getItem('accessToken')}`,
     },
   });
-  
+
 //   privateApi.interceptors.request.use(
 //     (config) => {
 //       const token = localStorage.getItem('accessToken');
@@ -38,7 +38,7 @@ export const privateApi: AxiosInstance = axios.create({
 //       if (status === 401) {
 //         if (error.response.data.message === 'access token expired') {
 //           const originRequest = config;
-  
+
 //           // 토큰 재발급.
 //           await TokenRefresh(
 //             (res) => {
@@ -47,7 +47,7 @@ export const privateApi: AxiosInstance = axios.create({
 //                 localStorage.setItem('accessToken', res.headers.access);
 //                 axios.defaults.headers.access = `${res.headers.access}`;
 //                 originRequest.headers.access = `${res.headers.access}`;
-  
+
 //                 // 토큰 교환 후 재 시도.
 //                 return axios(originRequest);
 //               }
@@ -60,8 +60,8 @@ export const privateApi: AxiosInstance = axios.create({
 //       }
 //     }
 //   );
-  
-  
+
+
 //   export const formDataApi: AxiosInstance = axios.create({
 //     baseURL: baseURL,
 //     headers: {
@@ -69,7 +69,7 @@ export const privateApi: AxiosInstance = axios.create({
 //       'access': `${localStorage.getItem('accessToken')}`,
 //     },
 //   });
-  
+
 //   formDataApi.interceptors.request.use(
 //     (config) => {
 //       const token = localStorage.getItem('accessToken');
@@ -84,7 +84,7 @@ export const privateApi: AxiosInstance = axios.create({
 //       if (status === 401) {
 //         if (error.response.data.message === 'access token expired') {
 //           const originRequest = config;
-  
+
 //           // 토큰 재발급.
 //           await TokenRefresh(
 //             (res) => {
@@ -93,7 +93,7 @@ export const privateApi: AxiosInstance = axios.create({
 //                 localStorage.setItem('accessToken', res.headers.access);
 //                 axios.defaults.headers.access = `${res.headers.access}`;
 //                 originRequest.headers.access = `${res.headers.access}`;
-  
+
 //                 // 토큰 교환 후 재 시도.
 //                 return axios(originRequest);
 //               }

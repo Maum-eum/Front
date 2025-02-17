@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { noneApi } from '../../utils/http-commons';
 
-import { ApiResponseDefault } from '../../types/commons';
+import { ApiResponseDefault } from '../../types/commons/commons';
 import { SearchCenterData } from '../../types/admin/searchCenterData';
 
 
