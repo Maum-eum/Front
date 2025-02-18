@@ -35,7 +35,7 @@ interface RecruitData {
     hospitalAccompaniment: boolean;
     exerciseSupport: boolean;
     emotionalSupport: boolean;
-    ognitiveStimulation: boolean;
+    cognitiveStimulation: boolean;
     detailRequiredService : string;
     recruitTimes: RecruitTime[];
 }
@@ -72,7 +72,7 @@ interface Response {
         hospitalAccompaniment: boolean;
         exerciseSupport: boolean;
         emotionalSupport: boolean;
-        ognitiveStimulation: boolean;
+        cognitiveStimulation: boolean;
         detailRequiredService : string;
         recruitTimes: RecruitTime[];
     }

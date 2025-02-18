@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { noneApi } from '../../utils/http-commons';
+import { privateApi } from '../../utils/http-commons';
 import type { RequiredData, Response } from "../../types/admin/requiredData";
 
 export const requiredRegisterApi = async (
@@ -8,7 +8,7 @@ export const requiredRegisterApi = async (
 	requiredData : RequiredData
 ): Promise<Response | null> => {
 	try {
-		const response: AxiosResponse<Response> = await noneApi.post(
+		const response: AxiosResponse<Response> = await privateApi.post(
 		`/admin/${centerId}/care/${elderId}`,
 		requiredData
 		);
@@ -25,7 +25,7 @@ export const requiredInfoApi = async (
 	careId : number
 ): Promise<Response | null> => {
 	try {
-		const response: AxiosResponse<Response> = await noneApi.get(
+		const response: AxiosResponse<Response> = await privateApi.get(
 		`/admin/${centerId}/care/${elderId}/${careId}`
 		);
 		return response.data;
@@ -42,7 +42,7 @@ export const requiredModifyApi = async (
 	requiredData : RequiredData
 ): Promise<Response | null> => {
 	try {
-		const response: AxiosResponse<Response> = await noneApi.put(
+		const response: AxiosResponse<Response> = await privateApi.put(
 		`/admin/${centerId}/care/${elderId}/${careId}`,
 		requiredData
 		);
@@ -59,7 +59,7 @@ export const requiredDeleteApi = async (
 	careId : number,
 ): Promise<Response | null> => {
 	try {
-		const response: AxiosResponse<Response> = await noneApi.delete(
+		const response: AxiosResponse<Response> = await privateApi.delete(
 		`/admin/${centerId}/care/${elderId}/${careId}`,
 		);
 		return response.data;

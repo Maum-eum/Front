@@ -3,33 +3,33 @@ import { noneApi } from '../../utils/http-commons';
 import type { SidoResponse, SigunguResponse, LocationResponse, AddressResponse } from '../../types/commons/regionData';
 
 export const sidoInfoApi = async (): Promise<SidoResponse | null> => {
-  try {
-    const response: AxiosResponse<SidoResponse> = await noneApi.get(
-      `/location/sidoList`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error get sido Info', error);
-    return null;
-  }
+	try {
+	const response: AxiosResponse<SidoResponse> = await noneApi.get(
+		`/location/sidoList`,
+	);
+		return response.data;
+	} catch (error) {
+		console.error('Error get sido Info', error);
+		return null;
+	}
 };
 
 export const sigunguInfoApi = async (sidoId : number): Promise<SigunguResponse | null> => {
 	try {
-	  const response: AxiosResponse<SigunguResponse> = await noneApi.get(
+		const response: AxiosResponse<SigunguResponse> = await noneApi.get(
 		`/location/sigunguList`,
 		{
 			params: {
 				sidoId: sidoId,
 			}
 		},
-	  );
-	  return response.data;
+		);
+		return response.data;
 	} catch (error) {
-	  console.error('Error get sigungu Info', error);
-	  return null;
+		console.error('Error get sigungu Info', error);
+		return null;
 	}
-  };
+	};
 
 export const locationInfoApi = async (sigunguId : number): Promise<LocationResponse | null> => {
 	try {
@@ -40,13 +40,13 @@ export const locationInfoApi = async (sigunguId : number): Promise<LocationRespo
 					sigunguId: sigunguId,
 				}
 			},
-		  );
-	  return response.data;
+			);
+		return response.data;
 	} catch (error) {
-	  console.error('Error get location Info', error);
-	  return null;
+		console.error('Error get location Info', error);
+		return null;
 	}
-  };
+};
 
 
 export const addressInfoApi = async (locationId : number): Promise<AddressResponse | null> => {
@@ -58,10 +58,10 @@ export const addressInfoApi = async (locationId : number): Promise<AddressRespon
 					locationId: locationId,
 				}
 			},
-		  );
-	  return response.data;
+			);
+		return response.data;
 	} catch (error) {
-	  console.error('Error get address Info', error);
-	  return null;
+		console.error('Error get address Info', error);
+		return null;
 	}
-  };
+};
