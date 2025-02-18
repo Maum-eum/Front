@@ -1,9 +1,14 @@
-import React from "react";
+import { useState } from "react";
+import type { Time } from "../../types/commons/timeData";
 
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 
 const RecruitRegistration: React.FC = () => {
+	const [timeData, setTimeData] = useState<Time[]>([]);
+	const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+
+
 
 	return (
 		<div>
@@ -60,10 +65,11 @@ const RecruitRegistration: React.FC = () => {
         }
     ]
 }  */}
-			<div className="font-gtr-B">지역선택 모달</div>
-			<RegionSelect />
-			<p className="font-gtr-B">시간선택 컴포넌트</p>
-			<TimeSelect />
+			<RegionSelect
+				selectedLocations={selectedLocations}
+				setSelectedLocations={setSelectedLocations}
+			/>
+			<TimeSelect setTimeData={setTimeData}/>
 		</div>
 	)
 

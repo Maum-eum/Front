@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import type { Time } from "../../types/commons/timeData";
 
+interface TimeSelectProps {
+	setTimeData: React.Dispatch<React.SetStateAction<Time[]>>; // 부모에서 전달받은 함수
+  }
 
-export function TimeSelect() {
+export function TimeSelect({ setTimeData }: TimeSelectProps) {
 	const [selectedDayOfWeek, setSelectedDayOfWeek ] = useState<string[]>([]);
 	const [selectedStartTime, setSelectedStartTime ] = useState<number | undefined>(undefined);
 	const [selectedEndTime, setSelectedEndTime ] = useState<number | undefined>(undefined);
-	const [timeData, setTimeData ] = useState<Time[]>();
 
 	const handleDayOfWeekChange = (day : string) => {
 		setSelectedDayOfWeek((prev) => {
@@ -26,31 +28,6 @@ export function TimeSelect() {
 		"금": "FRI",
 		"토": "SAT",
 		"일": "SUN",
-	};
-
-	const handleTimeDataChange = (startTime: number, endTime: number) => {
-		if (selectedStartTime && selectedEndTime && (selectedStartTime > selectedEndTime)){
-			window.alert(`잘못된 시간 형식입니다`);
-			setSelectedStartTime(undefined);
-			setSelectedEndTime(undefined);
-			return ;
-		}
-		if (selectedDayOfWeek !== undefined && startTime !== undefined && endTime !== undefined) {
-			setTimeData((prevData) => {
-				const updatedData = (prevData || []).filter(
-				(data) => !selectedDayOfWeek.includes(data.dayofweek)
-			);
-
-			const newData: Time[] = selectedDayOfWeek.map((day) => ({
-				dayofweek: day,
-				starttime: timeMapping[startTime],
-				endtime: timeMapping[endTime],
-			}));
-
-			return [...updatedData, ...newData];
-		});
-		}
-		console.log(timeData);
 	};
 
 	const timeOptions = Array.from({ length: (21 - 9) * 2 + 1 }, (_, i) => 9 + i * 0.5);
@@ -85,15 +62,28 @@ export function TimeSelect() {
 
 
 	useEffect(() => {
+		const handleTimeDataChange = (startTime: number, endTime: number) => {
+			if (selectedStartTime && selectedEndTime && (selectedStartTime > selectedEndTime)){
+				window.alert(`잘못된 시간 형식입니다`);
+				setSelectedStartTime(undefined);
+				setSelectedEndTime(undefined);
+				return ;
+			}
+			if (selectedDayOfWeek !== undefined && startTime !== undefined && endTime !== undefined) {
+				setTimeData(() => {
+				const newData: Time[] = selectedDayOfWeek.map((day) => ({
+					dayofweek: day,
+					starttime: timeMapping[startTime],
+					endtime: timeMapping[endTime],
+				}));
+				return newData;
+			});
+			}
+		};
 		if (selectedDayOfWeek !== undefined && selectedStartTime !== undefined && selectedEndTime !== undefined) {
 			handleTimeDataChange(selectedStartTime, selectedEndTime);
 		}
 	}, [selectedStartTime, selectedEndTime, selectedDayOfWeek]);
-
-	useEffect(() => {
-		console.log("Updated Time Data:", timeData);
-		console.log("Updated DayOfWeek Data:", selectedDayOfWeek);
-	  }, [timeData, selectedDayOfWeek]);  // timeData 변경 시마다 로그 찍기
 
 	return (
 		<div className="p-4 w-full max-w-3xl mx-auto">
@@ -145,11 +135,6 @@ export function TimeSelect() {
 			))}
 			</select>
 		</div>
-	</div>
-
-	<div className="pt-3 text-sm font-gtr-R">
-		<h4>Selected Days: {selectedDayOfWeek.join(", ")}</h4>
-		<h4>Selected Time: {selectedStartTime}시 - {selectedEndTime}시</h4>
 	</div>
 </div>
 );

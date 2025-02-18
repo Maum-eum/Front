@@ -17,7 +17,7 @@ export const sidoInfoApi = async (): Promise<SidoResponse | null> => {
 export const sigunguInfoApi = async (sidoId : number): Promise<SigunguResponse | null> => {
 	try {
 	  const response: AxiosResponse<SigunguResponse> = await noneApi.get(
-		`${noneApi}/location/sigunguList`,
+		`/location/sigunguList`,
 		{
 			params: {
 				sidoId: sidoId,
@@ -34,7 +34,7 @@ export const sigunguInfoApi = async (sidoId : number): Promise<SigunguResponse |
 export const locationInfoApi = async (sigunguId : number): Promise<LocationResponse | null> => {
 	try {
 		const response: AxiosResponse<LocationResponse> = await noneApi.get(
-			`${noneApi}/location/locationList`,
+			`/location/locationList`,
 			{
 				params: {
 					sigunguId: sigunguId,
@@ -52,7 +52,7 @@ export const locationInfoApi = async (sigunguId : number): Promise<LocationRespo
 export const addressInfoApi = async (locationId : number): Promise<AddressResponse | null> => {
 	try {
 		const response: AxiosResponse<AddressResponse> = await noneApi.get(
-			`${noneApi}/location/address`,
+			`/location/address`,
 			{
 				params: {
 					locationId: locationId,

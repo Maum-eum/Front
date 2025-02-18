@@ -31,7 +31,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
 
   return (
     <div className="w-full font-pre-SB">
-      
+
       <div className="w-full p-2 border border-green rounded-lg flex items-center" onClick={() => setIsOpen(!isOpen)}>
         <img src={isOpen ? dropdown_open : dropdown} className="w-4 h-2 mx-2 text-green"/>
         <span className="text-gray text-content ml-1">{name}</span>
@@ -64,7 +64,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
                 >
                   {status}
                 </span>
-              </div>              
+              </div>
             )
           })}
         </div>

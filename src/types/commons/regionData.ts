@@ -1,16 +1,3 @@
-
-interface SidoList {
-	result : Sido[];
-}
-
-interface SigunguList {
-	result : Sigungu[];
-}
-
-interface LocationList {
-	result : Location[];
-}
-
 interface Sido {
 	sidoId : number;
 	sidoName : string;
@@ -34,31 +21,27 @@ interface Address {
 }
 
 interface SidoResponse {
-	isSuccess : boolean;
-	code : string;
+	status : boolean;
 	message : string;
-	result : SidoList;
+	data : Sido[];
 }
 
 interface SigunguResponse {
-	isSuccess : boolean;
-	code : string;
+	status : boolean;
 	message : string;
-	result : SigunguList;
+	data : Sigungu[];
 }
 
 interface LocationResponse {
-	isSuccess : boolean;
-	code : string;
+	status : boolean;
 	message : string;
-	result : LocationList;
+	data : Location[];
 }
 
 interface AddressResponse {
-	isSuccess : boolean;
-	code : string;
+	status : boolean;
 	message : string;
-	result : Address;
+	data : Address;
 }
 
-export type { SidoResponse, SigunguResponse, LocationResponse, AddressResponse, SidoList, SigunguList, LocationList, Address };
+export type { SidoResponse, SigunguResponse, LocationResponse, AddressResponse, Sido, Sigungu, Location, Address };

@@ -1,9 +1,12 @@
-import React from "react";
+import { useState } from "react";
+import type { Time } from "../../types/commons/timeData";
 
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 
 const RecruitModify: React.FC = () => {
+	const [timeData, setTimeData] = useState<Time[]>([]);
+	const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
 
 	return (
 		<div>
@@ -67,12 +70,11 @@ const RecruitModify: React.FC = () => {
     ]
 }  */}
 
-
-
-			<div>hi</div>
-			<RegionSelect />
-			<p>hi</p>
-			<TimeSelect />
+			<RegionSelect
+				selectedLocations={selectedLocations}
+				setSelectedLocations={setSelectedLocations}
+			/>
+			<TimeSelect setTimeData={setTimeData}/>
 		</div>
 	)
 }
