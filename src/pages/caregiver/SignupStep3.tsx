@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import CheckList from "../../components/commons/CheckList";
 import Input from "../../components/commons/Input";
-//import { RegionSelect } from "../../components/commons/RegionSelect";
-//import { TimeSelect } from "../../components/commons/TimeSelect";
-//import { Time } from "../../types/commons/timeData";
+import { RegionSelect } from "../../components/commons/RegionSelect";
+import { TimeSelect } from "../../components/commons/TimeSelect";
+import { postJobCondition } from "../../api/caregiver/jobCondition"; // API 호출 함수
+import type { Time } from "../../types/commons/timeData";
 
 const categories = [
   { title: "식사 보조", services: ["식사 차리기", "구토물 정리", "수급자를 위한 음식물 조리 및 설거지", "경관식 보조"] },
@@ -18,11 +19,13 @@ const categories = [
 const SignupStep3 = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1); // ✅ step 1: 서비스 선택, step 2: 근무 조건 입력
-  const [selectedServices, setSelectedServices] = useState<Record<string, "불가능" | "가능" | "조율">>({});
+  const [selectedServices, setSelectedServices] = useState<Record<string, "불가능" | "가능" | "조율">>({}); // 서비스 선택 상태
   const [wage, setWage] = useState("13,000");
   const [schedule, setSchedule] = useState<{ [key: string]: { 오전: string; 오후: string } }>({
     월: { 오전: "", 오후: "" },
   });
+  const [selectedLocations, setSelectedLocations] = useState<number[]>([]); // 지역 선택 상태
+  const [timeData, setTimeData] = useState<Time[]>([]); // 시간 선택 상태
 
   const handleServiceChange = (updated: Record<string, "불가능" | "가능" | "조율">) => {
     setSelectedServices((prev) => ({ ...prev, ...updated }));
@@ -32,7 +35,36 @@ const SignupStep3 = () => {
     if (step === 1) {
       setStep(2); // ✅ 다음 단계(근무 조건 입력)로 이동
     } else {
-      console.log("근무 조건 등록 완료!", { selectedServices, schedule, wage });
+      // 모든 데이터를 하나의 객체로 묶어서 API 요청
+      const jobConditionData = {
+        flexibleSchedule: "NEGOTIABLE" as "NEGOTIABLE", // "NEGOTIABLE", "POSSIBLE", "IMPOSSIBLE"로 설정
+        desiredHourlyWage: parseInt(wage.replace(",", ""), 10),
+        selfFeeding: selectedServices["식사 차리기"] || "불가능",
+        mealPreparation: selectedServices["구토물 정리"] || "불가능",
+        cookingAssistance: selectedServices["수급자를 위한 음식물 조리 및 설거지"] || "불가능",
+        enteralNutritionSupport: selectedServices["경관식 보조"] || "불가능",
+        selfToileting: "NEGOTIABLE", // 예시값
+        occasionalToiletingAssist: "NEGOTIABLE", // 예시값
+        diaperCare: "IMPOSSIBLE", // 예시값
+        catheterOrStomaCare: "POSSIBLE", // 예시값
+        independentMobility: "POSSIBLE", // 예시값
+        mobilityAssist: "IMPOSSIBLE", // 예시값
+        wheelchairAssist: "POSSIBLE", // 예시값
+        immobile: "IMPOSSIBLE", // 예시값
+        cleaningLaundryAssist: "NEGOTIABLE", // 예시값
+        bathingAssist: "IMPOSSIBLE", // 예시값
+        hospitalAccompaniment: "IMPOSSIBLE", // 예시값
+        exerciseSupport: "NEGOTIABLE", // 예시값
+        emotionalSupport: "POSSIBLE", // 예시값
+        cognitiveStimulation: "POSSIBLE", // 예시값
+        dayOfWeek: "1001010", // 예시값
+        startTime: 12,
+        endTime: 19,
+        locationRequestDTOList: selectedLocations.map((locationId) => ({ locationId })), // 선택된 지역 정보
+        timeData, // 시간 정보
+      };
+
+     ///
     }
   };
 
@@ -81,32 +113,16 @@ const SignupStep3 = () => {
             {/* 근무 지역 */}
             <div className="w-full mb-6">
               <h3 className="text-item font-bold text-black mb-2">근무 지역</h3>
-              <div className="border p-4 rounded-lg text-center">
-                <p className="text-content text-black">시·도 / 시·구·군 / 동·읍·면</p>
-                <img src="/path-to-location-image.png" alt="근무 지역 선택" className="w-full mt-2" />
-              </div>
+              <RegionSelect
+                selectedLocations={selectedLocations}
+                setSelectedLocations={setSelectedLocations}
+              />
             </div>
 
             {/* 근무 시간 */}
             <div className="w-full mb-6">
               <h3 className="text-item font-bold text-black mb-2">근무 시간</h3>
-              {Object.entries(schedule).map(([day, times]) => (
-                <div key={day} className="flex items-center justify-between mb-2">
-                  <span className="text-item font-bold text-black">{day}</span>
-                  <Input
-                    type="text"
-                    placeholder="오전"
-                    value={times.오전}
-                    onChange={(e) => setSchedule((prev) => ({ ...prev, [day]: { ...prev[day], 오전: e.target.value } }))}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="오후"
-                    value={times.오후}
-                    onChange={(e) => setSchedule((prev) => ({ ...prev, [day]: { ...prev[day], 오후: e.target.value } }))}
-                  />
-                </div>
-              ))}
+              <TimeSelect setTimeData={setTimeData} />
             </div>
 
             {/* 급여 입력 */}
