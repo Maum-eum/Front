@@ -13,7 +13,7 @@ import { useAdminStore } from "../../stores/admin/adminStore";
 const categories = {
     title: "치매 증상",
     options: [
-      { label: "정상", name: "isNormal", value: false },
+      { label: "정상", name: "normal", value: false },
       { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: false },
       { label: "집 밖을 배회", name: "wandersOutside", value: false },
       { label: "어린아이 같은 행동", name: "actsLikeChild", value: false },
@@ -99,6 +99,9 @@ const AddElder: React.FC = () => {
 
     form.append("inmateTypes", elderData.inmateTypes.join(','))
     form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined}))
+    for (const [key, value] of form.entries()) {
+      console.log(key, value);
+     };
     return form
   }
 
@@ -216,7 +219,7 @@ const AddElder: React.FC = () => {
               <RadioInput
                 name="rate"
                 options={[
-                  { value: null,    label: "없음" },
+                  { value: "NONE",  label: "없음" },
                   { value: "RATE1", label: "1등급" },
                   { value: "RATE2", label: "2등급" },
                   { value: "RATE3", label: "3등급" },

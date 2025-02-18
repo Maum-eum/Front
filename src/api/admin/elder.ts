@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { privateApi, formDataApi } from '../../utils/http-commons';
-import { AddElderResponse, AddElderParams, elderInfo } from '../../types/admin/elderType';
+import { AddElderResponse, AddElderParams, elderInfo, ModifyElderParams } from '../../types/admin/elderType';
 import { ApiResponseDefault } from '../../types/commons';
 
 // 센터 내 어르신 조회
@@ -35,11 +35,11 @@ export const addElder = async (
 
 // 어르신 수정
 export const modifyElder = async (
-  params: AddElderParams,
+  params: ModifyElderParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await formDataApi.put(`/admin/${params.centerId}/elders`, params.data).then(Response).catch(Error);
+  await formDataApi.put(`/admin/${params.centerId}/elders/${params.elderId}`, params.data).then(Response).catch(Error);
 };
 
 // 어르신 삭제

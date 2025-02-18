@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type SelectOption = {
   value: null | string | number | string[];
@@ -15,12 +15,17 @@ type RadioInputProps = {
 
 const RadioInput: React.FC<RadioInputProps> = ( { name, options, selectedValues = [], onChange } ) => {
   const [selected, setSelected] = useState<(null | string | number | string[])[]>(selectedValues);
-
   const handleSelect = ( value: null | string | number | string[]) => {
     setSelected([value]);
     if (onChange) onChange(value);
   };
 
+  useEffect(() => {
+    if (selectedValues.length > 0){
+      setSelected(selectedValues)
+    }
+  },[selectedValues])
+  
   return (
     <div className={clsx("mb-2 gap-3 flex", {"grid grid-cols-3": name === "rate" }, {" flex-col ": name === "inmate" })}>
       {options.map(({ value, label }) => {
