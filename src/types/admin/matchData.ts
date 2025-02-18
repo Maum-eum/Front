@@ -119,7 +119,7 @@ interface RecruitCond {
 }
 
 interface MatchInfoResponse {
-	statue : string;
+	status : string;
 	message : string;
 	data : {
 		careGiverInfo : CareGiver;
@@ -138,11 +138,27 @@ interface RecommendedCareGiver {
 }
 
 interface RecommendListResponse {
-	statue : string;
+	status : string;
 	message : string;
 	data : {
 		list : RecommendedCareGiver[];
 	}
 }
 
-export type { MatchInfoResponse, RecommendListResponse };
+interface RequestResponse {
+	status : string;
+	message : string;
+	data : {
+		msg : string ;
+	}
+}
+
+interface DecideResponse {
+	status : string;
+	message : string;
+	data : {
+		msg : string ;
+	} | null;
+}
+
+export type { MatchInfoResponse, RecommendListResponse, RequestResponse, DecideResponse };
