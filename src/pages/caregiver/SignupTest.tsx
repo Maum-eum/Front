@@ -76,7 +76,7 @@ const SignupTest = () => {
     } else if (step === 2 && subStep === 1) {
       setStep(1); // Step 2에서 Step 1로 이동
     } else {
-      navigate("/"); // 처음 화면으로 이동
+      navigate("/caregiver/singup/step3"); // 
     }
   };
   
@@ -91,12 +91,30 @@ const SignupTest = () => {
         <div className="w-full max-w-xs sm:max-w-sm p-6">
          
 
-          {/* ✅ 프로필 이미지 업로드 */}
-          <div className="w-24 h-24 bg-green-200 rounded-lg mx-auto mt-4 flex items-center justify-center relative">
-            {profileImg && <img src={URL.createObjectURL(profileImg)} alt="프로필" className="w-full h-full rounded-lg object-cover" />}
+        {/* ✅ 프로필 이미지 업로드 (이미지 클릭 가능, 테두리 안에 꽉 차도록 개선) */}
+        <label htmlFor="profile-upload" className="cursor-pointer">
+          <div className="w-24 h-24 bg-green-200 border-2 border-gray-400 rounded-lg mx-auto mt-4 flex items-center justify-center overflow-hidden relative">
+            {profileImg ? (
+              <img
+                src={URL.createObjectURL(profileImg)}
+                alt="프로필"
+                className="absolute w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-500 text-sm">사진 추가</span>
+            )}
           </div>
-          <input type="file" className="mt-2 w-full text-sm" accept="image/*" 
-            onChange={(e) => setSignupData({ profileImg: e.target.files?.[0] || null })} />
+        </label>
+
+        {/* 숨겨진 파일 업로드 인풋 */}
+        <input
+          id="profile-upload"
+          type="file"
+          className="hidden"
+          accept="image/*"
+          onChange={(e) => setSignupData({ profileImg: e.target.files?.[0] || null })}
+        />
+
 
          {/* ✅ 아이디 입력 */}
           <label className="block text-item font-bold text-black mt-6">아이디</label>
@@ -122,6 +140,8 @@ const SignupTest = () => {
           </div>
         </div>
       )}
+
+      
        {/* ✅ Step 2 - 필수 정보 입력 */}
        {step === 2 && subStep === 1 && (
         <div className="w-full max-w-xs sm:max-w-sm p-6">

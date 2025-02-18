@@ -118,11 +118,11 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
         car: hasCar,
         education: dementiaTraining,
         employmentStatus,
-        img: profileImage,
         intro: introduction,
         address,
         certificateRequestDTOList: Array.isArray(certifications) ? certifications : [certifications],  
-        experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],      
+        experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],   
+        profileImg: selectedImage || profileImage,  // ✅ 추가됨!   
       };
     
       console.log("📌 보내는 데이터 확인:", updatedProfile);
@@ -132,6 +132,11 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
       if (response) {
         alert("✅ 정보가 성공적으로 수정되었습니다!");
         navigate("/caregiver/main");
+         // ✅ 최신 프로필 정보 다시 불러오기!
+         // 얘때문에 최신화가 안됏엇다
+         const updatedData = await getCaregiverProfile();
+        setProfileImage(updatedData.img); // 🔥 변경된 이미지 적용
+
         setTimeout(() => {
           window.location.reload();
         }, 100);
@@ -142,21 +147,21 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
     
     
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 py-8">
-    <h1 className="text-title font-bold text-black mb-6">정보 변경</h1>
-    <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md">
-      <div className="flex flex-col items-center mb-4">
-        {previewImage || profileImage ? (
-          <img
-            src={previewImage || profileImage!}
-            alt="프로필"
-            className="w-24 h-24 object-cover rounded-full border"
-          />
-        ) : (
-          <div className="w-24 h-24 bg-gray-200 rounded-full border flex items-center justify-center">
-            <span className="text-gray-500 text-sm">사진 없음</span>
-          </div>
-        )}
+      <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 py-8">
+        <h1 className="text-title font-bold text-black mb-6">정보 변경</h1>
+        <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md">
+          <div className="flex flex-col items-center mb-4">
+            {previewImage || profileImage ? (
+              <img
+                src={previewImage || profileImage!}
+                alt="프로필"
+                className="w-28 h-28 object-cover rounded-xl border-2 border-gray-300 shadow-sm"
+              />
+            ) : (
+              <div className="w-28 h-28 bg-gray-200 rounded-xl border-2 border-gray-300 shadow-sm flex items-center justify-center">
+                <span className="text-gray-500 text-sm">사진 없음</span>
+              </div>
+            )}
         <label className="mt-2 cursor-pointer text-sm text-blue-500">
           프로필 사진 수정
           <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
