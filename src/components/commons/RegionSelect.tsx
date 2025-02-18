@@ -22,12 +22,18 @@ export function RegionSelect() {
 		{ sidoId: 1, sidoName: "서울" },
 		{ sidoId: 2, sidoName: "경기" },
 		{ sidoId: 3, sidoName: "부산" },
+		{ sidoId: 4, sidoName: "대구" },
+		{ sidoId: 5, sidoName: "대전" },
+		{ sidoId: 6, sidoName: "광주" },
 	];
 
 	const dummySigunguData = [
 		{ sigunguId: 1, sigunguName: "강남구" },
 		{ sigunguId: 2, sigunguName: "서초구" },
 		{ sigunguId: 3, sigunguName: "송파구" },
+		{ sigunguId: 4, sigunguName: "직구" },
+		{ sigunguId: 5, sigunguName: "변화구" },
+		{ sigunguId: 6, sigunguName: "견제구" },
 	];
 
 	const dummyLocationData = [
@@ -182,14 +188,16 @@ export function RegionSelect() {
 	};
 
 	return (
-		<div className="p-4 w-full max-w-3xl mx-auto">
-			<h3 className="text-lg font-gtr-B mb-3">지역 선택</h3>
-			<div className="flex border p-3 rounded-md shadow-sm">
+		<div className="p-2 w-full max-w-3xl mx-auto border rounded-md shadow-sm">
+			<h3 className="text-lg font-gtr-B mb-3 text-center">지역 선택</h3>
+			<hr className="mx-3" />
+			{/* div 테두리 */}
+			<div className="text-sm flex px-3">
 			{/* 시/도 선택 */}
-			<div className="w-1/4 border-r pr-3">
-			<h4 className="text-md font-gtr-B mb-2 text-center">시/도</h4>
+			<div className="w-1/2 border-l border-r px-3 pt-2">
+			<h4 className="font-gtr-B mb-2 text-center">시/도</h4>
 			<hr />
-			<ul  className="max-h-60 overflow-y-auto p-2">
+			<ul  className="max-h-40 overflow-y-auto p-2">
 				{sido?.result?.map((s) => (
 				  <li
 					key={s.sidoId}
@@ -205,10 +213,10 @@ export function RegionSelect() {
 			</div>
 
 			{/* 시/군/구 선택 */}
-			<div className="w-1/4 border-r px-3">
-			  <h4 className="text-md font-gtr-B mb-2 text-center">시/군/구</h4>
+			<div className="w-1/2 border-r px-3 pt-2">
+			  <h4 className="text-sm font-gtr-B mb-2 text-center">시/군/구</h4>
 			  <hr />
-			  <ul className="max-h-60 overflow-y-auto p-2">
+			  <ul className="max-h-40 overflow-y-auto p-2">
 				{sigungu?.result?.map((sg) => (
 				  <li
 					key={sg.sigunguId}
@@ -222,12 +230,13 @@ export function RegionSelect() {
 				))}
 			  </ul>
 			</div>
-
+		  </div>
+		  <hr className="mx-3 mb-3" />
 			{/* 동 선택 */}
-			<div className="w-1/2 px-3">
-			  <h4 className="text-md font-gtr-B mb-2 text-center">동/읍/면</h4>
+			<div className="w-full px-3">
+			  <h4 className="text-sm font-gtr-B mb-2 text-center">동/읍/면</h4>
 			  <hr />
-			  <ul className="max-h-60 overflow-y-auto p-2 grid grid-cols-2 gap-2">
+			  <ul className="text-sm min-h-40 max-h-40 overflow-y-scroll p-2 grid grid-cols-2 gap-2 border-x border-b">
 				{location?.result?.map((loc) => (
 				  <li key={loc.locationId} className="flex items-center p-2 font-gtr-R hover:bg-gray-100 cursor-pointer"
 				  onClick={() => toggleLocation(loc.locationId)}>
@@ -241,16 +250,15 @@ export function RegionSelect() {
 				))}
 			  </ul>
 			</div>
-		  </div>
 
 		  {/* 선택된 지역 표시 */}
 		  <div className="mt-4">
-			<h4 className="text-md font-gtr-B mb-2">선택한 지역 (최대 5개)</h4>
-			<div className="flex flex-wrap gap-2">
+			<h4 className="text-sm font-gtr-B mb-2 pl-3">선택한 지역 (최대 5개)</h4>
+			<div className="flex flex-wrap gap-2 px-3">
 			  {selectedLocations.map((locId) => {
 				const locName = location?.result?.find((loc) => loc.locationId === locId)?.dongName;
 				return (
-				  <span key={locId} className="bg-gray-200 font-gtr-R px-5 py-1 rounded-xl">
+				  <span key={locId} className="text-sm bg-gray-200 font-gtr-R px-5 py-1 rounded-xl">
 					{locName}
 				  </span>
 				);
