@@ -5,61 +5,68 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'gtr-B';
-  src: url('./assets/fonts/GamtanRoadDotum-TTF/GTR-Bold.ttf');
+  font-family: "gtr-B";
+  src: url("./assets/fonts/GamtanRoadDotum-TTF/GTR-Bold.ttf");
 }
 
 @font-face {
-  font-family: 'gtr-R';
-  src: url('./assets/fonts/GamtanRoadDotum-TTF/GTR-Regular.ttf');
+  font-family: "gtr-R";
+  src: url("./assets/fonts/GamtanRoadDotum-TTF/GTR-Regular.ttf");
 }
 
 @font-face {
-  font-family: 'gtr-T';
-  src: url('./assets/fonts/GamtanRoadDotum-TTF/GTR-Thin.ttf');
+  font-family: "gtr-T";
+  src: url("./assets/fonts/GamtanRoadDotum-TTF/GTR-Thin.ttf");
 }
 
 @font-face {
-  font-family: 'pre-Black';
-  src: url('./assets/fonts/pretendard/Pretendard-Black.ttf');
+  font-family: "pre-Black";
+  src: url("./assets/fonts/pretendard/Pretendard-Black.ttf");
 }
 
 @font-face {
-  font-family: 'pre-B';
-  src: url('./assets/fonts/pretendard/Pretendard-Bold.ttf');
+  font-family: "pre-B";
+  src: url("./assets/fonts/pretendard/Pretendard-Bold.ttf");
 }
 
 @font-face {
-  font-family: 'pre-EB';
-  src: url('./assets/fonts/pretendard/Pretendard-ExtraBold.ttf');
+  font-family: "pre-EB";
+  src: url("./assets/fonts/pretendard/Pretendard-ExtraBold.ttf");
 }
 
 @font-face {
-  font-family: 'pre-EL';
-  src: url('./assets/fonts/pretendard/Pretendard-ExtraLight.ttf');
+  font-family: "pre-EL";
+  src: url("./assets/fonts/pretendard/Pretendard-ExtraLight.ttf");
 }
 
 @font-face {
-  font-family: 'pre-L';
-  src: url('./assets/fonts/pretendard/Pretendard-Light.ttf');
+  font-family: "pre-L";
+  src: url("./assets/fonts/pretendard/Pretendard-Light.ttf");
 }
 
 @font-face {
-  font-family: 'pre-M';
-  src: url('./assets/fonts/pretendard/Pretendard-Medium.ttf');
+  font-family: "pre-M";
+  src: url("./assets/fonts/pretendard/Pretendard-Medium.ttf");
 }
 
 @font-face {
-  font-family: 'pre-R';
-  src: url('./assets/fonts/pretendard/Pretendard-Regular.ttf');
+  font-family: "pre-R";
+  src: url("./assets/fonts/pretendard/Pretendard-Regular.ttf");
 }
 
 @font-face {
-  font-family: 'pre-SB';
-  src: url('./assets/fonts/pretendard/Pretendard-SemiBold.ttf');
+  font-family: "pre-SB";
+  src: url("./assets/fonts/pretendard/Pretendard-SemiBold.ttf");
 }
 
 @font-face {
-  font-family: 'pre-T';
-  src: url('./assets/fonts/pretendard/Pretendard-Thin.ttf');
+  font-family: "pre-T";
+  src: url("./assets/fonts/pretendard/Pretendard-Thin.ttf");
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-show:hover::-webkit-scrollbar {
+  display: block;
 }
