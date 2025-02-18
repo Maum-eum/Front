@@ -39,6 +39,14 @@ privateApi.interceptors.request.use(
       const obj = JSON.parse(stored);
       if (obj.state.accessToken !== "") {
         config.headers["authorization"] = obj.state.accessToken;
+        return config;
+      }
+    }
+    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    if (stored2) {
+      const obj = JSON.parse(stored2);
+      if (obj.state.accessToken !== "") {
+        config.headers["authorization"] = obj.state.accessToken;
       }
     }
     return config;
@@ -55,6 +63,14 @@ formDataApi.interceptors.request.use(
       const obj = JSON.parse(stored);
       if (obj.state.accessToken !== "") {
         config.headers["authorization"] = obj.state.accessToken;
+        return config;
+      }
+    }
+    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    if (stored2) {
+      const obj = JSON.parse(stored2);
+      if (obj.state.accessToken !== "") {
+        config.headers["authorization"] = obj.state.accessToken;
       }
     }
     return config;
@@ -63,6 +79,29 @@ formDataApi.interceptors.request.use(
     return error;
   }
 );
+
+// export const privateApi2: AxiosInstance = axios.create({
+//   baseURL: BASE_URL,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
+// privateApi2.interceptors.request.use(
+//   (config) => {
+//     const stored = localStorage.getItem("CAREGIVER_STORE");
+//     if (stored) {
+//       const obj = JSON.parse(stored);
+//       if (obj.state.accessToken !== "") {
+//         config.headers["authorization"] = obj.state.accessToken;
+//       }
+//     }
+//     return config;
+//   },
+//   async (error) => {
+//     return error;
+//   }
+// );
 
 //   formDataApi.interceptors.request.use(
 //     (config) => {

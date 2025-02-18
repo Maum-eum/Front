@@ -3,12 +3,12 @@ import { CareTypes, Rate, Sexual, Week } from "./stringType";
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
   matchId: number;
-  recruitStatus: RecruitRequest;
+  status: RecruitRequest;
 }
 
-/* 요양보호사 매칭 현황 리스트 조회 */
+/* 요양보호사 일정 리스트 조회 */
 export interface MatchedListResponse {
-  matchedRequests: MatchedStatus[];
+  list: MatchedStatus[];
 }
 
 export interface MatchedStatus {
@@ -47,10 +47,11 @@ export interface WorkTimes {
 
 /* 요양보호사 근무 요청 리스트 조회 */
 export interface RequestsListResponse {
-  requests: WorkRequest[];
+  list: WorkRequest[];
 }
 export interface WorkRequest {
   elderId: number;
+  status: boolean;
   recruitConditionId: number;
   centerId: number;
   centerName: string;

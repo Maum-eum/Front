@@ -1,65 +1,87 @@
 import { useNavigate } from "react-router-dom";
 import EmptyImg from "../../assets/image/empty.png";
-import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import ImageBtn from "../../components/commons/ImageBtn";
 import Alert from "../../components/commons/Alert";
 import { useEffect, useState } from "react";
 import ToggleBtn from "../../components/caregiver/ToggleBtn";
 import RequestList from "../../components/caregiver/RequestList";
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
-import { changeStatus } from "../../api/caregiver/caregiver";
+import { changeStatus, getCaregiverInfo } from "../../api/caregiver/caregiver";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 import { getRequests } from "../../api/caregiver/caregiverRequest";
+import { CaregiverInfoResponse } from "../../types/caregiver/caregiverType";
+import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 
 const Main = () => {
   const navigate = useNavigate();
 
+  /* 요양보호사 정보 store */
+  const store = useCaregiverStore();
+
+  const [caregiverInfo, setCaregiverInfo] = useState<CaregiverInfoResponse>();
   const [requests, setRequests] = useState<WorkRequest[]>();
   const [attuneRequests, setAttuneRequests] = useState<WorkRequest[]>();
 
   /* 모달 */
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
 
-  /* 요양보호사 정보 store */
-  const store = useCaregiverStore();
-
-  /* 요양보호사 구직 상태 변경 */
-  const handleChangeStatus = async () => {
-    await changeStatus(
+  /* 요양보호사 정보 조회 */
+  const handleGetCaregiverInfo = async () => {
+    await getCaregiverInfo(
       (response) => {
-        console.log("구직 상태 변경 성공:", response);
-        return response;
+        console.log("요양보호사 정보 조회 성공:", response);
+        if (response.data.data != null) {
+          setCaregiverInfo(response.data.data);
+          store.setCaregiverInfo(response.data.data.username, response.data.data.img);
+        }
       },
       (error) => {
-        console.log("구직 상태 변경 실패:", error);
-        return null;
+        console.log("요양보호사 정보 조회 실패:", error);
+        setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
+        setAlertOpen(true);
       }
     );
   };
 
-  const handleChangeEmploymentStatus = async () => {
-    if (store.employmentStatus != null) {
-      if ((await handleChangeStatus()) != null) {
-        store.setEmploymentStatus(!store.employmentStatus);
-        return true;
-      }
-      return false;
-    } else {
+  /* 요양보호사 구직 상태 변경 */
+  const handleChangeStatus = async () => {
+    if (caregiverInfo?.employmentStatus == null) {
+      console.log("구직 상태 변경 실패: 근무 조건 미등록");
+      setAlertMessage("매칭은 근무 조건 등록 후에 이용할 수 있습니다!");
       setAlertOpen(true);
-      return false;
     }
+    await changeStatus(
+      (response) => {
+        console.log("구직 상태 변경 성공:", response);
+        setCaregiverInfo((prev) => {
+          if (prev == null || prev.employmentStatus == null) return;
+          return {
+            ...prev,
+            employmentStatus: response.data.data,
+          };
+        });
+      },
+      (error) => {
+        console.log("구직 상태 변경 실패:", error);
+        setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
+        setAlertOpen(true);
+      }
+    );
   };
 
   /* 근무 요청 리스트 조회 */
   const handleGetRequests = async () => {
     await getRequests(
       (response) => {
-        console.log("근무 요청 리스트 조회 성공:", response);
-        return response;
+        console.log("근무 요청 리스트 조회 성공:", response.status);
+        if (response.data != null) {
+          setRequests([]);
+          setAttuneRequests(response.data.data.list);
+        }
       },
       (error) => {
         console.log("근무 요청 리스트 조회 실패:", error);
-        return null;
       }
     );
   };
@@ -74,45 +96,9 @@ const Main = () => {
     navigate(`/caregiver/request/details/${recruitConditionId}`);
   };
 
-  /* 새로고침 */
-  const fetchRequests = async () => {
-    const response = await handleGetRequests();
-    if (response != null) {
-      setRequests([
-        /********* Dummy *********/
-        {
-          recruitConditionId: 1,
-          elderId: 1,
-          centerId: 1,
-          centerName: "한마음",
-          imgUrl: null,
-          desiredHourlyWage: 40000,
-          rate: "RATE1",
-          age: 11,
-          sexual: "FEMALE",
-          careTypes: ["방문요양", "방문목욕", "입주요양"],
-        },
-      ]);
-      setAttuneRequests([
-        /********* Dummy *********/
-        {
-          recruitConditionId: 1,
-          elderId: 1,
-          centerId: 1,
-          centerName: "한마음",
-          imgUrl: null,
-          desiredHourlyWage: 40000,
-          rate: "RATE1",
-          age: 11,
-          sexual: "FEMALE",
-          careTypes: ["방문요양", "방문목욕", "입주요양"],
-        },
-      ]);
-    }
-  };
-
   useEffect(() => {
-    fetchRequests();
+    handleGetRequests();
+    handleGetCaregiverInfo();
   }, []);
 
   return (
@@ -121,14 +107,14 @@ const Main = () => {
         {/* 제목 */}
         <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
           <span className="text-black">[</span>
-          <span className="text-red">{store.name}</span>
+          <span className="text-red">{caregiverInfo?.username}</span>
           <span className="text-black">] 요양보호사님의 공간</span>
         </h1>
         {/* 요양보호사 프로필 */}
         <div className="text-content w-full h-42 sm:h-56 flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
-          {store.img ? (
+          {caregiverInfo?.img ? (
             <img
-              src={store.img}
+              src={caregiverInfo.img}
               className="w-24 h-24 sm:w-48 sm:h-full border rounded-lg object-cover"
             />
           ) : (
@@ -136,7 +122,10 @@ const Main = () => {
           )}
           <div className="flex-1 flex flex-col justify-between items-center">
             {/* 구직 상태 토글 */}
-            <ToggleBtn status={store.employmentStatus} onClick={handleChangeEmploymentStatus} />
+            <ToggleBtn
+              status={caregiverInfo?.employmentStatus ? true : false}
+              onClick={handleChangeStatus}
+            />
             {/* 요양보호사 정보 변경 */}
             <BasicBtn label="정보 변경" color="white" onClick={() => {}} />
           </div>
@@ -158,60 +147,16 @@ const Main = () => {
         </div>
         {/* 요청 리스트 조회 */}
         <RequestList
-          requests={
-            requests ?? [
-              /********* Dummy *********/
-              {
-                recruitConditionId: 1,
-                elderId: 1,
-                centerId: 1,
-                centerName: "한마음",
-                imgUrl: null,
-                desiredHourlyWage: 40000,
-                rate: "RATE1",
-                age: 11,
-                sexual: "FEMALE",
-                careTypes: ["방문요양", "방문목욕", "입주요양"],
-              },
-              {
-                recruitConditionId: 1,
-                elderId: 1,
-                centerId: 1,
-                centerName: "한마음",
-                imgUrl: null,
-                desiredHourlyWage: 40000,
-                rate: "RATE1",
-                age: 11,
-                sexual: "FEMALE",
-                careTypes: ["방문요양", "방문목욕", "입주요양"],
-              },
-            ]
-          }
-          attuneRequests={
-            attuneRequests ?? [
-              /********* Dummy *********/
-              {
-                recruitConditionId: 1,
-                elderId: 1,
-                centerId: 1,
-                centerName: "한마음",
-                imgUrl: null,
-                desiredHourlyWage: 40000,
-                rate: "RATE1",
-                age: 11,
-                sexual: "FEMALE",
-                careTypes: ["방문요양", "방문목욕", "입주요양"],
-              },
-            ]
-          }
+          requests={requests ?? []}
+          attuneRequests={attuneRequests ?? []}
           onClickRequest={handleClickRequest}
           onClickAttuneRequest={handleClickAttuneRequest}
-          onRefresh={fetchRequests}
+          onRefresh={handleGetRequests}
         />
       </div>
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
-        <div>매칭은 근무 조건 등록 후에 이용할 수 있습니다!</div>
+        <div>{alertMessage}</div>
       </Alert>
     </div>
   );
