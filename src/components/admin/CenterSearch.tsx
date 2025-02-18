@@ -77,8 +77,14 @@ const CenterSearch: React.FC<CenterSearchProps> = ({ onSelect }) => {
         <div className="p-1 pl-3">{centerInfo.startTime}</div>
         <div className="p-1 pl-3 bg-pale-green">운영 종료 시간</div>
         <div className="p-1 pl-3">{centerInfo.endTime}</div>
-        <div className="p-1 pl-3 col-span-2 text-center bg-pale-green">한줄소개</div>
-        <div className="p-1 pl-3 col-span-2">{centerInfo.intro}</div>
+        {centerInfo.intro && (
+          <>
+            <div className="p-1 pl-3 col-span-2 text-center bg-pale-green">한줄소개</div>
+            <div className="p-1 pl-3 col-span-2 min-h-8">
+              <span>{centerInfo.intro}</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* 검색 결과 모달 */}

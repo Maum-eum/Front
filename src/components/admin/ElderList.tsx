@@ -35,11 +35,11 @@ const ElderList: React.FC<ElderListProps> = ({data = []}) => {
 
   return (
     <div className="w-full flex flex-col p-1 rounded-lg">
-      <div className="w-full flex justify-center m-1 p-1 h-12 items-center font-gtr-B">
+      <div className="w-full flex m-1 p-1 h-12 justify-center items-center font-gtr-B">
         <span className="flex-grow text-content text-black">센터 어르신 리스트</span>
         <button
           className="text-sm border p-1 px-3 rounded-lg bg-pale-green"
-          onClick={() => navigate("/admin/addElder")}>
+          onClick={() => navigate("/admin/elder/add")}>
             등록
         </button>
       </div>
@@ -48,6 +48,7 @@ const ElderList: React.FC<ElderListProps> = ({data = []}) => {
           <div
           key={elder.name}
           className="p-1 pl-2 border rounded-md flex"
+          onClick={() => navigate(`/admin/elder/detail/${elder.elderId}`)}
           >
             <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-600 mr-4">
               {elder.img ? <img src={elder.img} alt="" className="w-full h-full object-cover" /> : null}

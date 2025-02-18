@@ -15,10 +15,10 @@ export const getElderList = async (
 // 센터 내 어르신 상세 조회
 export const getElderDetail = async (
   params: {
-    centerId:number,
-    elderId:number
+    centerId: number,
+    elderId: number
   },
-  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo[]>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
   await privateApi.get(`/admin/${params.centerId}/elders/${params.elderId}`).then(Response).catch(Error);
@@ -34,7 +34,7 @@ export const addElder = async (
 };
 
 // 어르신 수정
-export const ModifyElder = async (
+export const modifyElder = async (
   params: AddElderParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
@@ -43,7 +43,7 @@ export const ModifyElder = async (
 };
 
 // 어르신 삭제
-export const DeleteElder = async (
+export const deleteElder = async (
   params: {
     centerId:number,
     elderId:number

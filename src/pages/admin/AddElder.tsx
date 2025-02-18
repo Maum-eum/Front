@@ -27,6 +27,7 @@ const AddElder: React.FC = () => {
   const [step, setStep] = useState(1);
   const { centerId } = useAdminStore();
   const [elderData, setElderData] = useState<elderInfo>({
+    elderId                : 0,
     inmateTypes            : [],
     name                   : "",
     birth                  : "",
@@ -34,7 +35,7 @@ const AddElder: React.FC = () => {
     rate                   : "RATE1",
     weight                 : "",
     isTemporarySave        : false,
-    isNormal               : false,
+    normal                 : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
     actsLikeChild          : false,

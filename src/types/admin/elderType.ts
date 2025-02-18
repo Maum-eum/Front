@@ -1,11 +1,12 @@
 export interface elderInfo {
+  elderId                : number;
   name                   : string;
   inmateTypes            : string[];
   gender                 : number;
   birth                  : string;
   rate                   : string | null;
   weight                 : number | string;
-  isNormal               : boolean;
+  normal                 : boolean;
   hasShortTermMemoryLoss : boolean;
   wandersOutside         : boolean;
   actsLikeChild          : boolean;

@@ -1,39 +1,156 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
-import CheckList from "../../components/commons/CheckList";
+import CheckList from "../../components/admin/CheckList";
+import { modifyElder, getElderDetail } from "../../api/admin/elder";
+import { elderInfo, ServiceOption } from "../../types/admin/elderType";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAdminStore } from "../../stores/admin/adminStore";
 
-import { useNavigate } from "react-router-dom";
+const categories = {
+    title: "치매 증상",
+    options: [
+      { label: "정상", name: "isNormal", value: false },
+      { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: false },
+      { label: "집 밖을 배회", name: "wandersOutside", value: false },
+      { label: "어린아이 같은 행동", name: "actsLikeChild", value: false },
+      { label: "사람을 의심하는 망상", name: "hasDelusions", value: false },
+      { label: "때리거나 욕설 등 공격적인 행동", name: "hasAggressiveBehavior", value: false },
+    ]
+  }
 
 const ModifyElder: React.FC = () => {
-//   const navigate = useNavigate();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-
-  const [ElderData, setElderData] = useState({
-    center_id:  "",
-    name:       "",
-    birth:      "",
-    gender:     "",
-    rate:       "",
-    img:        "",
-    weight:     "",
-    inmate:     false,
+  const { centerId } = useAdminStore();
+  const { elderId } = useParams();
+  const [elderData, setElderData] = useState<elderInfo>({
+    elderId                : 0,
+    inmateTypes            : [],
+    name                   : "",
+    birth                  : "",
+    gender                 : 0,
+    rate                   : "RATE1",
+    weight                 : "",
+    isTemporarySave        : false,
+    normal                 : false,
+    hasShortTermMemoryLoss : false,
+    wandersOutside         : false,
+    actsLikeChild          : false,
+    hasDelusions           : false,
+    hasAggressiveBehavior  : false,
   });
 
-  // const [ServiceData, setServiceData] = useState({
+  const [profileFile, setProfileFile] = useState<File | null>(null);
 
-  // });
-
+  // Input 데이터 처리
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setElderData((prev) => ({ ...prev, [name]: value }))
+  
+    let newValue: string | number = value;
+  
+    // ✅ 몸무게(`weight`) 필드일 경우 숫자로 변환
+    if (name === "weight") {
+      newValue = value.replace(/[^0-9.]/g, ""); // 숫자와 소수점만 허용
+      if ((newValue.match(/\./g) || []).length > 1) return; // 소수점 1개만 허용
+    }
+  
+    setElderData((prev) => ({ ...prev, [name]: newValue }));
   }
-  
-  
+
+  // Radio 버튼 처리
+  const elderRadioDataChange = (selected: null | string | number | string[]) => {
+    if (typeof selected === "number") {
+      setElderData((prev) => ({ ...prev, gender: selected }));
+    }
+    else if (typeof selected === "string" || selected === null) {
+      setElderData((prev) => ({ ...prev, rate: selected }));
+    }
+    else {
+      setElderData((prev) => ({ ...prev, inmateTypes: selected}))
+    }
+  }
+
+  // 치매/서비스 항목 처리
+  const handleElderCheckList = (selected: ServiceOption) => {
+    const name = selected.name;
+    const value = selected.value;
+    const newData = {...elderData, [name]: value}
+    setElderData(newData)
+  }
+
+  // 이미치 처리
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfileFile(file);
+    }
+  };
+
+  // 폼데이터 전처리
+  const setIsTemp = (type: boolean) => {
+    const form = new FormData()
+
+    if (profileFile) {
+      form.append("profileImg", profileFile, profileFile.name);
+    } else {
+      form.append("profileImg", "");
+    }
+
+    form.append("inmateTypes", elderData.inmateTypes.join(','))
+    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined}))
+    return form
+  }
+
+  const getElderInfo = async () => {
+    if (!elderId) {
+      alert("잘못된 접근입니다.");
+      navigate(-1);
+      return;
+    }
+
+    await getElderDetail(
+      {
+        centerId: centerId,
+        elderId: parseInt(elderId),
+      },
+      (res) => {
+        setElderData(res.data.data);
+        console.log(res.data.data)
+        // if (res.data.data.img) {
+        //   setProfileFile()
+        // }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  };
+
+  const sendModifyElder = async () => {
+    const form = setIsTemp(false)
+    await modifyElder(
+      {
+        centerId: centerId,
+        data: form
+      },
+      () => {
+        alert('수정 되었습니다.')
+        navigate("/admin/main")
+      },
+      (err) => {
+        console.log(err.response?.data)
+      }
+    )
+  }
+
+  useEffect(() => {
+    getElderInfo();
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center">
       {/* 모바일 환경에서만 보이는 UI */}
@@ -46,34 +163,44 @@ const ModifyElder: React.FC = () => {
             
             <Steps step={step}/>
 
-            {/* 프로필 이미지 (임시 박스) */}
-            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-green-200 rounded-lg mb-6"></div>
+            {/* 프로필 이미지 업로드 */}
+            <div className="flex flex-col items-center m-2">
+              <label htmlFor="profile-upload" className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300 cursor-pointer">
+                {profileFile ? (
+                  <img src={URL.createObjectURL(profileFile)} alt="프로필" className="w-full h-full object-cover rounded-full" />
+                ) : (
+                  <span className="text-gray-500 text-sm">사진 추가</span>
+                )}
+              </label>
+              <input id="profile-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+              <p className="text-sm text-gray-500 mt-2">프로필 사진 추가</p>
+            </div>
 
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm">
               <label className="block text-item sm:text-2xl font-bold text-black mb-2">어르신 성함</label> 
               <Input
                 type="text"
-                name="username"
-                placeholder="아이디를 입력해주세요."
-                value={ElderData.name}
+                name="name"
+                placeholder="성함을 입력해주세요."
+                value={elderData.name}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">생년월일</label> 
               <Input
                 type="text"
-                name="text"
+                name="birth"
                 placeholder="생년월일를 입력해주세요."
-                value={ElderData.birth}
+                value={elderData.birth}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">성별</label>
-              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]}/>
+              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderRadioDataChange}/>
 
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
-              <Btn text="취소하기" color="white" onClick={() => navigate("/")} /> 
+              <Btn text="취소하기" color="white" onClick={() => navigate(-1)} /> 
               <Btn text="다음" onClick={() => setStep(2)} />
             </div>
           </div>
@@ -90,31 +217,37 @@ const ModifyElder: React.FC = () => {
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm">
               <label className="block text-item sm:text-xl font-bold text-black mt-3 mb-2">몸무게(Kg)</label> 
-              <Input
+              {/*몸무게입렵은 별도로..*/}
+              <input
+                className="w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0"
                 type="text"
-                name="text"
+                name="weight"
                 placeholder="몸무게를 입력해주세요."
-                value={ElderData.weight}
+                value={elderData.weight}
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label> 
-              <Input
-                type="text"
-                name="username"
-                placeholder="장기 요양 등급을 입력해주세요."
-                value={ElderData.rate}
-                onChange={elderDataChange}
+              <RadioInput
+                name="rate"
+                options={[
+                  { value: null,    label: "없음" },
+                  { value: "RATE1", label: "1등급" },
+                  { value: "RATE2", label: "2등급" },
+                  { value: "RATE3", label: "3등급" },
+                  { value: "RATE4", label: "4등급" },
+                  { value: "RATE5", label: "5등급" }]}
+                onChange={elderRadioDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
               <RadioInput
                 name="inmate" 
                 options={[
-                  { value: 1, label: "독거" },
-                  { value: 2, label: "배우자와 동거, 돌봄 시간 중 집에 있음" },
-                  { value: 3, label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
-                  { value: 4, label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
-                  { value: 5, label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" },
-              ]}/>
+                  { value: ["LIVING_ALONE"], label: "독거" },
+                  { value: ["LIVING_WITH_SPOUSE","AT_HOME_DURING_CARE"], label: "배우자와 동거, 돌봄 시간 중 집에 있음" },
+                  { value: ["LIVING_WITH_SPOUSE","AWAY_DURING_CARE"],    label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
+                  { value: ["LIVING_WITH_FAMILY","AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
+                  { value: ["LIVING_WITH_FAMILY","AWAY_DURING_CARE"],    label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" },
+              ]} onChange={elderRadioDataChange}/>
                   
             </div>
 
@@ -127,67 +260,28 @@ const ModifyElder: React.FC = () => {
 
         {/* 3단계 */}
         {step === 3 && (
-          <div className="w-full h-dvh p-4 flex flex-col items-center justify-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
+          <div className="w-full p-4 flex flex-col items-center justify-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 필요 서비스 항목</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 치매 증상</h1> 
 
             <Steps step={step}/>
-            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">어르신이 필요한 서비스를 <span className="text-red">모두 선택</span>해 주세요.</h2> 
+            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">증상을<span className="text-red"> 모두 선택 </span>해 주세요.</h2> 
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
               <CheckList
-                name="식사 보조"
-                options={[
-                  "식사 차리기",
-                  "구토물 정리",
-                  "음식물 조리 및 설거지",
-                  "경관식 보조"
-                ]}
-              />
-              <CheckList
-                name="배변 보조"
-                options={[
-                  "화장실 이동 지원",
-                  "유치도뇨 / 방광루 / 장루 관리 및 처리 지원",
-                  "배뇨, 배변 도움 후 처리 지원",
-                  "기저귀 교환"
-                ]}
-              />
-              <CheckList
-                name="이동 보조"
-                options={[
-                  "침대 <-> 휠체어 이동 보조",
-                  "보행 도움 (부축)",
-                  "보조 기구 이동 보조 (휠체어, 지팡이)",
-                  "신체 기능의 유지 및 증진 도움"
-                ]}
-              />
-              <CheckList
-                name="일상 생활"
-                options={[
-                  "컨디션 외 도움",
-                  "세면 도움",
-                  "구강 청결 도움",
-                  "몸 단장 도움"
-                ]}
-              />
-              <CheckList
-                name="치매 증상"
-                options={[
-                  "집 밖을 배회",
-                  "단기 기억 장애",
-                  "가족을 알아보지 못함",
-                  "길을 잃거나 자주 가던 곳을 헤맴",
-                  "사람을 의심하는 망상",
-                  "어린아이 같은 행동",
-                  "때리거나 욕설 등 공격적인 행동"
-                ]}
-              />
+                type="치매"
+                name={categories.title}
+                options={categories.options}
+                onChange={handleElderCheckList}
+              /> 
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
-              <Btn text="이전" color="white" onClick={() => setStep(2)} /> 
-              <Btn text="가입 대기" onClick={() => {console.log(ElderData)}} />
+              <div className="w-full flex gap-1">
+                <Btn text="이전" color="white" onClick={() => setStep(2)} />
+              </div>
+            
+              <Btn text="수정" onClick={sendModifyElder} />
             </div>
           </div>
         )}

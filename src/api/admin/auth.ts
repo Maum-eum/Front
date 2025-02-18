@@ -22,8 +22,26 @@ export const searchCenter = async (
 };
 
 export const getAdminDetail = async (
-  Response: (Response: AxiosResponse<ApiResponseDefault<SearchCenterData[]>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<SignUpParams>>) => void,
   Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
 ) => {
   await privateApi.get('/admin/profile').then(Response).catch(Error)
+}
+
+export const modifyAdmin = async (
+  params: {
+    name: string,
+    connect: string
+  }, 
+  Response: (Response: AxiosResponse<ApiResponseDefault<SignUpParams>>) => void,
+  Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
+) => {
+  await privateApi.put('/admin/profile', params).then(Response).catch(Error)
+}
+
+export const deleteAdmin = async (
+  Response: (Response: AxiosResponse<ApiResponseDefault<Record<string, boolean>>>) => void,
+  Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
+) => {
+  await privateApi.delete('/admin/').then(Response).catch(Error)
 }
