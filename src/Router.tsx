@@ -8,6 +8,9 @@ import Main from "./pages/Main";
 import AdminSignUp from "./pages/admin/SignUp";
 import AdminMain from "./pages/admin/Main";
 import AddElder from "./pages/admin/AddElder";
+import ModifyAdmin from "./pages/admin/ModifyAdmin";
+import DetailElder from "./pages/admin/DetailElder";
+import ModifyElder from "./pages/admin/ModifyElder";
 
 //유저회원가입
 import SignupTest from "./pages/caregiver/SignupTest";
@@ -21,6 +24,7 @@ import MatchSchedules from "./pages/caregiver/MatchSchedules";
 //유저
 import EditProfile from "./pages/caregiver/EditProfile";
 
+
 export default function Router() {
   //const navi = useNavigate();
 
@@ -31,7 +35,10 @@ export default function Router() {
       {/* 관리자 */}
       <Route path="/admin/signUp" element={<AdminSignUp />} />
       <Route path="/admin/main" element={<AdminMain />} />
-      <Route path="/admin/addElder" element={<AddElder />} />
+      <Route path="/admin/modify" element={<ModifyAdmin />} />
+      <Route path="/admin/elder/add" element={<AddElder />} />
+      <Route path="/admin/elder/detail/:elderId" element={<DetailElder />} />
+      <Route path="/admin/elder/modify/:elderId" element={<ModifyElder />} />
 
       {/* 요양보호사 */}
 

@@ -43,7 +43,7 @@ const Main: React.FC = () => {
             <h1 >{centerName}</h1>
             <div className="w-full flex gap-1">
               <p className="text-content flex-grow"><span className="text-green">{name}</span> 관리자</p>
-              <button className="text-xs border px-1 rounded-lg bg-pale-yellow" >관리자 정보수정</button>
+              <button className="text-xs border px-1 rounded-lg bg-pale-yellow" onClick={() => navigate('/admin/modify')} >관리자 정보수정</button>
               <button className="text-xs border px-1 rounded-lg bg-pale-red" onClick={handleLogOut}>로그아웃</button>
             </div>
           </div>

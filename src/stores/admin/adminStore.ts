@@ -9,6 +9,7 @@ type AdminInfo = {
   centerId: number;
   centerName: string;
   setAdminInfo: (accessToken: string, userId: number, role: string, name: string, centerId: number, centerName: string) => void;
+  setNameStore: (name: string) => void;
   logout: () => void;
 }
 
@@ -22,6 +23,7 @@ export const useAdminStore = create(
       centerId: 0,
       centerName: "",
       setAdminInfo: (accessToken, userId, role, name, centerId, centerName ) => set({accessToken, userId, role, name, centerId, centerName}),
+      setNameStore: (name) => set({name}),
       logout: () => set({ accessToken: "", userId: 0, role: "", name: "", centerId:0, centerName: "" })
     }),
     {
