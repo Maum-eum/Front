@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Btn from "../commons/Btn"; // ✅ Btn.tsx 가져오기
 
 interface CertificationModalProps {
   isOpen: boolean;
@@ -11,20 +12,11 @@ const CERT_TYPES = ["요양보호사", "간호조무사", "사회복지사"];
 const CERT_RATES = { "1급": "LEVEL1", "2급": "LEVEL2" } as const;
 
 const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose, onSave }) => {
-  const defaultCertificate = {
+  const [certificate, setCertificate] = useState({
     certNum: "",
-    certType: CERT_TYPES[0], // 기본값: 요양보호사
-    certRate: "1급", // 기본값: 1급
-  };
-
-  const [certificate, setCertificate] = useState(defaultCertificate);
-
-  // ✅ 모달이 열릴 때마다 초기화 (기존 데이터 유지 X)
-  useEffect(() => {
-    if (isOpen) {
-      setCertificate(defaultCertificate);
-    }
-  }, [isOpen]);
+    certType: CERT_TYPES[0],
+    certRate: "1급",
+  });
 
   if (!isOpen) return null;
 
@@ -34,7 +26,6 @@ const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose
       return;
     }
 
-    // ✅ API 전송 시 자격증 급수를 LEVEL1, LEVEL2로 변환
     onSave({
       certNum: certificate.certNum,
       certType: certificate.certType,
@@ -45,22 +36,24 @@ const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-80">
-        <h2 className="text-lg font-bold text-black mb-4">자격증 추가</h2>
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg w-full max-w-xs sm:max-w-sm">
+        <h2 className="text-lg font-bold text-black text-center mb-6">자격증 추가</h2>
 
         {/* ✅ 자격증 번호 입력 */}
+        <label className="block text-item font-bold text-black mb-2">자격증 번호</label>
         <input
           type="text"
-          placeholder="자격증 번호 (ex. CERT-12345)"
-          className="border p-2 w-full mb-2"
+          placeholder="ex) CERT-12345"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-4"
           value={certificate.certNum}
           onChange={(e) => setCertificate({ ...certificate, certNum: e.target.value })}
         />
 
         {/* ✅ 자격증 이름 (드롭다운) */}
+        <label className="block text-item font-bold text-black mb-2">자격증 이름</label>
         <select
-          className="border p-2 w-full mb-2"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-4"
           value={certificate.certType}
           onChange={(e) => setCertificate({ ...certificate, certType: e.target.value })}
         >
@@ -72,8 +65,9 @@ const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose
         </select>
 
         {/* ✅ 자격증 급수 (드롭다운) */}
+        <label className="block text-item font-bold text-black mb-2">자격증 급수</label>
         <select
-          className="border p-2 w-full"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-6"
           value={certificate.certRate}
           onChange={(e) => setCertificate({ ...certificate, certRate: e.target.value })}
         >
@@ -84,13 +78,10 @@ const CertificationModal: React.FC<CertificationModalProps> = ({ isOpen, onClose
           ))}
         </select>
 
-        <div className="flex gap-2 mt-4">
-          <button onClick={onClose} className="bg-gray-300 text-black px-4 py-2 w-1/2 rounded">
-            이전으로
-          </button>
-          <button onClick={handleSave} className="bg-green-500 text-green px-4 py-2 w-1/2 rounded">
-            완료
-          </button>
+        {/* ✅ 버튼 - Btn.tsx 스타일 적용 */}
+        <div className="flex flex-col gap-2">
+          <Btn text="이전으로" color="white" onClick={onClose} />
+          <Btn text="완료" color="green" onClick={handleSave} />
         </div>
       </div>
     </div>
