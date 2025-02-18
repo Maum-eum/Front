@@ -56,14 +56,11 @@ export const DeleteElder = async (
 
 // 어르신 임시 저장
 export const addTempElder = async (
-  params: {
-    centerId:number,
-    elderId:number
-  },
+  params: AddElderParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<AddElderResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await formDataApi.post(`/admin/${params.centerId}/elders/${params.elderId}`).then(Response).catch(Error);
+  await formDataApi.post(`/admin/${params.centerId}/elders/temp`, params.data).then(Response).catch(Error);
 };
 
 // 임시 저장된 어르신 상세 조회

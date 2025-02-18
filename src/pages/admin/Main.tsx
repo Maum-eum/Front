@@ -1,38 +1,22 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAdminStore } from "../../stores/admin/adminStore";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ElderList from "../../components/admin/ElderList";
-import MatchingList from "../../components/admin/MatchingList";
+// import MatchingList from "../../components/admin/MatchingList";
+import { elderInfo } from "../../types/admin/elderType";
 import { getElderList } from "../../api/admin/elder";
 
 const Main: React.FC = () => {
-//   const navigate = useNavigate();
-  const { centerName, name, centerId } = useAdminStore();
-
-  const dummy = [{
-    name       : "박노인",
-    centerName : "행복 요양 센터",
-    gender     : 1,
-    birth      : "1940-04-02",
-    rate       : "3등급",
-    imgUrl     : "",
-    weight     : 58,
-    //빌드 오류 수정용으로 더미에 없는 속성 추가했습니다.
-    inmateTypes: ["Type1", "Type2"],
-    address                : "",
-    isTemporarySave        : false,
-    isNormal               : false,
-    hasShortTermMemoryLoss : false,
-    wandersOutside         : false,
-    actsLikeChild          : false,
-    hasDelusions           : false,
-    hasAggressiveBehavior  : false,
-  }]
+  const navigate = useNavigate();
+  const { centerName, name, centerId, logout } = useAdminStore();
+  const [ elderList, setElderList ] = useState<elderInfo[]>([]);
 
   const handleGetElderList = useCallback(async () => {
+    if(centerId === 0) return;
     await getElderList(
       centerId,
       (res) => {
+        setElderList(res.data.data)
         console.log(res.data.data)
       },
       (err) => {
@@ -40,6 +24,11 @@ const Main: React.FC = () => {
       }
     );
   }, [centerId]);
+
+  const handleLogOut = async() => {
+    logout();
+    navigate('/');
+  };
 
   useEffect(() => {
     handleGetElderList();
@@ -50,9 +39,15 @@ const Main: React.FC = () => {
       {/* 모바일 환경에서만 보이는 UI */}
       <div className="block md:hidden w-full">
         <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
-          <h1 className="text-xl font-bold text-black mb-6 font-gtr-B">{centerName} - {name} 관리자</h1>
-          <ElderList data= {dummy}/>
-          <MatchingList data = {["김 요양 보호사"]} />
+          <div className="w-full flex flex-col gap-2 text-xl font-bold text-black mb-6 font-gtr-B">
+            <h1 >{centerName}</h1>
+            <div className="w-full flex gap-1">
+              <p className="text-content flex-grow"><span className="text-green">{name}</span> 관리자</p>
+              <button className="text-xs border px-1 rounded-lg bg-pale-yellow" >관리자 정보수정</button>
+              <button className="text-xs border px-1 rounded-lg bg-pale-red" onClick={handleLogOut}>로그아웃</button>
+            </div>
+          </div>
+          <ElderList data= {elderList}/>
         </div>
       </div>
 

@@ -5,7 +5,7 @@ import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
 import CheckList from "../../components/admin/CheckList";
-import { addElder } from "../../api/admin/elder";
+import { addElder, addTempElder } from "../../api/admin/elder";
 import { elderInfo, ServiceOption } from "../../types/admin/elderType";
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../stores/admin/adminStore";
@@ -27,14 +27,13 @@ const AddElder: React.FC = () => {
   const [step, setStep] = useState(1);
   const { centerId } = useAdminStore();
   const [elderData, setElderData] = useState<elderInfo>({
+    inmateTypes            : [],
     name                   : "",
-    centerName             : "",
     birth                  : "",
     gender                 : 0,
     rate                   : "RATE1",
     weight                 : "",
-    inmateTypes            : [""],
-    address                : "",
+    isTemporarySave        : false,
     isNormal               : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
@@ -60,12 +59,15 @@ const AddElder: React.FC = () => {
   }
 
   // Radio 버튼 처리
-  const elderRadioDataChange = (selected: number | string[]) => {
+  const elderRadioDataChange = (selected: null | string | number | string[]) => {
     if (typeof selected === "number") {
       setElderData((prev) => ({ ...prev, gender: selected }));
     }
+    else if (typeof selected === "string" || selected === null) {
+      setElderData((prev) => ({ ...prev, rate: selected }));
+    }
     else {
-      setElderData((prev) => ({ ...prev, inmateTypes: selected }));
+      setElderData((prev) => ({ ...prev, inmateTypes: selected}))
     }
   }
 
@@ -85,21 +87,47 @@ const AddElder: React.FC = () => {
     }
   };
 
-  const handleAddElder = async () => {
-    const form = new FormData();
-    form.append("data", JSON.stringify(elderData));
+  const setIsTemp = (type: boolean) => {
+    const form = new FormData()
+
     if (profileFile) {
       form.append("profileImg", profileFile, profileFile.name);
     } else {
       form.append("profileImg", "");
     }
+
+    form.append("inmateTypes", elderData.inmateTypes.join(','))
+    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined}))
+    return form
+  }
+
+  const sendAddTempElder = async () => {
+    const form = setIsTemp(true)
+    await addTempElder(
+      {
+        centerId: centerId,
+        data: form
+      },
+      () => {
+        alert('임시 저장 되었습니다.')
+        navigate("/admin/main")
+      },
+      (err) => {
+        console.log(err.response?.data)
+      }
+    )
+  }
+
+  const sendAddElder = async () => {
+    const form = setIsTemp(false)
+    console.log(elderData)
     await addElder(
       {
         centerId: centerId,
         data: form
       },
-      (res) => {
-        console.log(res)
+      () => {
+        alert('등록 되었습니다.')
         navigate("/admin/main")
       },
       (err) => {
@@ -152,7 +180,7 @@ const AddElder: React.FC = () => {
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">성별</label>
-              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]}/>
+              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderRadioDataChange}/>
 
             </div>
 
@@ -184,18 +212,22 @@ const AddElder: React.FC = () => {
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label> 
-              <Input
-                type="text"
+              <RadioInput
                 name="rate"
-                placeholder="장기 요양 등급을 입력해주세요."
-                value={elderData.rate}
-                onChange={elderDataChange}
+                options={[
+                  { value: null,    label: "없음" },
+                  { value: "RATE1", label: "1등급" },
+                  { value: "RATE2", label: "2등급" },
+                  { value: "RATE3", label: "3등급" },
+                  { value: "RATE4", label: "4등급" },
+                  { value: "RATE5", label: "5등급" }]}
+                onChange={elderRadioDataChange}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
               <RadioInput
                 name="inmate" 
                 options={[
-                  { value: ["LIVING_ALONE "], label: "독거" },
+                  { value: ["LIVING_ALONE"], label: "독거" },
                   { value: ["LIVING_WITH_SPOUSE","AT_HOME_DURING_CARE"], label: "배우자와 동거, 돌봄 시간 중 집에 있음" },
                   { value: ["LIVING_WITH_SPOUSE","AWAY_DURING_CARE"],    label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
                   { value: ["LIVING_WITH_FAMILY","AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
@@ -232,10 +264,10 @@ const AddElder: React.FC = () => {
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
               <div className="w-full flex gap-1">
                 <Btn text="이전" color="white" onClick={() => setStep(2)} />
-                <Btn text="임시저장" color="pale-green" onClick={() => setStep(2)} />
+                <Btn text="임시저장" color="pale-green" onClick={sendAddTempElder} />
               </div>
-              
-              <Btn text="등록" onClick={handleAddElder} />
+            
+              <Btn text="등록" onClick={sendAddElder} />
             </div>
           </div>
         )}
