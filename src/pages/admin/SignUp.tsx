@@ -6,7 +6,7 @@ import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import CenterSearch from "../../components/admin/CenterSearch";
 
-import { signUp } from "../../api/admin/signup";
+import { signUp } from "../../api/admin/auth";
 
 const AdminSignUp: React.FC = () => {
   const navigate = useNavigate();

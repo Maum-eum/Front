@@ -1,19 +1,18 @@
 export interface elderInfo {
   name                   : string;
-  centerName             : string;
   inmateTypes            : string[];
   gender                 : number;
   birth                  : string;
-  rate                   : string;
+  rate                   : string | null;
   weight                 : number | string;
-  address                : string;
   isNormal               : boolean;
   hasShortTermMemoryLoss : boolean;
   wandersOutside         : boolean;
   actsLikeChild          : boolean;
   hasDelusions           : boolean;
   hasAggressiveBehavior  : boolean;
-  // isTemporarySave        : boolean;
+  isTemporarySave        : boolean;
+  img?                   : string;
 }
 
 export interface ServiceOption {

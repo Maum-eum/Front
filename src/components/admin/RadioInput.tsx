@@ -2,27 +2,27 @@ import clsx from "clsx";
 import React, { useState } from "react";
 
 type SelectOption = {
-  value: number | string[];
+  value: null | string | number | string[];
   label: string;
 }
 
 type RadioInputProps = {
     name: string;
     options: SelectOption[];
-    selectedValues? : (number | string[])[];
-    onChange?: (selected: (number | string[])) => void;
+    selectedValues? : (null | string | number | string[])[];
+    onChange?: (selected: (null | string | number | string[])) => void;
 }
 
 const RadioInput: React.FC<RadioInputProps> = ( { name, options, selectedValues = [], onChange } ) => {
-  const [selected, setSelected] = useState<(number | string[])[]>(selectedValues);
+  const [selected, setSelected] = useState<(null | string | number | string[])[]>(selectedValues);
 
-  const handleSelect = (value: number | string[]) => {
+  const handleSelect = ( value: null | string | number | string[]) => {
     setSelected([value]);
     if (onChange) onChange(value);
   };
 
   return (
-    <div className={clsx("flex gap-3 text-sm", { "flex-col": name === "inmate" })}>
+    <div className={clsx("mb-2 gap-3 flex", {"grid grid-cols-3": name === "rate" }, {" flex-col ": name === "inmate" })}>
       {options.map(({ value, label }) => {
         const isSelected = selected.some((item) =>
           Array.isArray(item) && Array.isArray(value)
@@ -31,7 +31,7 @@ const RadioInput: React.FC<RadioInputProps> = ( { name, options, selectedValues 
         );
   
         return (
-          <label key={JSON.stringify(value)} className="flex items-center gap-1 cursor-pointer">
+          <label key={JSON.stringify(value)} className="flex items-center gap-1 cursor-pointer text-xs">
             <input
               type="radio"
               name={name}

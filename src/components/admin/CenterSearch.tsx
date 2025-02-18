@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { searchCenter } from "../../api/admin/signup";
+import { searchCenter } from "../../api/admin/auth";
 import Input from "../commons/Input";
 import { SearchCenterData } from "../../types/admin/searchCenterData";
 
@@ -83,10 +83,10 @@ const CenterSearch: React.FC<CenterSearchProps> = ({ onSelect }) => {
 
       {/* 검색 결과 모달 */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center w-full p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center w-full p-4 ">
           <div className="bg-white p-3 rounded-lg w-full">
             <h2 className="text-lg font-bold mb-2">센터 선택</h2>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 overflow-auto">
               {results.length > 0 ? results.map((center, index) => (
                 <div 
                   key={index} 

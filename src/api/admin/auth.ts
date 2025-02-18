@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { noneApi } from '../../utils/http-commons';
+import { noneApi, privateApi } from '../../utils/http-commons';
 
 import { SignUpParams, SignUpResponse } from '../../types/admin/singUpType';
 import { ApiResponseDefault } from '../../types/commons';
@@ -20,3 +20,10 @@ export const searchCenter = async (
 ) => {
   await noneApi.get(`/center/search?keyword=${params}`,).then(Response).catch(Error);
 };
+
+export const getAdminDetail = async (
+  Response: (Response: AxiosResponse<ApiResponseDefault<SearchCenterData[]>>) => void,
+  Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
+) => {
+  await privateApi.get('/admin/profile').then(Response).catch(Error)
+}
