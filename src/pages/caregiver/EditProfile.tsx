@@ -7,6 +7,8 @@ import { updateCaregiverProfile } from "../../api/caregiver/updateprofile"; // �
 import CertificationModal from "../../components/caregiver/CertificationModal"; // ✅ 자격증 추가 모달
 import CareerModal from "../../components/caregiver/CareerModal"; // ✅ 경력 추가 모달
 
+
+
 const EditProfile = () => {
   const navigate = useNavigate();
 
@@ -25,6 +27,9 @@ const EditProfile = () => {
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
   const [selectedCertIndex, setSelectedCertIndex] = useState<number | null>(null);
   const [selectedCareerIndex, setSelectedCareerIndex] = useState<number | null>(null);
+const [previewImage, setPreviewImage] = useState<string | null>(null); // 미리보기 이미지 URL
+const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
 
   // ✅ 기존 데이터 불러오기
   useEffect(() => {
@@ -32,7 +37,7 @@ const EditProfile = () => {
       try {
         const response = await getCaregiverProfile();
         console.log("📌 가져온 요양보호사 데이터:", response);
-        // ✅ 불러온 데이터를 상태에 저장하여 사용자가 수정 가능하게 함
+  
         setProfileImage(response.img || null);
         setUserName(response.username);
         setPhone(response.contact);
@@ -41,15 +46,36 @@ const EditProfile = () => {
         setHasCar(response.car);
         setDementiaTraining(response.education);
         setEmploymentStatus(response.employmentStatus);
-        setCertifications(response.certificateResponseDTOList);
-        setExperiences(response.experienceResponseDTOList);
+  
+        // ✅ 데이터가 존재하는지 확인 후 상태 업데이트
+        if (response.certificateResponseDTOList && response.certificateResponseDTOList.length > 0) {
+          setCertifications(response.certificateResponseDTOList);
+        } else {
+          setCertifications([]);
+        }
+  
+        if (response.experienceResponseDTOList && response.experienceResponseDTOList.length > 0) {
+          setExperiences(response.experienceResponseDTOList);
+        } else {
+          setExperiences([]);
+        }
+  
       } catch (error) {
         console.error("🚨 요양보호사 정보 가져오기 실패:", error);
       }
     };
-
+  
     fetchProfile();
-  }, []);
+  }, []); // 📌 ✅ 의존성 배열을 빈 배열로 수정 → **한 번만 실행되도록 변경**
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const previewURL = URL.createObjectURL(file);
+      setPreviewImage(previewURL);
+    }
+  };
 
   // ✅ 자격증 추가 및 수정 핸들러
   const handleAddCertificate = (newCertificate: { certNum: string; certType: string; certRate: string }) => {
@@ -84,46 +110,60 @@ const EditProfile = () => {
       setExperiences(experiences.filter((_, i) => i !== index));
     };
 
-  const handleUpdateProfile = async () => {
-    const updatedProfile = {
-      username,
-      contact: phone,
-      car: hasCar,
-      education: dementiaTraining,
-      employmentStatus, // ✅ 구직 상태 추가
-      img: profileImage,
-      intro: introduction,
-      address,
-      certificateResponseDTOList: certifications,
-      experienceResponseDTOList: experiences,
+    
+    const handleUpdateProfile = async () => {
+      const updatedProfile = {
+        username,
+        contact: phone,
+        car: hasCar,
+        education: dementiaTraining,
+        employmentStatus,
+        img: profileImage,
+        intro: introduction,
+        address,
+        certificateRequestDTOList: Array.isArray(certifications) ? certifications : [certifications],  
+        experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],      
+      };
+    
+      console.log("📌 보내는 데이터 확인:", updatedProfile);
+    
+      const response = await updateCaregiverProfile(updatedProfile);
+    
+      if (response) {
+        alert("✅ 정보가 성공적으로 수정되었습니다!");
+        navigate("/caregiver/main");
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+      } else {
+        alert("🚨 정보 수정에 실패했습니다. 다시 시도해주세요.");
+      }
     };
-
-    const response = await updateCaregiverProfile(updatedProfile);
-  
-    if (response) {
-      alert("✅ 정보가 성공적으로 수정되었습니다!");
-      navigate("/caregiver/main"); // ✅ 수정 후 메인으로 이동
-    } else {
-      alert("🚨 정보 수정에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-  
+    
+    
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 sm:px-6 py-8">
-      <h1 className="text-title font-bold text-black mb-6">정보 변경</h1>
-
-      <div className="w-full max-w-xs sm:max-w-sm bg-white p-6 rounded-lg shadow-md">
-        {/* ✅ 프로필 이미지 */}
-        <div className="flex flex-col items-center mb-6">
-          {profileImage ? (
-            <img src={profileImage} alt="프로필" className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-full border" />
-          ) : (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full border flex items-center justify-center">
-              <span className="text-gray-500 text-sm">사진 없음</span>
-            </div>
-          )}
-        </div>
-
+    <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 py-8">
+    <h1 className="text-title font-bold text-black mb-6">정보 변경</h1>
+    <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col items-center mb-4">
+        {previewImage || profileImage ? (
+          <img
+            src={previewImage || profileImage!}
+            alt="프로필"
+            className="w-24 h-24 object-cover rounded-full border"
+          />
+        ) : (
+          <div className="w-24 h-24 bg-gray-200 rounded-full border flex items-center justify-center">
+            <span className="text-gray-500 text-sm">사진 없음</span>
+          </div>
+        )}
+        <label className="mt-2 cursor-pointer text-sm text-blue-500">
+          프로필 사진 수정
+          <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+        </label>
+      </div>
+      
+        <div className="flex flex-col gap-4">
         {/* ✅ 이름 */}
         <label className="block text-item font-bold text-black">이름</label>
         <Input type="text" value={username} onChange={(e) => setUserName(e.target.value)} placeholder="이름 입력" />
@@ -135,18 +175,20 @@ const EditProfile = () => {
         {/* ✅ 주소 */}
         <label className="block text-item font-bold text-black">주소</label>
         <Input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="주소 입력" />
-          {/* ✅ 자격증 목록 */}
+      </div>
+
+        {/* ✅ 자격증 목록 */}
         <div className="flex justify-between items-center mt-4">
-          <h2 className="font-bold text-item text-black">자격증</h2>
+          <h2 className="font-bold text-item text-black mb-4">자격증</h2>
           <button onClick={() => setIsCertModalOpen(true)} className="text-gray-500 text-sm font-bold">
-            + 추가
+            + 추가하기
           </button>
         </div>
         {certifications.length > 0 ? (
           certifications.map((cert, index) => (
             <div
               key={index}
-              className="w-full p-3 border-2 rounded-lg bg-white cursor-pointer"
+              className="w-full h-12 p-2 border-2 border-gray-300 bg-white focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0 flex items-center cursor-pointer"
               onClick={() => {
                 setSelectedCertIndex(index);
                 setIsCertModalOpen(true);
@@ -159,73 +201,99 @@ const EditProfile = () => {
           <p className="text-gray-500 text-sm">자격증 없음</p>
         )}
 
-        {/* ✅ 한줄 소개 */}
-        <label className="block text-item font-bold text-black">한줄 소개</label>
-        <textarea className="w-full p-3 border-2 rounded-lg bg-white" value={introduction} onChange={(e) => setIntroduction(e.target.value)} placeholder="한줄 소개 입력" />
 
         {/* ✅ 차량 소유 여부 */}
-        <label className="block text-item font-bold text-black">차량 소유</label>
-        <div className="flex gap-4">
-          <label>
-            <input type="radio" name="car" checked={hasCar === true} onChange={() => setHasCar(true)} /> 소유
-          </label>
-          <label>
-            <input type="radio" name="car" checked={hasCar === false} onChange={() => setHasCar(false)} /> 미소유
-          </label>
+        <label className="block text-item font-bold text-black mt-4">차량 소유</label>
+        <div className="flex gap-4 mb-4 mt-2">
+          {[
+            { label: "소유", value: true },
+            { label: "미소유", value: false },
+          ].map((option) => (
+            <label
+              key={option.value.toString()}
+              className={`flex items-center gap-2 cursor-pointer px-3 py-2  ${
+                hasCar === option.value ? "border-green bg-green-100" : "border-gray-300"
+              }`}
+              onClick={() => setHasCar(option.value)}
+            >
+              <div
+                className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+                  hasCar === option.value ? "border-green bg-green" : "border-gray-400 bg-white"
+                }`}
+              >
+                {hasCar === option.value && <div className="w-2.5 h-2.5 bg-white rounded-full"></div>}
+              </div>
+              <span className="text-content">{option.label}</span>
+            </label>
+          ))}
         </div>
 
         {/* ✅ 치매 교육 이수 여부 */}
         <label className="block text-item font-bold text-black">치매 교육 이수</label>
-        <div className="flex gap-4">
-          <label>
-            <input type="radio" name="dementia" checked={dementiaTraining === true} onChange={() => setDementiaTraining(true)} /> 이수
-          </label>
-          <label>
-            <input type="radio" name="dementia" checked={dementiaTraining === false} onChange={() => setDementiaTraining(false)} /> 미이수
-          </label>
-        </div>
-
-        {/* ✅ 구직 상태 추가 */}
-        <label className="block text-item font-bold text-black">구직 상태</label>
-        <div className="flex gap-4">
-          <label>
-            <input type="radio" name="employment" checked={employmentStatus === true} onChange={() => setEmploymentStatus(true)} /> 구직 중
-          </label>
-          <label>
-            <input type="radio" name="employment" checked={employmentStatus === false} onChange={() => setEmploymentStatus(false)} /> 구직 아님
-          </label>
-        </div>        
-
-         {/* ✅ 경력 목록 */}
-         <div className="flex justify-between items-center mt-4">
-          <h2 className="font-bold text-item text-black">경력사항</h2>
-          <button onClick={() => setIsCareerModalOpen(true)} className="text-gray-500 text-sm font-bold">
-            + 추가
-          </button>
-        </div>
-        {experiences.length > 0 ? (
-          experiences.map((exp, index) => (
-            <div key={index} className="flex justify-between items-center border p-3 rounded-lg bg-white cursor-pointer">
+        <div className="flex gap-4 mt-2">
+          {[
+            { label: "이수", value: true },
+            { label: "미이수", value: false },
+          ].map((option) => (
+            <label
+              key={option.value.toString()}
+              className={`flex items-center gap-2 cursor-pointer px-3 py-2  ${
+                dementiaTraining === option.value ? "border-green bg-green-100" : "border-gray-300"
+              }`}
+              onClick={() => setDementiaTraining(option.value)}
+            >
               <div
-                className="flex flex-col w-full"
-                onClick={() => {
-                  setSelectedCareerIndex(index);
-                  setIsCareerModalOpen(true);
-                }}
+                className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+                  dementiaTraining === option.value ? "border-green bg-green" : "border-gray-400 bg-white"
+                }`}
               >
-                <p className="font-bold text-black text-item">
-                  {exp.title} <span className="text-gray-500">{exp.duration}개월</span>
-                </p>
-                <p className="text-sm text-black">{exp.description}</p>
+                {dementiaTraining === option.value && <div className="w-2.5 h-2.5 bg-white rounded-full"></div>}
               </div>
-              <button onClick={() => handleDeleteExperience(index)} className="text-red-500 text-sm font-bold">
-                 🗑️
-              </button>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-sm">경력 없음</p>
-        )}
+              <span className="text-content">{option.label}</span>
+            </label>
+          ))}
+        </div>
+
+      {/* ✅ 한줄 소개 */}
+      <label className="block text-item font-bold text-black mt-4">한줄 소개</label>
+      <textarea
+        className="w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0 mt-2"
+        value={introduction}
+        onChange={(e) => setIntroduction(e.target.value)}
+        placeholder="한줄 소개 입력"
+      />
+
+  {/* ✅ 경력 목록 */}
+  <div className="flex justify-between items-center mt-4">
+    <h2 className="font-bold text-item text-black mb-2">경력사항</h2>
+    <button onClick={() => setIsCareerModalOpen(true)} className="text-gray-500 text-sm font-bold">
+      + 추가하기
+    </button>
+  </div>
+
+  {experiences.length > 0 ? (
+    experiences.map((exp, index) => (
+      <div key={index} className="flex justify-between items-center p-3 bg-white cursor-pointer">
+        <div
+          className="flex flex-col w-full"
+          onClick={() => {
+            setSelectedCareerIndex(index);
+            setIsCareerModalOpen(true);
+          }}
+        >
+          <p className="font-semibold text-black text-item">
+            {exp.title} <span className="text-gray-500 text-sm">{exp.duration}개월</span>
+          </p>
+          <p className="text-sm text-black mt-2">{exp.description}</p> {/* ✅ 제목과 설명 사이 간격 추가 */}
+        </div>
+        <button onClick={() => handleDeleteExperience(index)} className="text-red-500 text-sm font-bold">
+          🗑️
+        </button>
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-500 text-sm">경력 없음</p>
+  )}
 
         {/* ✅ 버튼 */}
         <div className="flex flex-col gap-2 mt-6">

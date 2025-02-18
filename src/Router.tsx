@@ -35,7 +35,7 @@ export default function Router() {
 
       {/* 요양보호사 */}
 
-      <Route path="/signup/step3" element={<SignupStep3 />} />
+      <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
       <Route path="/caregiver/signup" element={<SignupTest />} />
       <Route path="/caregiver/edit/profile" element={<EditProfile />} />
 

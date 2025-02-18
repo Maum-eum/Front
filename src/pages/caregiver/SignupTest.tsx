@@ -80,11 +80,6 @@ const SignupTest = () => {
     }
   };
   
-  const transformedCertificates = certificateRequestDTOList.map(cert => ({
-    certNum: cert.certNum,
-    certType: cert.certType,
-    certRate: cert.certRate === "1급" ? "LEVEL1" : "LEVEL2",
-  }));
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8">
@@ -189,73 +184,85 @@ const SignupTest = () => {
             </div>
           </div>
           </div>
+      
+    {/* ✅ 차량 소유 여부 */}
+<label className="text-item font-bold text-black mt-4">차량 소유</label>
+<div className="flex gap-4 mb-4">
+  {[
+    { label: "소유", value: true },
+    { label: "미소유", value: false },
+  ].map((option) => (
+    <label
+      key={option.value.toString()}
+      className={`flex items-center justify-between w-1/2 px-4 py-2 cursor-pointer ${
+        signupData.car === option.value ? "border-green bg-green-100" : "border-gray-300"
+      }`}
+      onClick={() => setSignupData({ car: option.value })}
+    >
+      <span className="text-content">{option.label}</span>
+      <div
+        className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+          signupData.car === option.value ? "border-green bg-green" : "border-gray-400 bg-white"
+        }`}
+      >
+        {signupData.car === option.value && <div className="w-2.5 h-2.5 bg-white rounded-full"></div>}
+      </div>
+    </label>
+  ))}
+</div>
 
-          {/* ✅ 차량 소유 여부 */}
-          <label className="text-item font-bold text-black  mt-4 ">차량 소유</label>
-          <div className="flex gap-4 mb-4">
-            <label>
-              <input
-                type="radio"
-                name="car"
-                checked={signupData.car === true} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ car: true })}
-              /> 소유
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="car"
-                checked={signupData.car === false} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ car: false })}
-                
-              /> 미소유
-            </label>
-          </div>
+{/* ✅ 치매 교육 이수 여부 */}
+<label className="text-item font-bold text-black">치매 교육 이수</label>
+<div className="flex gap-4 mb-4">
+  {[
+    { label: "이수", value: true },
+    { label: "미이수", value: false },
+  ].map((option) => (
+    <label
+      key={option.value.toString()}
+      className={`flex items-center justify-between w-1/2 px-4 py-2 cursor-pointer ${
+        signupData.education === option.value ? "border-green bg-green-100" : "border-gray-300"
+      }`}
+      onClick={() => setSignupData({ education: option.value })}
+    >
+      <span className="text-content">{option.label}</span>
+      <div
+        className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+          signupData.education === option.value ? "border-green bg-green" : "border-gray-400 bg-white"
+        }`}
+      >
+        {signupData.education === option.value && <div className="w-2.5 h-2.5 bg-white rounded-full"></div>}
+      </div>
+    </label>
+  ))}
+</div>
 
-          {/* ✅ 치매 교육 이수 여부 */}
-          <label className="text-item font-bold text-black">치매 교육 이수</label>
-          <div className="flex gap-4 mb-4">
-            <label>
-              <input
-                type="radio"
-                name="education"
-                checked={signupData.education === true} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ education: true })}     
-              /> 이수
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="education"
-                checked={signupData.education === false} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ education: false })}
-                
-              /> 미이수
-            </label>
-          </div>
+{/* ✅ 구직 여부 */}
+<label className="text-item font-bold text-black">구직 여부</label>
+<div className="flex gap-4 mb-4">
+  {[
+    { label: "구직중", value: true },
+    { label: "비구직중", value: false },
+  ].map((option) => (
+    <label
+      key={option.value.toString()}
+      className={`flex items-center justify-between w-1/2 px-4 py-2  cursor-pointer ${
+        signupData.employmentStatus === option.value ? "border-green bg-green-100" : "border-gray-300"
+      }`}
+      onClick={() => setSignupData({ employmentStatus: option.value })}
+    >
+      <span className="text-content">{option.label}</span>
+      <div
+        className={`w-5 h-5 flex items-center justify-center rounded-full border-2 ${
+          signupData.employmentStatus === option.value ? "border-green bg-green" : "border-gray-400 bg-white"
+        }`}
+      >
+        {signupData.employmentStatus === option.value && <div className="w-2.5 h-2.5 bg-white rounded-full"></div>}
+      </div>
+    </label>
+  ))}
+</div>
 
-          {/* ✅ 구직 여부 */}
-          <label className="text-item font-bold text-black">구직 여부</label>
-          <div className="flex gap-4">
-            <label>
-              <input
-                type="radio"
-                name="employmentStatus"
-                checked={signupData.employmentStatus === true} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ employmentStatus: true })}
-                
-              /> 구직중
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="employmentStatus"
-                checked={signupData.employmentStatus === false} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ employmentStatus: false })}
-              /> 비구직중
-            </label>
-          </div>
 
           <div className="flex flex-col gap-2 mt-4">
           <Btn text="이전으로" color="white" onClick={handlePrev} />

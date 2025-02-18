@@ -4,6 +4,9 @@ import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
 import CheckList from "../../components/commons/CheckList";
 import Input from "../../components/commons/Input";
+//import { RegionSelect } from "../../components/commons/RegionSelect";
+//import { TimeSelect } from "../../components/commons/TimeSelect";
+//import { Time } from "../../types/commons/timeData";
 
 const categories = [
   { title: "식사 보조", services: ["식사 차리기", "구토물 정리", "수급자를 위한 음식물 조리 및 설거지", "경관식 보조"] },
@@ -37,7 +40,7 @@ const SignupStep3 = () => {
     if (step === 2) {
       setStep(1); // ✅ 서비스 선택으로 돌아가기
     } else {
-      navigate("/signup/step1"); // ✅ 이전 페이지로 이동
+      navigate("/caregiver/signup"); // ✅ 이전 페이지로 이동
     }
   };
 

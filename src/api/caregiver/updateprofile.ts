@@ -1,6 +1,8 @@
 import axios from "axios";
 
-export const updateCaregiverProfile = async (updatedData: any) => {
+const API_BASE_URL = "https://api.gyeotae.site"; // ✅ 배포 서버 주소
+
+export const updateCaregiverProfile = async (params: any) => {
   try {
     const token = localStorage.getItem("token");
 
@@ -9,40 +11,37 @@ export const updateCaregiverProfile = async (updatedData: any) => {
       return null;
     }
 
-    // ✅ Bearer 중복 방지
     const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
 
-    const requestBody: any = {
-      username: updatedData.username, // ✅ 기존 name → username 변경
-      contact: updatedData.contact,
-      car: updatedData.car,
-      education: updatedData.education,
-      img: updatedData.img,
-      intro: updatedData.intro,
-      address: updatedData.address,
-      certificateRequestDTOList: updatedData.certificateRequestDTOList || [],
-      experienceRequestDTOList: updatedData.experienceRequestDTOList || [],
-    };
+    // ✅ FormData 생성
+    const formData = new FormData();
 
-    // ✅ 요청 전에 콘솔로 확인 (디버깅)
-    console.log("🛠️ 사용 중인 요청 헤더:", {
-      Authorization: formattedToken,
-      "Content-Type": "application/json",
-    });
+    formData.append("data", JSON.stringify({
+      username: params.username,
+      contact: params.contact,
+      car: params.car,
+      education: params.education,
+      intro: params.intro,
+      address: params.address,
+      employmentStatus: params.employmentStatus,
+      certificateRequestDTOList: params.certificateRequestDTOList,
+      experienceRequestDTOList: params.experienceRequestDTOList,
+    }));
 
-    console.log("📌 보내는 데이터 확인:", requestBody);
+    if (params.profileImg) {
+      formData.append("profileImg", params.profileImg);
+    }
 
-    const response = await axios.put("https://api.gyeotae.site/caregiver/profile", requestBody, {
+    const response = await axios.put(`${API_BASE_URL}/caregiver/profile`, formData, {
       headers: {
-        Authorization: formattedToken, // ✅ 중복 방지
-        "Content-Type": "application/json",
+        Authorization: formattedToken,
+        "Content-Type": "multipart/form-data",
       },
     });
 
-    console.log("✅ 요양보호사 정보 수정 성공:", response.data);
     return response.data;
-  } catch (error: any) {
-    console.error("🚨 요양보호사 정보 수정 실패:", error.response?.data || error.message);
-    return null;
+  } catch (error) {
+    console.error("🚨 요양보호사 정보 수정 실패:", error);
+    throw error;
   }
 };
