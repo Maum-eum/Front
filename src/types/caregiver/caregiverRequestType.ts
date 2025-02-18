@@ -1,4 +1,4 @@
-import { CareTypes, Rate, Sexual, Week } from "./stringType";
+import { CareTypes, MatchStatus, Rate, Sexual, Week } from "./stringType";
 
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
@@ -14,6 +14,8 @@ export interface MatchedListResponse {
 export interface MatchedStatus {
   elderId: number;
   elderName: string;
+  recruitConditionId: number;
+  centerId: number;
   mealAssistance: boolean;
   toiletAssistance: boolean;
   moveAssistance: boolean;
@@ -51,7 +53,7 @@ export interface RequestsListResponse {
 }
 export interface WorkRequest {
   elderId: number;
-  status: boolean;
+  MatchStatus: MatchStatus;
   recruitConditionId: number;
   centerId: number;
   centerName: string;

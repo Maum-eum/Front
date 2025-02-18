@@ -20,7 +20,7 @@ const Main = () => {
 
   const [caregiverInfo, setCaregiverInfo] = useState<CaregiverInfoResponse>();
   const [requests, setRequests] = useState<WorkRequest[]>();
-  const [attuneRequests, setAttuneRequests] = useState<WorkRequest[]>();
+  const [tuneRequests, setTuneRequests] = useState<WorkRequest[]>();
 
   /* 모달 */
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
@@ -75,9 +75,13 @@ const Main = () => {
     await getRequests(
       (response) => {
         console.log("근무 요청 리스트 조회 성공:", response.status);
-        if (response.data != null) {
-          setRequests([]);
-          setAttuneRequests(response.data.data.list);
+        if (response.data.data != null) {
+          setRequests(
+            (response.data.data.list as WorkRequest[]).filter((e) => e.MatchStatus === "NONE")
+          );
+          setTuneRequests(
+            (response.data.data.list as WorkRequest[]).filter((e) => e.MatchStatus === "TUNING")
+          );
         }
       },
       (error) => {
@@ -86,14 +90,9 @@ const Main = () => {
     );
   };
 
-  /* 요양보호사 근무 요청 상세 보기 */
-  const handleClickRequest = (recruitConditionId: number) => {
-    navigate(`/caregiver/request/details/${recruitConditionId}`);
-  };
-
-  /* 요양보호사 조율 중인 요청 상세 보기 */
-  const handleClickAttuneRequest = (recruitConditionId: number) => {
-    navigate(`/caregiver/request/details/${recruitConditionId}`);
+  /* 요양보호사 근무 요청 NONE/TUNING 상세 보기 */
+  const handleClickRequest = (recruitConditionId: number, centerId: number, elderId: number) => {
+    navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
   useEffect(() => {
@@ -148,9 +147,8 @@ const Main = () => {
         {/* 요청 리스트 조회 */}
         <RequestList
           requests={requests ?? []}
-          attuneRequests={attuneRequests ?? []}
-          onClickRequest={handleClickRequest}
-          onClickAttuneRequest={handleClickAttuneRequest}
+          tuneRequests={tuneRequests ?? []}
+          onClick={handleClickRequest}
           onRefresh={handleGetRequests}
         />
       </div>

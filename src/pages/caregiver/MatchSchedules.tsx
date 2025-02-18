@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import Alert from "../../components/commons/Alert";
-import { MatchedListResponse } from "../../types/caregiver/caregiverRequestType";
-import { getMatchedResquests } from "../../api/caregiver/caregiverRequest";
+import { MatchedStatus } from "../../types/caregiver/caregiverRequestType";
+import { getMatches } from "../../api/caregiver/caregiverRequest";
+import MatchList from "../../components/caregiver/MatchList";
+import ScheduleList from "../../components/caregiver/ScheduleList";
 
 const MatchSchedules = () => {
   const navigate = useNavigate();
@@ -11,19 +13,19 @@ const MatchSchedules = () => {
   /* 요양보호사 정보 store */
   const store = useCaregiverStore();
 
-  const [matchedRequests, setMatchedRequests] = useState<MatchedListResponse>();
+  const [matches, setMatches] = useState<MatchedStatus[]>();
 
   /* 모달 */
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
 
   /* 요양보호사 일정 조회 */
-  const handleGetMatchedRequests = async () => {
-    await getMatchedResquests(
+  const handleGetMatches = async () => {
+    await getMatches(
       (response) => {
         console.log("요양보호사 일정 조회 성공:", response);
         if (response.data.data != null) {
-          setMatchedRequests(response.data.data);
+          setMatches(response.data.data.list);
         }
       },
       (error) => {
@@ -34,9 +36,13 @@ const MatchSchedules = () => {
     );
   };
 
+  /* 요양보호사 근무 일정 상세 보기 */
+  const handleClickMatch = (recruitConditionId: number, centerId: number, elderId: number) => {
+    navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
+  };
+
   useEffect(() => {
-    handleGetMatchedRequests();
-    // setMatchedRequests();
+    handleGetMatches();
   }, []);
 
   return (
@@ -49,7 +55,10 @@ const MatchSchedules = () => {
           <span className="text-black">] 요양보호사님의 일정</span>
         </h1>
       </div>
-      <div>matchedRequests</div>
+      {/* 일정 리스트 조회 */}
+      <ScheduleList matches={matches ?? []} />
+      {/* 서비스 진행 중인 리스트 조회 */}
+      <MatchList matches={matches ?? []} onClick={handleClickMatch} onRefresh={handleGetMatches} />
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
         <div>{alertMessage}</div>

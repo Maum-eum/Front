@@ -40,8 +40,8 @@ export default function Router() {
       <Route path="/caregiver/edit/profile" element={<EditProfile />} />
 
       <Route path="/caregiver/main" element={<CaregiverMain />} />
-      <Route path="/caregiver/request/details/:recruitConditionId" element={<RequestDetails />} />
       <Route path="/caregiver/match" element={<MatchSchedules />} />
+      <Route path="/caregiver/match/:recruitId/:centerId/:elderId" element={<RequestDetails />} />
     </Routes>
   );
 }

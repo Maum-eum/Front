@@ -17,7 +17,7 @@ export const reponseToRecruit = async (
 };
 
 /* 요양보호사 일정 리스트 조회 */
-export const getMatchedResquests = async (
+export const getMatches = async (
   Response: (Response: AxiosResponse<ApiResponseDefault<MatchedListResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
