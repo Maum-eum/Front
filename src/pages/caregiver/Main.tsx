@@ -93,6 +93,7 @@ const Main = () => {
           careTypes: ["방문요양", "방문목욕", "입주요양"],
         },
       ]);
+      
       setAttuneRequests([
         /********* Dummy *********/
         {
@@ -138,7 +139,7 @@ const Main = () => {
             {/* 구직 상태 토글 */}
             <ToggleBtn status={store.employmentStatus} onClick={handleChangeEmploymentStatus} />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn label="정보 변경" color="white" onClick={() => {}} />
+            <BasicBtn label="정보 변경" color="white" onClick={() => navigate("/caregiver/edit/profile")} />
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}

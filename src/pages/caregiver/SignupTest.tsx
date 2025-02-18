@@ -49,7 +49,6 @@ const SignupTest = () => {
   }
 };
   
-
   // ✅ 경력 추가 함수
   const addExperience = (newExperience: { title: string; duration: number; description: string }) => {
     setSignupData({ experienceRequestDTOList: [...experienceRequestDTOList, newExperience] });
@@ -86,7 +85,6 @@ const SignupTest = () => {
     certType: cert.certType,
     certRate: cert.certRate === "1급" ? "LEVEL1" : "LEVEL2",
   }));
-  
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8">

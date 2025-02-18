@@ -24,10 +24,18 @@ const Main: React.FC = () => {
       loginData,
       (res) => {
         console.log(res);
-        
+  
         const userId = res.data.data.userId;
         const role = res.data.data.role;
         const token = res.headers.authorization; // ✅ 토큰 받아오기
+  
+        if (token) {
+          localStorage.setItem("token", token); // ✅ 토큰 저장
+          console.log("✅ 로그인 성공! 토큰 저장 완료:", token);
+        } else {
+          console.error("🚨 로그인 성공했지만 토큰이 없습니다.");
+          return;
+        }
   
         if (role === "ROLE_ADMIN") {
           const centerId = res.data.data.centerId;
@@ -38,9 +46,6 @@ const Main: React.FC = () => {
           navigate("/admin/main"); // ✅ 관리자 로그인 성공 시 이동
         } 
         else if (role === "ROLE_CAREGIVER") {
-
-          //이동 페이지는 수정해야함 현재는 테스트용
-          //일단 메인 페이지 들어오면 메인으로 이동하도록 하자
           navigate("/caregiver/main"); // ✅ 요양보호사 로그인 성공 시 이동
         } 
         else {
@@ -52,7 +57,6 @@ const Main: React.FC = () => {
       }
     );
   };
-  
   
   return (
     <div className="w-full h-full py-2 px-4 flex flex-col gap-9 mb-2">
