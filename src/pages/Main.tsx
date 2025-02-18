@@ -23,29 +23,36 @@ const Main: React.FC = () => {
     await Login(
       loginData,
       (res) => {
-        console.log(res)
+        console.log(res);
+        
         const userId = res.data.data.userId;
         const role = res.data.data.role;
-        const token = res.headers.authorization;
-
+        const token = res.headers.authorization; // ✅ 토큰 받아오기
+  
         if (role === "ROLE_ADMIN") {
           const centerId = res.data.data.centerId;
           const centerName = res.data.data.centerName;
           const name = res.data.data.name;
+  
+          setAdminInfo(token, userId, role, name, centerId, centerName);
+          navigate("/admin/main"); // ✅ 관리자 로그인 성공 시 이동
+        } 
+        else if (role === "ROLE_CAREGIVER") {
 
-          setAdminInfo( token, userId, role, name, centerId, centerName );
-          navigate("/admin/main");
-        }
+          //이동 페이지는 수정해야함 현재는 테스트용
+          //일단 메인 페이지 들어오면 메인으로 이동하도록 하자
+          navigate("/caregiver/main"); // ✅ 요양보호사 로그인 성공 시 이동
+        } 
         else {
-          console.log(res)
+          console.log("알 수 없는 역할:", role);
         }
-
       },
       (err) => {
-        console.log(err.response?.data)
+        console.log(err.response?.data);
       }
-    )
-  }
+    );
+  };
+  
   
   return (
     <div className="w-full h-full py-2 px-4 flex flex-col gap-9 mb-2">
