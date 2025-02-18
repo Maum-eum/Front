@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import EmptyImg from "../../assets/image/empty.png";
-import { useCaregiverStore } from "../../store/caregiverStore";
+import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import ImageBtn from "../../components/commons/ImageBtn";
 import Alert from "../../components/commons/Alert";
 import { useEffect, useState } from "react";

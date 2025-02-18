@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCaregiverStore } from "../../store/caregiverStore";
+import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import Alert from "../../components/commons/Alert";
 import { useNavigate } from "react-router-dom";
 import BasicBtn from "../../components/caregiver/BasicBtn";
