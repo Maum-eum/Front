@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import Btn from "../commons/Btn"; // ✅ Btn.tsx 가져오기
 
 interface CareerModalProps {
   isOpen: boolean;
@@ -9,54 +10,64 @@ interface CareerModalProps {
 const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) => {
   const [experience, setExperience] = useState({
     title: "",
-    duration: "", // ✅ 기본값을 빈 문자열로 변경
     description: "",
+    duration: "",
   });
 
   if (!isOpen) return null;
 
   const handleSave = () => {
-    if (!experience.title || !experience.duration || !experience.description) {
+    if (!experience.title || !experience.description || !experience.duration) {
       alert("모든 필드를 입력해주세요!");
       return;
     }
-    onSave({
-      ...experience,
-      duration: Number(experience.duration), // ✅ 숫자로 변환해서 전달
+    onSave({ 
+      title: experience.title, 
+      description: experience.description, 
+      duration: Number(experience.duration) 
     });
-    onClose(); // 모달 닫기
+    onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-80">
-        <h2 className="text-lg font-bold text-black mb-4">경력 추가</h2>
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg w-full max-w-xs sm:max-w-sm">
+        <h2 className="text-lg font-bold text-black text-center mb-6">경력추가</h2>
 
+        {/* ✅ 일한 곳 입력 */}
+        <label className="block text-item font-bold text-black mb-2">일한 곳</label>
         <input
           type="text"
-          placeholder="일한 곳"
-          className="border p-2 w-full mb-2"
+          placeholder="예) 김딩딩 노인보조"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-4"
           value={experience.title}
           onChange={(e) => setExperience({ ...experience, title: e.target.value })}
         />
+
+        {/* ✅ 했던 일 입력 */}
+        <label className="block text-item font-bold text-black mb-2">했던 일</label>
         <input
           type="text"
-          placeholder="했던 일"
-          className="border p-2 w-full mb-2"
+          placeholder="예) 식사보조, 이동보조"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-4"
           value={experience.description}
           onChange={(e) => setExperience({ ...experience, description: e.target.value })}
         />
+
+        {/* ✅ 일한 기간 입력 */}
+        <label className="block text-item font-bold text-black mb-2">일한 기간</label>
         <input
-          type="number"
-          placeholder="일한 기간 (개월)" // ✅ 기본값이 없을 때 보이도록 설정
-          className="border p-2 w-full"
+          type="text"
+          placeholder="예) 12개월"
+          className="border-2 border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-green mb-6"
           value={experience.duration}
           onChange={(e) => setExperience({ ...experience, duration: e.target.value })}
         />
 
-        <div className="flex gap-2 mt-4">
-          <button onClick={onClose} className="bg-gray-300 text-black px-4 py-2 w-1/2 rounded">이전으로</button>
-          <button onClick={handleSave} className="bg-green-500 text-green px-4 py-2 w-1/2 rounded">완료</button>
+        {/* ✅ 버튼 - Btn.tsx 스타일 적용 */}
+        <div className="flex flex-col gap-2">
+          <Btn text="이전으로" color="white" onClick={onClose} />
+          <Btn text="완료" color="green" onClick={handleSave} />
         </div>
       </div>
     </div>

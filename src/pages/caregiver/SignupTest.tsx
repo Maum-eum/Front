@@ -7,6 +7,7 @@ import Input from "../../components/commons/Input";
 import CareerModal from "../../components/caregiver/CareerModal";
 import CertificationModal from "../../components/caregiver/CertificationModal";
 import { signUpCaregiver } from "../../api/caregiver/auth";
+import axios, { AxiosError } from "axios"; 
 
 const SignupTest = () => {
   const navigate = useNavigate();
@@ -17,30 +18,36 @@ const SignupTest = () => {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ✅ 회원가입 API 요청
-  const handleSignup = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const response = await signUpCaregiver({
-        ...signupData,
-        profileImg,
-        certificateRequestDTOList,
-        experienceRequestDTOList,
-      });
-  
-      console.log("회원가입 성공:", response);
-      alert("회원가입 성공!");
-      
-      navigate("/"); // ✅ 회원가입 완료 후 메인 페이지로 이동
-  
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-      alert("회원가입 실패 ㅠㅠ");
-    } finally {
-      setLoading(false);
+ const handleSignup = async () => {
+  if (loading) return;
+  setLoading(true);
+
+  try {
+    const response = await signUpCaregiver({
+      ...signupData,
+      profileImg,
+      certificateRequestDTOList,
+      experienceRequestDTOList,
+    });
+
+    console.log("✅ 회원가입 성공:", response);
+    alert("회원가입 성공!");
+    navigate("/");
+  } catch (error) {
+    console.error("❌ 회원가입 실패:", error);
+
+    // ✅ `error`를 `AxiosError`로 캐스팅
+    if (axios.isAxiosError(error)) {
+      console.error("🛑 서버 응답 에러:", error.response?.data);
+    } else {
+      console.error("🛑 예상치 못한 에러:", (error as Error).message);
     }
-  };
+
+    alert("회원가입 실패 ㅠㅠ");
+  } finally {
+    setLoading(false);
+  }
+};
   
 
   // ✅ 경력 추가 함수
@@ -74,6 +81,13 @@ const SignupTest = () => {
     }
   };
   
+  const transformedCertificates = certificateRequestDTOList.map(cert => ({
+    certNum: cert.certNum,
+    certType: cert.certType,
+    certRate: cert.certRate === "1급" ? "LEVEL1" : "LEVEL2",
+  }));
+  
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8">
       <h2 className="text-title font-bold text-black text-center mb-4">회원가입</h2>
@@ -118,11 +132,11 @@ const SignupTest = () => {
        {/* ✅ Step 2 - 필수 정보 입력 */}
        {step === 2 && subStep === 1 && (
         <div className="w-full max-w-xs sm:max-w-sm p-6">
-          <h2 className="text-title font-bold text-black text-center">필수 입력 사항</h2>
+          <h2 className="text-item font-bold text-black text-center">필수 입력 사항</h2>
 
           {/* ✅ 입력 필드 (왼쪽 라벨 + 오른쪽 입력창) */}
                     {/* ✅ 이름 입력 */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between  mt-4">
             <label className="text-item font-bold text-black w-1/3">이름</label>
             <Input
               type="text"
@@ -133,7 +147,7 @@ const SignupTest = () => {
           </div>
 
           {/* ✅ 연락처 입력 */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between  mt-4">
             <label className="text-item font-bold text-black w-1/3">연락처</label>
             <Input
               type="text"
@@ -143,9 +157,8 @@ const SignupTest = () => {
             />
           </div>
 
-
           {/* ✅ 주소 입력 */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             <label className="text-item font-bold text-black w-1/3">주소</label>
             <Input
               type="text"
@@ -156,13 +169,15 @@ const SignupTest = () => {
           </div>
 
           {/* ✅ 자격증 추가 */}
-          <div className="flex items-center justify-between">
-            <label className="text-item font-bold text-black w-1/3">자격증</label>
-            <div className="w-full">
+          <div className="border-b border-gray-300 pb-4 mb-4">
+          <div className="flex items-center justify-between mt-4">
+            <label className="text-item font-bold text-black w-1/4">자격증</label>
+            <div className="w-3/4">
               <input
                 type="text"
                 readOnly
-                className="w-full p-3 border-2 rounded-lg bg-white cursor-pointer"
+                className="w-full p-2 border-2 border-gray-300 bg-white cursor-pointer 
+                          rounded-lg text-content sm:text-lg focus:border-green focus:outline-none focus:ring-0"
                 placeholder="자격증을 입력해주세요."
                 value={
                   certificateRequestDTOList.length > 0
@@ -175,10 +190,11 @@ const SignupTest = () => {
               />
             </div>
           </div>
+          </div>
 
           {/* ✅ 차량 소유 여부 */}
-          <label className="text-item font-bold text-black">차량 소유</label>
-          <div className="flex gap-4">
+          <label className="text-item font-bold text-black  mt-4 ">차량 소유</label>
+          <div className="flex gap-4 mb-4">
             <label>
               <input
                 type="radio"
@@ -193,19 +209,20 @@ const SignupTest = () => {
                 name="car"
                 checked={signupData.car === false} // ✅ Zustand 상태 유지
                 onChange={() => setSignupData({ car: false })}
+                
               /> 미소유
             </label>
           </div>
 
           {/* ✅ 치매 교육 이수 여부 */}
           <label className="text-item font-bold text-black">치매 교육 이수</label>
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-4">
             <label>
               <input
                 type="radio"
                 name="education"
                 checked={signupData.education === true} // ✅ Zustand 상태 유지
-                onChange={() => setSignupData({ education: true })}
+                onChange={() => setSignupData({ education: true })}     
               /> 이수
             </label>
             <label>
@@ -214,6 +231,7 @@ const SignupTest = () => {
                 name="education"
                 checked={signupData.education === false} // ✅ Zustand 상태 유지
                 onChange={() => setSignupData({ education: false })}
+                
               /> 미이수
             </label>
           </div>
@@ -227,6 +245,7 @@ const SignupTest = () => {
                 name="employmentStatus"
                 checked={signupData.employmentStatus === true} // ✅ Zustand 상태 유지
                 onChange={() => setSignupData({ employmentStatus: true })}
+                
               /> 구직중
             </label>
 
@@ -240,7 +259,7 @@ const SignupTest = () => {
             </label>
           </div>
 
-          <div className="flex flex-col gap-2 mt-6">
+          <div className="flex flex-col gap-2 mt-4">
           <Btn text="이전으로" color="white" onClick={handlePrev} />
             <Btn text="다음" color="green" onClick={() => setSubStep(2)} />
           </div>
@@ -250,21 +269,23 @@ const SignupTest = () => {
       {/* ✅ Step 2 - 선택 정보 입력 */}
       {step === 2 && subStep === 2 && (
         <div className="w-full max-w-xs sm:max-w-sm p-6">
-          <h2 className="text-title font-bold text-black text-center">선택 입력 사항</h2>
+          <h2 className="text-item font-bold text-black text-center mb-6">선택 입력 사항</h2>
 
          {/* ✅ 한줄 소개 */}
-        <label className="text-item font-bold text-black">한줄 소개</label>
+        <label className="text-item font-bold text-black mb-4 block ">한줄 소개</label>
         <textarea
-          className="w-full border p-2 rounded-lg"
+          className="w-full border p-2 rounded-lg mb-4"
           placeholder="한줄 소개 입력"
           value={signupData.intro} // ✅ Zustand에서 유지
           onChange={(e) => setSignupData({ intro: e.target.value })} // ✅ Zustand에 저장
         />
+        {/* ✅ 구분선 추가 */}
+        <div className="border-b border-gray-300 mb-6"></div>
 
-          {/* ✅ 경력 사항 */}
-          <div className="mt-4">
-            <h3 className="text-item font-bold text-black">경력 사항</h3>
-            <button onClick={() => setIsModalOpen(true)} className="text-green-500 font-bold">+ 추가하기</button>
+          {/* ✅ 경력 사항 (제목 & 추가하기 버튼 정렬) */}
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-item font-bold text-black">경력사항</h3>
+            <button onClick={() => setIsModalOpen(true)} className="text-[#777777] font-bold">+ 추가하기</button>
           </div>
 
           {/* ✅ 추가된 경력 리스트 */}
@@ -281,7 +302,7 @@ const SignupTest = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 mt-2">경력을 추가해주세요.</p>
+            <p className="text-gray-500 mt-2">추가하기 버튼으로 경력 추가하기</p>
           )}
 
           <div className="flex flex-col gap-2 mt-6">
