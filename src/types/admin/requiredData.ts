@@ -28,7 +28,7 @@ interface RequiredData {
 	hospitalAccompaniment: boolean;
 	exerciseSupport: boolean;
 	emotionalSupport: boolean;
-	ognitiveStimulation: boolean;
+	cognitiveStimulation: boolean;
 	detailRequiredService : string;
 }
 
@@ -64,7 +64,7 @@ interface Response {
 		hospitalAccompaniment: boolean;
 		exerciseSupport: boolean;
 		emotionalSupport: boolean;
-		ognitiveStimulation: boolean;
+		cognitiveStimulation: boolean;
 		detailRequiredService : string;
 	} | null;
 }

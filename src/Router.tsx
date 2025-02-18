@@ -13,6 +13,7 @@ import ModifyAdmin from "./pages/admin/ModifyAdmin";
 import DetailElder from "./pages/admin/DetailElder";
 import ModifyElder from "./pages/admin/ModifyElder";
 
+import RequiredInfoRegister from "./pages/admin/RequiredInfoRegister";
 import RecruitRegistration from './pages/admin/RecruitRegistration';
 import RecruitModify from './pages/admin/RecruitModify';
 import RecommendedCaregiverList from './pages/admin/RecommendedCaregiverList';
@@ -52,6 +53,8 @@ export default function Router() {
       <Route path="/admin/elder/detail/:elderId" element={<DetailElder />} />
       <Route path="/admin/elder/modify/:elderId" element={<ModifyElder />} />
 
+      <Route path="/admin/elder/required/:elderId" element={<RequiredInfoRegister />} />
+
       <Route path="/admin/recruit"                   element={<RecruitRegistration />} />
       {/* <Route path="/admin/:elderId/recruit"                   element={<RecruitRegistration />} /> */}
       <Route path="/admin/:elderId/recruit-modify"            element={<RecruitModify />} />
@@ -59,7 +62,6 @@ export default function Router() {
       <Route path="/admin/:elderId/recommended/:caregiverId"  element={<RecommendedCaregiverInfo />} />
       <Route path="/admin/negotiation/:matchId"               element={<NegotiationInfo />} />
       <Route path="/admin/ongoing/:matchId"                   element={<OngoingServiceInfo />} />
-
       {/* */}
       <Route path="/test"                   element={<ApiTest />} />
 
