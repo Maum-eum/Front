@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { privateApi } from "../../utils/http-commons";
+import { CaregiverInfoResponse } from "../../types/caregiver/caregiverType";
 
 type ApiResponseDefault<T> = {
   data: T;

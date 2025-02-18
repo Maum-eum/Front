@@ -2,14 +2,19 @@ import { useState } from "react";
 
 type ToggleBtnProps = {
   status?: boolean | null;
-  onClick?: () => void;
+  onClick?: () => Promise<boolean>;
 };
 
 const ToggleBtn = ({ status, onClick }: ToggleBtnProps) => {
   const [isOn, setIsOn] = useState(status);
 
-  const onToggle = () => {
-    if (onClick?.()) setIsOn(!isOn);
+  const onToggle = async () => {
+    if (onClick) {
+      const result = await onClick();
+      if (result === true) {
+        setIsOn(!isOn);
+      }
+    }
   };
 
   return (

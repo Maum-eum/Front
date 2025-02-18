@@ -13,7 +13,7 @@ export interface CaregiverExperienceResponse {
 }
 
 /* 요양보호사 정보 조회 */
-export interface CaregiverInfoResponseDTO {
+export interface CaregiverInfoResponse {
   name: string;
   contact: string;
   car: boolean;
@@ -22,6 +22,6 @@ export interface CaregiverInfoResponseDTO {
   intro: string;
   address: string;
   employmentStatus: boolean | null;
-  certificateResponseDTOList: CaregiverCertificateResponse[];
-  experienceResponseDTOList: CaregiverExperienceResponse[];
+  certificateResponseList: CaregiverCertificateResponse[];
+  experienceResponseList: CaregiverExperienceResponse[];
 }

@@ -17,6 +17,9 @@ import SignupStep3 from "./pages/caregiver/SignupStep3";
 
 // 요양보호사 화면
 import CaregiverMain from "./pages/caregiver/Main";
+import RequestDetails from "./pages/caregiver/RequestDetails";
+import MatchSchedules from "./pages/caregiver/MatchSchedules";
+import MatchDetails from "./pages/caregiver/MatchDetails";
 
 export default function Router() {
   //const navi = useNavigate();
@@ -37,6 +40,9 @@ export default function Router() {
       <Route path="/signup/step3" element={<SignupStep3 />} />
 
       <Route path="/caregiver/main" element={<CaregiverMain />} />
+      <Route path="/caregiver/request/details" element={<RequestDetails />} />
+      <Route path="/caregiver/match" element={<MatchSchedules />} />
+      <Route path="/caregiver/match/details" element={<MatchDetails />} />
     </Routes>
   );
 }
