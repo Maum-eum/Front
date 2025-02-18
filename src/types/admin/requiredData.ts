@@ -66,7 +66,7 @@ interface Response {
 		emotionalSupport: boolean;
 		ognitiveStimulation: boolean;
 		detailRequiredService : string;
-	}
+	} | null;
 }
 
 export type { Response, RequiredData };

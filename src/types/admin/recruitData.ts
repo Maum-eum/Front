@@ -75,7 +75,7 @@ interface Response {
         cognitiveStimulation: boolean;
         detailRequiredService : string;
         recruitTimes: RecruitTime[];
-    }
+    } | null;
 }
 
 export type { Response, RecruitData };
