@@ -3,12 +3,13 @@ import EmptyImg from "../../assets/image/empty.png";
 import { useCaregiverStore } from "../../store/caregiverStore";
 import ImageBtn from "../../components/commons/ImageBtn";
 import Alert from "../../components/commons/Alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleBtn from "../../components/caregiver/ToggleBtn";
 import RequestList from "../../components/caregiver/RequestList";
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 import { changeStatus } from "../../api/caregiver/caregiver";
 import BasicBtn from "../../components/caregiver/BasicBtn";
+import { getRequests } from "../../api/caregiver/caregiverRequest";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Main = () => {
 
   /* 근무 요청 리스트 조회 */
   const handleGetRequests = async () => {
-    await changeStatus(
+    await getRequests(
       (response) => {
         console.log("근무 요청 리스트 조회 성공:", response);
         return response;
@@ -74,7 +75,7 @@ const Main = () => {
   };
 
   /* 새로고침 */
-  const handleRefreshRequests = async () => {
+  const fetchRequests = async () => {
     const response = await handleGetRequests();
     if (response != null) {
       setRequests([
@@ -110,6 +111,10 @@ const Main = () => {
     }
   };
 
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
   return (
     <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
       <div className="w-72 sm:w-[600px]">
@@ -120,7 +125,7 @@ const Main = () => {
           <span className="text-black">] 요양보호사님의 공간</span>
         </h1>
         {/* 요양보호사 프로필 */}
-        <div className="text-content w-full h-42 sm:h-56 flex flex-wrap gap-3 shadow bg-white rounded-lg mb-6 p-5">
+        <div className="text-content w-full h-42 sm:h-56 flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
           {store.img ? (
             <img
               src={store.img}
@@ -137,7 +142,7 @@ const Main = () => {
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}
-        <div className="w-full flex gap-3 mb-6">
+        <div className="w-full flex gap-3 mb-10">
           <ImageBtn
             label="근무 조건"
             icon={EmptyImg}
@@ -156,6 +161,18 @@ const Main = () => {
           requests={
             requests ?? [
               /********* Dummy *********/
+              {
+                recruitConditionId: 1,
+                elderId: 1,
+                centerId: 1,
+                centerName: "한마음",
+                imgUrl: null,
+                desiredHourlyWage: 40000,
+                rate: "RATE1",
+                age: 11,
+                sexual: "FEMALE",
+                careTypes: ["방문요양", "방문목욕", "입주요양"],
+              },
               {
                 recruitConditionId: 1,
                 elderId: 1,
@@ -189,7 +206,7 @@ const Main = () => {
           }
           onClickRequest={handleClickRequest}
           onClickAttuneRequest={handleClickAttuneRequest}
-          onRefresh={handleRefreshRequests}
+          onRefresh={fetchRequests}
         />
       </div>
       {/* 알림 추가 */}

@@ -40,7 +40,7 @@ export default function Router() {
       <Route path="/signup/step3" element={<SignupStep3 />} />
 
       <Route path="/caregiver/main" element={<CaregiverMain />} />
-      <Route path="/caregiver/request/details" element={<RequestDetails />} />
+      <Route path="/caregiver/request/details/:recruitConditionId" element={<RequestDetails />} />
       <Route path="/caregiver/match" element={<MatchSchedules />} />
       <Route path="/caregiver/match/details" element={<MatchDetails />} />
     </Routes>

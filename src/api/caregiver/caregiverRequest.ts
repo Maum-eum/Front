@@ -36,3 +36,11 @@ export const getRequests = async (
 ) => {
   await privateApi.get(`/match/requests/`).then(Response).catch(Error);
 };
+
+/* 요양보호사 근무 요청 상세 정보 조회 */
+export const getRequestDetails = async (
+  Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListResponse>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.get(`/match/requests/detail`).then(Response).catch(Error);
+};

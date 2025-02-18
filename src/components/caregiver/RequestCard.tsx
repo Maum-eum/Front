@@ -1,4 +1,5 @@
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
+import AttributeCard from "./AttributeCard";
 
 type CaregiverRequestCardProps = {
   request: WorkRequest;
@@ -15,10 +16,10 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
         {request.imgUrl ? (
           <img
             src={request.imgUrl}
-            className="w-24 h-24 sm:w-28 sm:h-28 border rounded-lg object-cover"
+            className="w-24 h-24 sm:w-28 sm:h-28 border rounded-lg object-cover mb-3"
           />
         ) : (
-          <div className="w-24 h-24 sm:w-28 sm:h-28 border rounded-lg bg-empty-green"></div>
+          <div className="w-24 h-24 sm:w-28 sm:h-28 border rounded-lg bg-empty-green mb-3"></div>
         )}
 
         <div className="flex flex-col justify-start ml-4">
@@ -29,25 +30,15 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
           </div>
         </div>
       </div>
-
-      <div className="flex flex-wrap">
-        {/* 공통 className 적용 부분 */}
-        {[
+      <AttributeCard
+        content={[
           `${request.desiredHourlyWage}원`,
           `${request.age}세`,
           `${request.sexual}`,
           `${request.rate}급`,
-          // ...request.careTypes,
-        ].map((text, index) => (
-          <div
-            key={index}
-            className="text-content border bg-white rounded-lg px-2 py-1 mr-2 mb-2 transition cursor-pointer 
-              hover:bg-base-white"
-          >
-            {text}
-          </div>
-        ))}
-      </div>
+          ...request.careTypes,
+        ]}
+      />
     </div>
   );
 };

@@ -24,7 +24,7 @@ const ScrollListBox: React.FC<ScrollListBoxProps> = ({ children }) => {
       <div
         ref={scrollRef}
         onScroll={checkScrollable}
-        className="h-[350px] sm:h-[700px] overflow-y-auto hover:scrollbar-show scrollbar-hide"
+        className="h-[400px] overflow-y-auto hover:scrollbar-show scrollbar-hide"
       >
         {children}
       </div>
