@@ -70,6 +70,10 @@ export interface AddElderParams {
   data: FormData;
 }
 
+export interface ModifyElderParams extends AddElderParams{
+  elderId: number;
+}
+
 export interface AddElderServiceParams {
   centerId: number;
   elderId: number;

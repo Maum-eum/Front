@@ -20,7 +20,7 @@ const categories = {
       { label: "사람을 의심하는 망상", name: "hasDelusions", value: false },
       { label: "때리거나 욕설 등 공격적인 행동", name: "hasAggressiveBehavior", value: false },
     ]
-  }
+}
 
 const ModifyElder: React.FC = () => {
   const navigate = useNavigate();
@@ -46,6 +46,7 @@ const ModifyElder: React.FC = () => {
 
   const [profileFile, setProfileFile] = useState<File | null>(null);
 
+  
   // Input 데이터 처리
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,15 +73,18 @@ const ModifyElder: React.FC = () => {
     else {
       setElderData((prev) => ({ ...prev, inmateTypes: selected}))
     }
-  }
-
-  // 치매/서비스 항목 처리
+  };
+  
+  // 치매항목 처리
   const handleElderCheckList = (selected: ServiceOption) => {
-    const name = selected.name;
-    const value = selected.value;
-    const newData = {...elderData, [name]: value}
-    setElderData(newData)
-  }
+    // console.log(3)
+    // console.log(selected)
+    setElderData((prev) => ({
+      ...prev,
+      [selected.name]: selected.value, 
+    }));
+
+  };
 
   // 이미치 처리
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +94,14 @@ const ModifyElder: React.FC = () => {
     }
   };
 
+  // 기존이미지 처리
+  const urlToFile = async (imageUrl: string) => {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const Img =  new File([blob], "prevImg", { type: blob.type });
+    setProfileFile(Img)
+  };
+  
   // 폼데이터 전처리
   const setIsTemp = (type: boolean) => {
     const form = new FormData()
@@ -101,10 +113,11 @@ const ModifyElder: React.FC = () => {
     }
 
     form.append("inmateTypes", elderData.inmateTypes.join(','))
-    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined}))
+    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined, img: undefined}))
     return form
   }
 
+  // 어르신 데이터 조회
   const getElderInfo = async () => {
     if (!elderId) {
       alert("잘못된 접근입니다.");
@@ -119,10 +132,9 @@ const ModifyElder: React.FC = () => {
       },
       (res) => {
         setElderData(res.data.data);
-        console.log(res.data.data)
-        // if (res.data.data.img) {
-        //   setProfileFile()
-        // }
+        if (res.data.data.img) {
+          urlToFile(res.data.data.img)
+        }
       },
       (err) => {
         console.log(err);
@@ -130,11 +142,18 @@ const ModifyElder: React.FC = () => {
     );
   };
 
+  // api 요청
   const sendModifyElder = async () => {
+    if (!elderId) {
+      alert("잘못된 접근입니다.");
+      navigate(-1);
+      return;
+    }
     const form = setIsTemp(false)
     await modifyElder(
       {
         centerId: centerId,
+        elderId: parseInt(elderId),
         data: form
       },
       () => {
@@ -147,6 +166,7 @@ const ModifyElder: React.FC = () => {
     )
   }
 
+  // useEffect
   useEffect(() => {
     getElderInfo();
   }, []);
@@ -159,14 +179,14 @@ const ModifyElder: React.FC = () => {
         {step === 1 && (
           <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 기본 정보 등록</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 기본 정보 변경</h1> 
             
             <Steps step={step}/>
 
             {/* 프로필 이미지 업로드 */}
             <div className="flex flex-col items-center m-2">
               <label htmlFor="profile-upload" className="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300 cursor-pointer">
-                {profileFile ? (
+              {profileFile ? (
                   <img src={URL.createObjectURL(profileFile)} alt="프로필" className="w-full h-full object-cover rounded-full" />
                 ) : (
                   <span className="text-gray-500 text-sm">사진 추가</span>
@@ -195,7 +215,7 @@ const ModifyElder: React.FC = () => {
                 onChange={elderDataChange}
               />
               <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">성별</label>
-              <RadioInput name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderRadioDataChange}/>
+              <RadioInput selectedValues={[elderData.gender]} name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderRadioDataChange}/>
 
             </div>
 
@@ -210,7 +230,7 @@ const ModifyElder: React.FC = () => {
         {step === 2 && (
           <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 세부 정보 등록</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 기본 정보 변경</h1> 
 
             <Steps step={step}/>
 
@@ -230,13 +250,14 @@ const ModifyElder: React.FC = () => {
               <RadioInput
                 name="rate"
                 options={[
-                  { value: null,    label: "없음" },
+                  { value: "NONE",  label: "없음" },
                   { value: "RATE1", label: "1등급" },
                   { value: "RATE2", label: "2등급" },
                   { value: "RATE3", label: "3등급" },
                   { value: "RATE4", label: "4등급" },
                   { value: "RATE5", label: "5등급" }]}
                 onChange={elderRadioDataChange}
+                selectedValues={[elderData.rate]}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
               <RadioInput
@@ -247,7 +268,10 @@ const ModifyElder: React.FC = () => {
                   { value: ["LIVING_WITH_SPOUSE","AWAY_DURING_CARE"],    label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
                   { value: ["LIVING_WITH_FAMILY","AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
                   { value: ["LIVING_WITH_FAMILY","AWAY_DURING_CARE"],    label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" },
-              ]} onChange={elderRadioDataChange}/>
+                ]}
+                onChange={elderRadioDataChange}
+                selectedValues={[elderData.inmateTypes]}
+                />
                   
             </div>
 
@@ -271,7 +295,14 @@ const ModifyElder: React.FC = () => {
               <CheckList
                 type="치매"
                 name={categories.title}
-                options={categories.options}
+                options={[
+                  { label: "정상",          name: "normal", value: elderData.normal },
+                  { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: elderData.hasShortTermMemoryLoss },
+                  { label: "집 밖을 배회",   name: "wandersOutside", value: elderData.wandersOutside },
+                  { label: "어린아이 같은 행동",  name: "actsLikeChild", value: elderData.actsLikeChild },
+                  { label: "사람을 의심하는 망상",    name: "hasDelusions", value: elderData.hasDelusions },
+                  { label: "때리거나 욕설 등 공격적인 행동",    name: "hasAggressiveBehavior", value: elderData.hasAggressiveBehavior },
+                ]}
                 onChange={handleElderCheckList}
               /> 
             </div>

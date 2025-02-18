@@ -18,19 +18,26 @@ type CheckListProps = {
 
 
 const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
+  
   const [selected, setSelected] = useState<option[]>(options)
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSelect = (opt: option) => {
     const newSelected = selected.map((item) => {
+
       if(item.name === opt.name) {
+
+        console.log(item.name, opt.name, item.value)
         item.value = !item.value;
       }
       return item
     });
+    
     setSelected(newSelected)
 
-    if (onChange) onChange(opt);
+    if (onChange) {
+      onChange(opt);
+    }
   };
 
 
@@ -44,7 +51,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
 
       {isOpen && (
         <div className="flex flex-col w-full items-center mt-1">
-          {options.map((item) => {
+          {selected.map((item) => {
             const status = item.value;
             return (
               <div

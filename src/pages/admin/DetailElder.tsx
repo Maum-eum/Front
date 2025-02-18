@@ -70,7 +70,6 @@ const DetailElder: React.FC = () => {
         elderId: parseInt(elderId),
       },
       (res) => {
-        console.log(res.data.data);
         setElderInfo(res.data.data);
       },
       (err) => {
