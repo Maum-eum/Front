@@ -2,14 +2,14 @@ import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 
 type CaregiverRequestCardProps = {
   request: WorkRequest;
-  onClick: () => void;
+  onClick: (recruitConditionId: number) => void;
 };
 
 const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, onClick }) => {
   return (
     <div
       className="flex flex-col h-auto shadow bg-white rounded-lg p-5 mb-4 transition cursor-pointer active:bg-point-pink"
-      onClick={onClick}
+      onClick={() => onClick(request.recruitConditionId)}
     >
       <div className="flex flex-wrap mb-5">
         {request.imgUrl ? (
@@ -23,7 +23,7 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
 
         <div className="flex flex-col justify-start ml-4">
           <div className="flex">
-            <span className="text-content font-bold">#{request.recruitConditionId}번 [</span>
+            <span className="text-content font-bold">#{request.recruitConditionId} [</span>
             <span className="text-content font-bold text-red">{request.centerName}</span>
             <span className="text-content font-bold">] 센터</span>
           </div>

@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useCaregiverStore } from "../../store/caregiverStore";
 import Alert from "../../components/commons/Alert";
 
 const MatchDetails = () => {
-  const navigate = useNavigate();
-
   const [isAlertOpen, setAlertOpen] = useState(false);
 
   /* 요양보호사 정보 store */

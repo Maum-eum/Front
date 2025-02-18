@@ -26,7 +26,7 @@ export const getMatchedResquests = async (
   Response: (Response: AxiosResponse<ApiResponseDefault<MatchedListResponse>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.get(`/caregiver/status/`).then(Response).catch(Error);
+  await privateApi.get(`/match/matching/`).then(Response).catch(Error);
 };
 
 /* 요양보호사 근무 요청 리스트 조회 */

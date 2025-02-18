@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import EmptyImg from "../../assets/image/empty.png";
 import { useCaregiverStore } from "../../store/caregiverStore";
 import ImageBtn from "../../components/commons/ImageBtn";
-// import RequestList from "../../components/caregiver/RequestList";
 import Alert from "../../components/commons/Alert";
 import { useState } from "react";
 import ToggleBtn from "../../components/caregiver/ToggleBtn";
@@ -14,9 +13,11 @@ import BasicBtn from "../../components/caregiver/BasicBtn";
 const Main = () => {
   const navigate = useNavigate();
 
-  const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
   const [requests, setRequests] = useState<WorkRequest[]>();
   const [attuneRequests, setAttuneRequests] = useState<WorkRequest[]>();
+
+  /* 모달 */
+  const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
 
   /* 요양보호사 정보 store */
   const store = useCaregiverStore();
@@ -63,21 +64,49 @@ const Main = () => {
   };
 
   /* 요양보호사 근무 요청 상세 보기 */
-  const handleClickRequest = () => {
-    navigate("/caregiver/request/details");
+  const handleClickRequest = (recruitConditionId: number) => {
+    navigate(`/caregiver/request/details/${recruitConditionId}`);
   };
 
   /* 요양보호사 조율 중인 요청 상세 보기 */
-  const handleClickAttuneRequest = () => {
-    navigate("/caregiver/request/details");
+  const handleClickAttuneRequest = (recruitConditionId: number) => {
+    navigate(`/caregiver/request/details/${recruitConditionId}`);
   };
 
   /* 새로고침 */
   const handleRefreshRequests = async () => {
     const response = await handleGetRequests();
     if (response != null) {
-      setRequests([]);
-      setAttuneRequests([]);
+      setRequests([
+        /********* Dummy *********/
+        {
+          recruitConditionId: 1,
+          elderId: 1,
+          centerId: 1,
+          centerName: "한마음",
+          imgUrl: null,
+          desiredHourlyWage: 40000,
+          rate: "RATE1",
+          age: 11,
+          sexual: "FEMALE",
+          careTypes: ["방문요양", "방문목욕", "입주요양"],
+        },
+      ]);
+      setAttuneRequests([
+        /********* Dummy *********/
+        {
+          recruitConditionId: 1,
+          elderId: 1,
+          centerId: 1,
+          centerName: "한마음",
+          imgUrl: null,
+          desiredHourlyWage: 40000,
+          rate: "RATE1",
+          age: 11,
+          sexual: "FEMALE",
+          careTypes: ["방문요양", "방문목욕", "입주요양"],
+        },
+      ]);
     }
   };
 
@@ -124,8 +153,40 @@ const Main = () => {
         </div>
         {/* 요청 리스트 조회 */}
         <RequestList
-          requests={requests ?? []}
-          attuneRequests={attuneRequests ?? []}
+          requests={
+            requests ?? [
+              /********* Dummy *********/
+              {
+                recruitConditionId: 1,
+                elderId: 1,
+                centerId: 1,
+                centerName: "한마음",
+                imgUrl: null,
+                desiredHourlyWage: 40000,
+                rate: "RATE1",
+                age: 11,
+                sexual: "FEMALE",
+                careTypes: ["방문요양", "방문목욕", "입주요양"],
+              },
+            ]
+          }
+          attuneRequests={
+            attuneRequests ?? [
+              /********* Dummy *********/
+              {
+                recruitConditionId: 1,
+                elderId: 1,
+                centerId: 1,
+                centerName: "한마음",
+                imgUrl: null,
+                desiredHourlyWage: 40000,
+                rate: "RATE1",
+                age: 11,
+                sexual: "FEMALE",
+                careTypes: ["방문요양", "방문목욕", "입주요양"],
+              },
+            ]
+          }
           onClickRequest={handleClickRequest}
           onClickAttuneRequest={handleClickAttuneRequest}
           onRefresh={handleRefreshRequests}

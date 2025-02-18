@@ -1,7 +1,9 @@
+import { CareTypes, Rate, Sexual, Week } from "./stringType";
+
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
   matchId: number;
-  RecruitStatus: string; // ***********
+  recruitStatus: RecruitRequest;
 }
 
 /* 요양보호사 매칭 현황 리스트 조회 */
@@ -38,7 +40,7 @@ export interface MatchedStatus {
 }
 
 export interface WorkTimes {
-  dayOfWeek: string; // ***********
+  dayOfWeek: Week;
   startTime: number;
   endTime: number;
 }
@@ -54,8 +56,8 @@ export interface WorkRequest {
   centerName: string;
   imgUrl: string | null;
   desiredHourlyWage: number;
-  rate: string; // ***********
+  rate: Rate;
   age: number;
-  sexual: string; // ***********
-  careTypes: string[]; // ***********
+  sexual: Sexual;
+  careTypes: CareTypes[];
 }
