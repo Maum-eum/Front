@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Login } from "../api/commons/User";
 import { useAdminStore } from "../stores/admin/adminStore";
 import { useCaregiverStore } from "../stores/caregiver/caregiverStore";
-import PoongImage from "../assets/image/곁에.png";
+import PoongImage from "../assets/image/logo.png";
 
 
 const Main: React.FC = () => {
@@ -70,7 +70,7 @@ const Main: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-gradient-to-b from-white to-[#E3F7D0] py-10 px-4 font-gtr-B">
       <div ref={topSectionRef} className="flex flex-col items-center w-full max-w-sm">
-        <img src={PoongImage} alt="곁에" className="w-50 mx-auto mb-4" />
+        <img src={PoongImage} alt="logo" className="w-50 mx-auto mb-4" />
 
         <div className="bg-white shadow-md rounded-lg p-6 w-full flex flex-col gap-6 ">
           <label className="text-gray-700 font-bold">아이디</label>
