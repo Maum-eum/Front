@@ -92,7 +92,7 @@ const MatchSchedules = () => {
 
   return (
     <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
-      <div className="w-72 sm:w-[600px]">
+      <div className="w-72 sm:w-[600px] mb-10">
         {/* 제목 */}
         <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
           <span className="text-black">[</span>
@@ -107,8 +107,12 @@ const MatchSchedules = () => {
           onClick={handleClickMatch}
           onRefresh={handleGetMatches}
         />
-        {/* 뒤로 가기 */}
-        <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+      </div>
+      {/* 뒤로 가기 */}
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
+        <div className="w-72 sm:w-[600px]">
+          <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+        </div>
       </div>
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>

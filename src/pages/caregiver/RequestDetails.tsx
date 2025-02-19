@@ -110,8 +110,8 @@ const RequestDetails = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
-      <div className="w-72 sm:w-[600px]">
+    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8 ">
+      <div className="w-72 sm:w-[600px] mb-10">
         {/* 제목 */}
         <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
           <span className="text-black">[</span>
@@ -197,26 +197,25 @@ const RequestDetails = () => {
         {isStatus && (
           <div className="flex justify-betweens gap-2">
             <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
-            {/* 뒤로 가기 */}
-            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
             <BasicBtn label="조율" color="green" onClick={handleAttuneRequest} />
           </div>
         )}
         {isStatus && (
           <div className="flex justify-between gap-2">
             <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
-            {/* 뒤로 가기 */}
-            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
             <BasicBtn label="수락" color="green" onClick={handleAcceptRequest} />
           </div>
         )}
         {isStatus && (
           <div className="flex justify-between gap-2">
-            {/* 뒤로 가기 */}
-            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
             <BasicBtn label="매칭 끝내기" color="green" onClick={handleFinishMatch} />
           </div>
         )}
+      </div>
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
+        <div className="w-72 sm:w-[600px]">
+          <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+        </div>
       </div>
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
