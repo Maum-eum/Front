@@ -127,21 +127,29 @@ const RequestDetails = () => {
     );
   };
 
+  const handleLogOut = async () => {
+    store.logout();
+    navigate("/");
+  };
+
   useEffect(() => {
     handleGetRequestsDetails();
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8 ">
+    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8 font-gtr-B">
       <div className="w-72 sm:w-[600px] mb-10">
         {/* 제목 */}
-        <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
-          <span className="text-black">[</span>
-          <span className="text-red">{"센터으에에이름이에요"}</span>
-          <span className="text-black">] </span>
-          <br className="sm:hidden"></br>
-          <span className="text-black">센터의 근무 요청</span>
-        </h1>
+        <div className="flex justify-betweens">
+          <h1 className="w-full text-start text-[20px] sm:text-3xl font-bold mb-6">
+            <span className="text-black">[</span>
+            <span className="text-red">{"희망 요양 센터"}</span>
+            <span className="text-black">] 요청</span>
+          </h1>
+          <div className="w-[120px]">
+            <BasicBtn label="로그아웃" color="green" attribute="content" onClick={handleLogOut} />
+          </div>
+        </div>
         {/* 매칭 요청 정보 조회 */}
         {/* 요양보호사 프로필 */}
         <div className="text-content w-full h-auto sm:h-auto shadow bg-white rounded-lg mb-6 p-5">
@@ -152,16 +160,19 @@ const RequestDetails = () => {
               <div className="w-20 h-20 sm:w-48 sm:h-48 border rounded-lg bg-empty-green"></div>
             )}
             <div className="flex-1 flex flex-col justify-between items-center">
-              <span className="font-bold">[비공개] 어르신</span>
+              <span className="font-bold text-content sm:text-title">[비공개] 어르신 연락처</span>
               {/* 연락처 정보 */}
-              {isStatus && (
+              {isStatus ? (
                 <BasicBtn
                   label="010-1234-1234"
                   color="white"
+                  attribute="content"
                   onClick={() => {
                     handleCopyClipBoard("010-1234-1234");
                   }}
                 />
+              ) : (
+                <BasicBtn label="[비공개]" color="white" attribute="content" onClick={() => {}} />
               )}
             </div>
           </div>
@@ -169,47 +180,47 @@ const RequestDetails = () => {
           <hr className="border my-10" />
 
           {/* 매칭 상세 정보 */}
-          <div className="font-title font-bold">기본 정보</div>
+          <div className="font-bold text-item my-3">기본 정보</div>
           <AttributeCard content={["78세"]} />
           {isStatus && <AttributeCard content={["78세"]} />}
-          <div className="font-title font-bold">근무 유형</div>
+          <div className="font-bold text-item my-3">근무 유형</div>
           <AttributeCard content={["방문 요양"]} />
-          <div className="font-title font-bold">근무 요일 및 시간</div>
+          <div className="font-bold text-item my-3">근무 요일 및 시간</div>
           <AttributeCard content={["월, 10:00 - 13:00"]} />
-          <div className="font-title font-bold">필요 서비스</div>
+          <div className="font-bold text-item my-3">필요 서비스</div>
           <AttributeCard content={["식사보조(조율)"]} />
-          <div className="font-title font-bold">복리후생</div>
+          <div className="font-bold text-item my-3">복리후생</div>
           <AttributeCard content={["4대보험"]} />
-          <div className="font-title font-bold">급여</div>
+          <div className="font-bold text-item my-3">급여</div>
           <AttributeCard content={["15,000원"]} />
 
           {isStatus && (
             <>
               <hr className="border my-10" />
 
-              <div className="font-title font-bold">근무지 주소</div>
+              <div className="font-bold text-item my-3">근무지 주소</div>
               <AttributeCard content={["경산시 진량읍", "애옹아파트 11동 301호"]} />
-              <div className="font-title font-bold">동거인 여부</div>
+              <div className="font-bold text-item my-3">동거인 여부</div>
               <AttributeCard content={["배우자와 동거"]} />
-              <div className="font-title font-bold">추가 필요사항</div>
+              <div className="font-bold text-item my-3">추가 필요사항</div>
               <AttributeCard content={["고지혈증 있으심."]} />
 
               <hr className="border my-10" />
 
               <div className="flex justify-between">
-                <div className="font-title font-bold">센터</div>
+                <div className="font-bold text-item my-3">센터</div>
                 <AttributeCard content={["나라 사랑 복지관"]} />
               </div>
               <div className="flex justify-between">
-                <div className="font-title font-bold">사회복지사</div>
+                <div className="font-bold text-item my-3">사회복지사</div>
                 <AttributeCard content={["안지히"]} />
               </div>
               <div className="flex justify-between">
-                <div className="font-title font-bold">연락처</div>
+                <div className="font-bold text-item my-3">연락처</div>
                 <AttributeCard content={["010-1234-1234"]} />
               </div>
               <div className="flex justify-between">
-                <div className="font-title font-bold">이메일</div>
+                <div className="font-bold text-item my-3">이메일</div>
                 <AttributeCard content={["wert@naver.com"]} />
               </div>
             </>
@@ -218,26 +229,36 @@ const RequestDetails = () => {
         {/* 수락/조율/거절 버튼 */}
         {isStatus && (
           <div className="flex justify-betweens gap-2">
-            <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
-            <BasicBtn label="조율" color="green" onClick={handleAttuneRequest} />
+            <BasicBtn label="거절" color="red" attribute="button" onClick={handleRefuseRequest} />
+            <BasicBtn label="조율" color="green" attribute="button" onClick={handleAttuneRequest} />
           </div>
         )}
         {isStatus && (
           <div className="flex justify-between gap-2">
-            <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
-            <BasicBtn label="수락" color="green" onClick={handleAcceptRequest} />
+            <BasicBtn label="거절" color="red" attribute="button" onClick={handleRefuseRequest} />
+            <BasicBtn label="수락" color="green" attribute="button" onClick={handleAcceptRequest} />
           </div>
         )}
         {isStatus && (
           <div className="flex justify-between gap-2">
-            <BasicBtn label="매칭 끝내기" color="green" onClick={handleFinishMatch} />
+            <BasicBtn
+              label="매칭 끝내기"
+              color="green"
+              attribute="button"
+              onClick={handleFinishMatch}
+            />
           </div>
         )}
       </div>
       {!isAlertOpen && (
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
           <div className="w-72 sm:w-[600px]">
-            <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+            <BasicBtn
+              label="뒤로 가기"
+              color="green"
+              attribute="button"
+              onClick={() => navigate(-1)}
+            />
           </div>
         </div>
       )}

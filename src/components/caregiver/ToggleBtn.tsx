@@ -12,7 +12,9 @@ const ToggleBtn = ({ status, onClick }: ToggleBtnProps) => {
       <div
         className={`w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full transform transition duration-300 ${status ? "translate-x-[95px] sm:translate-x-[183px]" : "translate-x-0"}`}
       ></div>
-      <div className="w-[70px] sm:w-[150px] text-white">{status ? "구직 중" : "휴직 중"}</div>
+      <div className="w-[70px] sm:w-[150px] text-white text-item">
+        {status ? "구직 중" : "휴직 중"}
+      </div>
     </button>
   );
 };

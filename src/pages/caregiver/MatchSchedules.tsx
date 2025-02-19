@@ -42,6 +42,11 @@ const MatchSchedules = () => {
     navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
+  const handleLogOut = async () => {
+    store.logout();
+    navigate("/");
+  };
+
   /***** dummy *****/
 
   useEffect(() => {
@@ -90,14 +95,19 @@ const MatchSchedules = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
+    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8 font-gtr-B">
       <div className="w-72 sm:w-[600px] mb-10">
         {/* 제목 */}
-        <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
-          <span className="text-black">[</span>
-          <span className="text-red">{store.username}</span>
-          <span className="text-black">] 요양보호사님의 일정</span>
-        </h1>
+        <div className="flex justify-betweens">
+          <h1 className="w-full text-start text-[20px] sm:text-3xl font-bold mb-6">
+            <span className="text-black">[</span>
+            <span className="text-red">{store.username}</span>
+            <span className="text-black">] 요양보호사님의 일정</span>
+          </h1>
+          <div className="w-[120px]">
+            <BasicBtn label="로그아웃" color="green" attribute="content" onClick={handleLogOut} />
+          </div>
+        </div>
         {/* 일정 리스트 조회 */}
         <ScheduleList matches={matches ?? []} />
         {/* 서비스 진행 중인 리스트 조회 */}
@@ -110,7 +120,12 @@ const MatchSchedules = () => {
       {!isAlertOpen && (
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
           <div className="w-72 sm:w-[600px]">
-            <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+            <BasicBtn
+              label="뒤로 가기"
+              color="green"
+              attribute="button"
+              onClick={() => navigate(-1)}
+            />
           </div>
         </div>
       )}

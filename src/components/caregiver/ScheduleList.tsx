@@ -47,14 +47,14 @@ const ScheduleList: React.FC<ScheduleListProps> = ({ matches }) => {
                 key={day}
                 className=" w-[34px] h-[34px] flex justify-center items-center py-2 px-4 gap-2 bg-empty-green rounded-lg"
               >
-                <span className="font-bold">{weekMap.get(day)}</span>
+                <span className="text-item">{weekMap.get(day)}</span>
               </div>
             ) : (
               <div
                 key={day}
                 className=" w-[34px] h-[34px] flex justify-center items-center py-2 px-4 gap-2 bg-base-white rounded-lg"
               >
-                <span className="font-bold">{weekMap.get(day)}</span>
+                <span className="text-item">{weekMap.get(day)}</span>
               </div>
             )}
             <div className="flex flex-col">

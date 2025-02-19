@@ -33,7 +33,7 @@ const Main = () => {
         console.log("요양보호사 정보 조회 성공:", response);
         if (response.data.data != null) {
           setCaregiverInfo(response.data.data);
-          store.setCaregiverInfo(response.data.data.username, response.data.data.img);
+          store.setUserInfo(response.data.data.username, response.data.data.img);
         }
       },
       (error) => {
@@ -95,20 +95,30 @@ const Main = () => {
     navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
+  const handleLogOut = async () => {
+    store.logout();
+    navigate("/");
+  };
+
   useEffect(() => {
     handleGetRequests();
     handleGetCaregiverInfo();
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
+    <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8 font-gtr-B">
       <div className="w-72 sm:w-[600px]">
         {/* 제목 */}
-        <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
-          <span className="text-black">[</span>
-          <span className="text-red">{caregiverInfo?.username}</span>
-          <span className="text-black">] 요양보호사님의 공간</span>
-        </h1>
+        <div className="flex justify-betweens">
+          <h1 className="w-full text-start text-[20px] sm:text-3xl font-bold mb-6">
+            <span className="text-black">[</span>
+            <span className="text-red">{caregiverInfo?.username}</span>
+            <span className="text-black">] 요양보호사님</span>
+          </h1>
+          <div className="w-[120px]">
+            <BasicBtn label="로그아웃" color="green" onClick={handleLogOut} />
+          </div>
+        </div>
         {/* 요양보호사 프로필 */}
         <div className="text-content w-full h-42 sm:h-56 flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
           {caregiverInfo?.img ? (
@@ -126,11 +136,7 @@ const Main = () => {
               onClick={handleChangeStatus}
             />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn
-              label="정보 변경"
-              color="white"
-              onClick={() => navigate("/caregiver/edit/profile")}
-            />
+            <BasicBtn label="정보 변경" color="white" onClick={() => {}} />
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}

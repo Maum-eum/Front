@@ -14,14 +14,14 @@ type CaregiverInfo = {
   setUsername: (name: string) => void;
   setImg: (img: string | null) => void;
 
-  setUserInfo: (userId: number, accessToken: string) => void;
-  setCaregiverInfo: (username: string, img: string | null) => void;
+  setCaregiverInfo: (userId: number, accessToken: string) => void;
+  setUserInfo: (username: string, img: string | null) => void;
 
   logout: () => void;
 };
 
-export const useCaregiverStore = create<CaregiverInfo>()(
-  persist(
+export const useCaregiverStore = create(
+  persist<CaregiverInfo>(
     (set) => ({
       userId: 0,
       accessToken: "",
@@ -33,8 +33,8 @@ export const useCaregiverStore = create<CaregiverInfo>()(
       setUsername: (username) => set({ username }),
       setImg: (img) => set({ img }),
 
-      setUserInfo: (userId, accessToken) => set({ userId, accessToken }),
-      setCaregiverInfo: (username, img) => set({ username, img }),
+      setCaregiverInfo: (userId, accessToken) => set({ userId, accessToken }),
+      setUserInfo: (username, img) => set({ username, img }),
 
       logout: () => {
         set({

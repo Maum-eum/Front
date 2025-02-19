@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { formDataApi, privateApi } from "../../utils/http-commons";
 import { CaregiverInfoResponse } from "../../types/caregiver/caregiverType";
-import { ApiResponseDefault } from "../../types/commons";
+import { ApiResponseDefault } from "../../types/commons/commons";
 
 /* ✔️ 요양보호사 정보 조회 */
 export const getCaregiverInfo = async (

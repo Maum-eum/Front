@@ -5,8 +5,7 @@ import {
   RecruitRequest,
   RequestsListRes,
 } from "../../types/caregiver/caregiverRequestType";
-import { ApiResponseDefault } from "../../types/commons";
-import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
+import { ApiResponseDefault } from "../../types/commons/commons";
 
 /* 요양보호사 근무 요청 응답 */
 export const reponseToRecruit = async (

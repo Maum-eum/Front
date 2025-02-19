@@ -40,6 +40,7 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
       <BasicBtn
         label="상세 정보 보기"
         color="green"
+        attribute="button"
         onClick={() => onClick(request.recruitConditionId, request.centerId, request.elderId)}
       />
     </div>
