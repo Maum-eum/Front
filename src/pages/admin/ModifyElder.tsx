@@ -133,31 +133,32 @@ const ModifyElder: React.FC = () => {
       }
     );
   };
-    // 어르신 데이터 조회
-    const getTempElderInfo = async () => {
-      if (temp !== "temp") return;
-      if (!elderId) {
-        alert("잘못된 접근입니다.");
-        navigate(-1);
-        return;
-      }
-  
-      await getTempElderDetail(
-        {
-          centerId: centerId,
-          elderId: parseInt(elderId),
-        },
-        (res) => {
-          setElderData(res.data.data);
-          if (res.data.data.img) {
-            urlToFile(res.data.data.img)
-          }
-        },
-        (err) => {
-          console.log(err);
+
+  // 어르신 데이터 조회
+  const getTempElderInfo = async () => {
+    if (temp !== "temp") return;
+    if (!elderId) {
+      alert("잘못된 접근입니다.");
+      navigate(-1);
+      return;
+    }
+
+    await getTempElderDetail(
+      {
+        centerId: centerId,
+        elderId: parseInt(elderId),
+      },
+      (res) => {
+        setElderData(res.data.data);
+        if (res.data.data.img) {
+          urlToFile(res.data.data.img)
         }
-      );
-    };
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  };
 
   // api 요청
   const sendModifyElder = async () => {
@@ -345,8 +346,117 @@ const ModifyElder: React.FC = () => {
       </div>
 
       {/* 데스크탑 환경에서만 보이는 UI 추후 작업할지..?*/}
-      <div className="hidden md:block">
-        데스크탑 화면입니다!
+      <div className="hidden md:flex w-full h-screen items-center justify-center bg-gray-50">
+        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col w-full max-w-4xl">
+          <h1 className="text-2xl font-bold text-center text-black mb-6">어르신 정보 등록</h1>
+          <div className="grid grid-cols-2 gap-6">
+            {/* ✅ 왼쪽 - 기본 정보 (사진 + 주요 정보) */}
+            <div className="flex flex-col gap-6">
+              {/* 📸 프로필 이미지 업로드 */}
+              <div className="flex flex-col items-center mb-2">
+                <label htmlFor="profile-upload" className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300 cursor-pointer">
+                  {profileFile ? (
+                    <img src={URL.createObjectURL(profileFile)} alt="프로필" className="w-full h-full object-cover rounded-full" />
+                  ) : (
+                    <span className="text-gray-500 text-sm">사진 추가</span>
+                  )}
+                </label>
+                <input id="profile-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                <p className="text-sm text-gray-500 mt-2">프로필 사진 추가</p>
+              </div>
+
+              {/* 기본 정보 입력 */}
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-sm font-bold mb-1">어르신 성함</label>
+                  <Input type="text" name="name" placeholder="성함을 입력해주세요." value={elderData.name} onChange={elderDataChange} />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold mb-1">생년월일</label>
+                  <Input type="text" name="birth" placeholder="생년월일을 입력해주세요." value={elderData.birth} onChange={elderDataChange} />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold mb-1">성별</label>
+                  <RadioInput selectedValues={[elderData.gender]}  name="gender" options={[{ value: 1, label: "남성" }, { value: 2, label: "여성" }]} onChange={elderRadioDataChange} />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold mb-1">몸무게 (Kg)</label>
+                  {/*몸무게입렵은 별도로..*/}
+                  <input
+                    className="w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0"
+                    type="text"
+                    name="weight"
+                    placeholder="몸무게를 입력해주세요."
+                    value={elderData.weight}
+                    onChange={elderDataChange}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold mb-1">장기 요양 등급</label>
+                  <RadioInput
+                    name="rate"
+                      options={[
+                        { value: "NORATE", label: "없음" },
+                        { value: "RATE1", label: "1등급" },
+                        { value: "RATE2", label: "2등급" },
+                        { value: "RATE3", label: "3등급" },
+                        { value: "RATE4", label: "4등급" },
+                        { value: "RATE5", label: "5등급" }
+                      ]}
+                      onChange={elderRadioDataChange}
+                    selectedValues={[elderData.rate]}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <div>
+                <label className="block text-sm font-bold mb-1">동거인 여부</label>
+                <RadioInput
+                  name="inmate"
+                  options={[
+                    { value: ["LIVING_ALONE"], label: "독거" },
+                    { value: ["LIVING_WITH_SPOUSE", "AT_HOME_DURING_CARE"], label: "배우자와 동거, 돌봄 시간 중 집에 있음" },
+                    { value: ["LIVING_WITH_SPOUSE", "AWAY_DURING_CARE"], label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
+                    { value: ["LIVING_WITH_FAMILY", "AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
+                    { value: ["LIVING_WITH_FAMILY", "AWAY_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" }
+                  ]}
+                  onChange={elderRadioDataChange}
+                  selectedValues={[elderData.inmateTypes]}
+                />
+              </div>
+
+              
+              <div className="w-full">
+                <h2 className="text-sm font-bold mb-2">어르신 치매 증상</h2>
+                <CheckList
+                type="치매"
+                name={categories.title}
+                options={[
+                  { label: "정상",          name: "normal", value: elderData.normal },
+                  { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: elderData.hasShortTermMemoryLoss },
+                  { label: "집 밖을 배회",   name: "wandersOutside", value: elderData.wandersOutside },
+                  { label: "어린아이 같은 행동",  name: "actsLikeChild", value: elderData.actsLikeChild },
+                  { label: "사람을 의심하는 망상",    name: "hasDelusions", value: elderData.hasDelusions },
+                  { label: "때리거나 욕설 등 공격적인 행동",    name: "hasAggressiveBehavior", value: elderData.hasAggressiveBehavior },
+                ]}
+                onChange={handleElderCheckList}
+              /> 
+              </div>
+            </div>
+          </div>
+
+
+          {/* 📌 버튼 영역 */}
+          <div className="flex justify-between mt-8 gap-2 w-full">
+            <Btn text="뒤로 가기" color="white" onClick={() => navigate(-1)} />
+            <Btn text="수정" onClick={sendModifyElder} />
+          </div>
+        </div>
       </div>
     </div>
   );
