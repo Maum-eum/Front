@@ -1,19 +1,21 @@
-import { CareTypes, Rate, Sexual, Week } from "./stringType";
+import { CareType, MatchStatus, ElderRate, RecruitStatus, Sexual, Week } from "./stringType";
 
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
   matchId: number;
-  recruitStatus: RecruitRequest;
+  status: RecruitStatus;
 }
 
-/* 요양보호사 매칭 현황 리스트 조회 */
+/* 요양보호사 일정 리스트 조회 */
 export interface MatchedListResponse {
-  matchedRequests: MatchedStatus[];
+  list: MatchedStatus[];
 }
 
 export interface MatchedStatus {
   elderId: number;
   elderName: string;
+  recruitConditionId: number;
+  centerId: number;
   mealAssistance: boolean;
   toiletAssistance: boolean;
   moveAssistance: boolean;
@@ -46,8 +48,8 @@ export interface WorkTimes {
 }
 
 /* 요양보호사 근무 요청 리스트 조회 */
-export interface RequestsListResponse {
-  requests: WorkRequest[];
+export interface RequestsListRes {
+  list: WorkRequest[];
 }
 export interface WorkRequest {
   elderId: number;
@@ -56,8 +58,9 @@ export interface WorkRequest {
   centerName: string;
   imgUrl: string | null;
   desiredHourlyWage: number;
-  rate: Rate;
+  rate: ElderRate;
   age: number;
   sexual: Sexual;
-  careTypes: CareTypes[];
+  matchStatus: MatchStatus;
+  careTypes: CareType[];
 }

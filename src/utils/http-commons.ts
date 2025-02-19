@@ -39,6 +39,14 @@ privateApi.interceptors.request.use(
       const obj = JSON.parse(stored);
       if (obj.state.accessToken !== "") {
         config.headers["authorization"] = obj.state.accessToken;
+        return config;
+      }
+    }
+    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    if (stored2) {
+      const obj = JSON.parse(stored2);
+      if (obj.state.accessToken !== "") {
+        config.headers["authorization"] = obj.state.accessToken;
       }
     }
     return config;
@@ -53,6 +61,14 @@ formDataApi.interceptors.request.use(
     const stored = localStorage.getItem("ADMIN_STORE");
     if (stored) {
       const obj = JSON.parse(stored);
+      if (obj.state.accessToken !== "") {
+        config.headers["authorization"] = obj.state.accessToken;
+        return config;
+      }
+    }
+    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    if (stored2) {
+      const obj = JSON.parse(stored2);
       if (obj.state.accessToken !== "") {
         config.headers["authorization"] = obj.state.accessToken;
       }

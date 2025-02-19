@@ -5,17 +5,15 @@ import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 
 type RequestListProps = {
   requests: WorkRequest[];
-  attuneRequests: WorkRequest[];
-  onClickRequest: (recruitConditionId: number) => void;
-  onClickAttuneRequest: (recruitConditionId: number) => void;
+  tuneRequests: WorkRequest[];
+  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
   onRefresh: () => void;
 };
 
 const RequestList: React.FC<RequestListProps> = ({
   requests,
-  attuneRequests,
-  onClickRequest,
-  onClickAttuneRequest,
+  tuneRequests,
+  onClick,
   onRefresh,
 }) => {
   return (
@@ -28,28 +26,28 @@ const RequestList: React.FC<RequestListProps> = ({
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
               {requests.map((request) => (
-                <CaregiverRequestCard request={request} onClick={onClickRequest} />
+                <CaregiverRequestCard request={request} onClick={onClick} />
               ))}
             </div>
           </ScrollListBox>
         </>
       )}
       {/* 조율 중인 요청 */}
-      {attuneRequests && attuneRequests.length > 0 && (
+      {tuneRequests && tuneRequests.length > 0 && (
         <>
           <label className="text-item font-bold mb-3">조율 중인 요청이에요</label>
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {attuneRequests.map((attuneRequest) => (
-                <CaregiverRequestCard request={attuneRequest} onClick={onClickAttuneRequest} />
+              {tuneRequests.map((tuneRequest) => (
+                <CaregiverRequestCard request={tuneRequest} onClick={onClick} />
               ))}
             </div>
           </ScrollListBox>
         </>
       )}
       {/* 아무 요청도 없을 경우 */}
-      {!(requests && requests.length > 0) && !(attuneRequests && attuneRequests.length > 0) && (
+      {!(requests && requests.length > 0) && !(tuneRequests && tuneRequests.length > 0) && (
         <div className="w-full h-full flex flex-col items-center justify-center p-10">
           <label className="text-item font-bold mb-6">이런...</label>
           <button onClick={onRefresh}>🔄️</button>

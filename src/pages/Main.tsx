@@ -4,11 +4,13 @@ import Btn from "../components/commons/Btn";
 import { useNavigate } from "react-router-dom";
 import { Login } from "../api/commons/User";
 import { useAdminStore } from "../stores/admin/adminStore";
+import { useCaregiverStore } from "../stores/caregiver/caregiverStore";
 import PoongImage from "../assets/image/포옹.png";
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { setAdminInfo } = useAdminStore();
+  const { setCaregiverInfo } = useCaregiverStore();
   const registerSectionRef = useRef<HTMLDivElement>(null);
   const topSectionRef = useRef<HTMLDivElement>(null);
 
@@ -44,6 +46,7 @@ const Main: React.FC = () => {
           setAdminInfo(token, userId, role, name, centerId, centerName);
           navigate("/admin/main");
         } else if (role === "ROLE_CAREGIVER") {
+          setCaregiverInfo(userId, token);
           navigate("/caregiver/main");
         } else {
           console.log("알 수 없는 역할:", role);
@@ -67,7 +70,6 @@ const Main: React.FC = () => {
     <div className="flex flex-col items-center w-full min-h-screen bg-gradient-to-b from-white to-[#E3F7D0] py-10 px-4">
       <div ref={topSectionRef} className="flex flex-col items-center w-full max-w-sm">
         <img src={PoongImage} alt="포옹" className="w-50 mx-auto mb-4" />
-       
 
         <div className="bg-white shadow-md rounded-lg p-6 w-full flex flex-col gap-4 ">
           <label className="text-gray-700 font-bold">아이디</label>
@@ -94,7 +96,10 @@ const Main: React.FC = () => {
         회원가입 하러 가기
       </button>
 
-      <div ref={registerSectionRef} className="flex flex-col items-center mt-20 w-full max-w-sm relative pb-80">
+      <div
+        ref={registerSectionRef}
+        className="flex flex-col items-center mt-20 w-full max-w-sm relative pb-80"
+      >
         <h2 className="text-gray-700 font-bold mb-6">회원가입</h2>
         <div className="relative w-full flex flex-col items-center gap-40">
           <div className="w-64 h-64 bg-[#FFB4B4] rounded-full flex items-center justify-center text-white text-lg font-bold shadow-md absolute top-[50px] left-[-40px]">
@@ -114,7 +119,6 @@ const Main: React.FC = () => {
         </div>
 
         <div className="mt-96"></div>
-
       </div>
 
       <div className="w-full flex flex-col items-center">
