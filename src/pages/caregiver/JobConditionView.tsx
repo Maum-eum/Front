@@ -64,11 +64,6 @@ const JobConditionView = () => {
         const data = await getJobCondition();
         console.log("🟢 [조회한 데이터]:", data);
   
-        // ✅ dayOfWeek 값이 비어 있으면 기본값 설정
-        if (!data.dayOfWeek || data.dayOfWeek.length < 7) {
-          console.warn("⚠️ dayOfWeek 값이 비어 있음, 기본값으로 설정");
-          data.dayOfWeek = "0000000"; // 기본값
-        }
   
         setJobCondition(data);
       } catch (error) {

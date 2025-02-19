@@ -38,7 +38,6 @@ export const registerJobCondition = async (data: JobConditionRequest) => {
   }
 };
 
-// ✅ 근무 조건 수정 (PUT 요청)
 export const updateJobCondition = async (jobConditionData: JobConditionRequest) => {
   try {
     const token = localStorage.getItem("accessToken");
@@ -56,11 +55,15 @@ export const updateJobCondition = async (jobConditionData: JobConditionRequest) 
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ 최신 토큰 사용
+        Authorization: `Bearer ${token}`,
       },
     });
 
     console.log("🟢 [서버 응답] response.data:", response.data);
+
+    // ✅ 최신 데이터를 다시 불러와 상태 갱신
+    await getJobCondition();  
+
     return response.data;
   } catch (error: any) {
     console.error("❌ [근무 조건 수정 실패]:", error);
@@ -75,21 +78,20 @@ export const updateJobCondition = async (jobConditionData: JobConditionRequest) 
 };
 
 
-// ✅ 근무 조건 조회 API
 export const getJobCondition = async () => {
   try {
     const response = await axios.get(API_URL, {
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // ✅ 토큰 추가
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
 
     console.log("🟢 [근무 조건 조회 성공] response.data:", response.data);
-    return response.data.data; // 서버 응답에서 'data' 부분만 반환
+
+    return response.data.data; // `data` 내부에 `dayOfWeek`가 포함되는지 확인
   } catch (error) {
     console.error("❌ [근무 조건 조회 실패]:", error);
     return null;
   }
 };
-

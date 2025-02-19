@@ -44,9 +44,7 @@ export default function SignupStep3() {
     const requestData: JobConditionRequest = {
       ...selectedOptions, // ✅ 기존 옵션 추가
       desiredHourlyWage: hourlyWage,
-      dayOfWeek: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
-        .map((day) => (timeData.some((t) => t.dayofweek === day) ? "1" : "0"))
-        .join(""), // ✅ 요일을 "1001010" 형식으로 변환
+      dayOfWeek: timeData[0]?.dayofweek || "0000000", // ✅ 변환 방식을 수정
       startTime: timeData[0]?.starttime || 0, 
       endTime: timeData[0]?.endtime || 0, 
       locationRequestDTOList: selectedLocations.map((id) => ({ locationId: id })),
