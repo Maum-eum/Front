@@ -7,7 +7,15 @@ type ScheduleListProps = {
 };
 
 const ScheduleList: React.FC<ScheduleListProps> = ({ matches }) => {
-  const week = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  const weekMap = new Map<string, string>([
+    ["SUN", "일"],
+    ["MON", "월"],
+    ["TUE", "화"],
+    ["WED", "수"],
+    ["THU", "목"],
+    ["FRI", "금"],
+    ["SAT", "토"],
+  ]);
   const scheduleMap: { [key: string]: string[] } = {};
 
   matches.forEach((m: MatchedStatus) => {
@@ -30,16 +38,25 @@ const ScheduleList: React.FC<ScheduleListProps> = ({ matches }) => {
   });
 
   return (
-    <div className="w-72 sm:w-[600px] text-content h-full flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
+    <div className="w-full text-content h-full flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
       <div className="flex flex-col gap-2">
-        {week.map((day) => (
+        {[...weekMap.keys()].map((day) => (
           <div className="flex gap-2">
-            <div
-              key={day}
-              className=" w-14 h-9 flex justify-center items-center py-2 px-4 gap-2 bg-base-white rounded-lg"
-            >
-              <span className="font-bold">{day}</span>
-            </div>
+            {[...weekMap.keys()][new Date().getDay()] == day ? (
+              <div
+                key={day}
+                className=" w-[34px] h-[34px] flex justify-center items-center py-2 px-4 gap-2 bg-empty-green rounded-lg"
+              >
+                <span className="font-bold">{weekMap.get(day)}</span>
+              </div>
+            ) : (
+              <div
+                key={day}
+                className=" w-[34px] h-[34px] flex justify-center items-center py-2 px-4 gap-2 bg-base-white rounded-lg"
+              >
+                <span className="font-bold">{weekMap.get(day)}</span>
+              </div>
+            )}
             <div className="flex flex-col">
               {scheduleMap[day] ? (
                 <AttributeCard content={scheduleMap[day]} />

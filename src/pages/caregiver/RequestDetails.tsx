@@ -3,8 +3,9 @@ import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import Alert from "../../components/commons/Alert";
 import { useNavigate } from "react-router-dom";
 import BasicBtn from "../../components/caregiver/BasicBtn";
-import { getRequestDetails } from "../../api/caregiver/caregiverRequest";
+import { getRequestDetails, reponseToRecruit } from "../../api/caregiver/caregiverRequest";
 import AttributeCard from "../../components/caregiver/AttributeCard";
+import Btn from "../../components/commons/Btn";
 
 const RequestDetails = () => {
   const navigate = useNavigate();
@@ -21,13 +22,67 @@ const RequestDetails = () => {
   const store = useCaregiverStore();
 
   /* 매칭 거절 */
-  const handleRefuseRequest = () => {};
-
+  const handleRefuseRequest = async () => {
+    await reponseToRecruit(
+      { matchId: 0, status: "DECLINED" },
+      (response) => {
+        console.log("근무 요청 상세 보기 성공:", response);
+        // if (response.data != null) setRequest(response.data.data);
+      },
+      (error) => {
+        console.log("근무 요청 상세 보기 실패:", error);
+        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+        setAlertOpen(true);
+      }
+    );
+  };
   /* 매칭 조율 */
-  const handleAttuneRequest = () => {};
+  const handleAttuneRequest = async () => {
+    await reponseToRecruit(
+      { matchId: 0, status: "TUNING" },
+      (response) => {
+        console.log("매칭 조율 성공공:", response);
+        // if (response.data != null) setRequest(response.data.data);
+      },
+      (error) => {
+        console.log("매칭 조율 실패:", error);
+        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+        setAlertOpen(true);
+      }
+    );
+  };
 
   /* 매칭 수락 */
-  const handleAcceptRequest = () => {};
+  const handleAcceptRequest = async () => {
+    await reponseToRecruit(
+      { matchId: 0, status: "ACCEPTED" },
+      (response) => {
+        console.log("매칭 수락 성공:", response);
+        // if (response.data != null) setRequest(response.data.data);
+      },
+      (error) => {
+        console.log("매칭 수락 실패:", error);
+        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+        setAlertOpen(true);
+      }
+    );
+  };
+
+  /* 매칭 끝내기 */
+  const handleFinishMatch = async () => {
+    await reponseToRecruit(
+      { matchId: 0, status: "WITHDRAWN" },
+      (response) => {
+        console.log("매칭 끝내기 성공:", response);
+        // if (response.data != null) setRequest(response.data.data);
+      },
+      (error) => {
+        console.log("매칭 끝내기 실패:", error);
+        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+        setAlertOpen(true);
+      }
+    );
+  };
 
   /* 연락처 복사 */
   const handleCopyClipBoard = (call: string) => {
@@ -41,7 +96,7 @@ const RequestDetails = () => {
     await getRequestDetails(
       (response) => {
         console.log("근무 요청 상세 보기 성공:", response);
-        // if (response.data != null) setRequest(response.data);
+        // if (response.data != null) setRequest(response.data.data);
       },
       (error) => {
         console.log("근무 요청 상세 보기 실패:", error);
@@ -139,15 +194,27 @@ const RequestDetails = () => {
           )}
         </div>
         {/* 수락/조율/거절 버튼 */}
-        {!isStatus ? (
-          <div className="flex justify-betweens">
+        {isStatus && (
+          <div className="flex justify-betweens gap-2">
             <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
+            {/* 뒤로 가기 */}
+            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
             <BasicBtn label="조율" color="green" onClick={handleAttuneRequest} />
           </div>
-        ) : (
-          <div className="flex justify-between">
+        )}
+        {isStatus && (
+          <div className="flex justify-between gap-2">
             <BasicBtn label="거절" color="red" onClick={handleRefuseRequest} />
+            {/* 뒤로 가기 */}
+            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
             <BasicBtn label="수락" color="green" onClick={handleAcceptRequest} />
+          </div>
+        )}
+        {isStatus && (
+          <div className="flex justify-between gap-2">
+            {/* 뒤로 가기 */}
+            <BasicBtn label="보류" color="point-gray" onClick={() => navigate(-1)} />
+            <BasicBtn label="매칭 끝내기" color="green" onClick={handleFinishMatch} />
           </div>
         )}
       </div>

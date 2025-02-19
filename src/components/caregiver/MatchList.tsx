@@ -11,12 +11,11 @@ type MatchListProps = {
 
 const MatchList: React.FC<MatchListProps> = ({ matches, onClick, onRefresh }) => {
   return (
-    <>
+    <div className="w-full flex flex-wrap">
       {/* 서비스 진행 중인 리스트 조회 */}
       {matches && matches.length > 0 ? (
         <>
-          <label className="text-item font-bold mb-10">진행 중인 서비스가 있어요</label>
-          <button onClick={onRefresh}>🔄️</button>
+          <label className="text-item font-bold mb-3">진행 중인 서비스가 있어요</label>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
               {matches.map((match) => (
@@ -36,7 +35,7 @@ const MatchList: React.FC<MatchListProps> = ({ matches, onClick, onRefresh }) =>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

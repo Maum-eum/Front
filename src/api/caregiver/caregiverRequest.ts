@@ -24,7 +24,7 @@ export const getMatches = async (
   await privateApi.get(`/match/matching`).then(Response).catch(Error);
 };
 
-/* ✔️ 요양보호사 근무 요청 리스트 조회 */
+/* 요양보호사 근무 요청 리스트 조회 */
 export const getRequests = async (
   Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListResponse>>) => void,
   Error: (Error: AxiosError<null>) => void

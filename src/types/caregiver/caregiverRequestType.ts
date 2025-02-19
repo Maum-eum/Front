@@ -3,7 +3,7 @@ import { CareTypes, MatchStatus, Rate, Sexual, Week } from "./stringType";
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
   matchId: number;
-  status: RecruitRequest;
+  status: RecruitStatus;
 }
 
 /* 요양보호사 일정 리스트 조회 */
