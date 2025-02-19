@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 import { getRequestDetails, reponseToRecruit } from "../../api/caregiver/caregiverRequest";
 import AttributeCard from "../../components/caregiver/AttributeCard";
-import Btn from "../../components/commons/Btn";
+// import { sendNotification } from "../../utils/fcm/notificationService";
 
 const RequestDetails = () => {
   const navigate = useNavigate();
@@ -26,11 +26,12 @@ const RequestDetails = () => {
     await reponseToRecruit(
       { matchId: 0, status: "DECLINED" },
       (response) => {
-        console.log("근무 요청 상세 보기 성공:", response);
+        console.log("매칭 거절 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
+        handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 요청을 거절했어요...`);
       },
       (error) => {
-        console.log("근무 요청 상세 보기 실패:", error);
+        console.log("매칭 거절 실패:", error);
         setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
         setAlertOpen(true);
       }
@@ -43,6 +44,7 @@ const RequestDetails = () => {
       (response) => {
         console.log("매칭 조율 성공공:", response);
         // if (response.data != null) setRequest(response.data.data);
+        handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 조건 조율을 원해요!`);
       },
       (error) => {
         console.log("매칭 조율 실패:", error);
@@ -59,6 +61,7 @@ const RequestDetails = () => {
       (response) => {
         console.log("매칭 수락 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
+        handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 요청을 수락했어요!`);
       },
       (error) => {
         console.log("매칭 수락 실패:", error);
@@ -75,6 +78,7 @@ const RequestDetails = () => {
       (response) => {
         console.log("매칭 끝내기 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
+        handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무를 종료했어요...`);
       },
       (error) => {
         console.log("매칭 끝내기 실패:", error);
@@ -90,6 +94,24 @@ const RequestDetails = () => {
     setAlertOpen(true);
     setAlertMessage("연락처가 복사 되었어요!");
   };
+
+  /* 알림 보내기 */
+  const handleSaveFcmToken = async (content: string) => {};
+  // const handleSaveFcmToken = async (content: string) => {
+  //   /* 백엔드로 FCM 토큰 저장 */
+  //   await sendNotification(
+  //     store.userId,
+  //     content,
+  //     (response: any) => {
+  //       console.log("알림 보내기 성공:", response);
+  //       // if (response.data != null) setRequest(response.data.data);
+  //     },
+  //     (error: any) => {
+  //       console.log("알림 보내기 실패:", error);
+  //       // navigate(-1);
+  //     }
+  //   );
+  // };
 
   /* 요양보호사 근무 요청 상세 보기 */
   const handleGetRequestsDetails = async () => {

@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { formDataApi, privateApi } from "../../utils/http-commons";
 import {
   MatchedListResponse,
@@ -6,6 +6,7 @@ import {
   RequestsListRes,
 } from "../../types/caregiver/caregiverRequestType";
 import { ApiResponseDefault } from "../../types/commons";
+import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 
 /* 요양보호사 근무 요청 응답 */
 export const reponseToRecruit = async (
