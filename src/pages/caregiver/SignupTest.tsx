@@ -57,7 +57,7 @@ const SignupTest = () => {
             localStorage.setItem("accessToken", token);
         
             // ✅ 4. 필수 정보 등록 페이지 (SignupStep3)으로 이동
-            alert("회원가입 및 자동 로그인 성공! 필수 정보 등록으로 이동합니다.");
+            alert("회원가입 성공! 필수 정보 등록으로 이동합니다.");
             navigate("/caregiver/signup/step3");
           },
           (loginError) => {
