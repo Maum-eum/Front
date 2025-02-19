@@ -48,7 +48,7 @@ export interface WorkTimes {
 }
 
 /* 요양보호사 근무 요청 리스트 조회 */
-export interface RequestsListRes {
+export interface RequestsListResponse {
   list: WorkRequest[];
 }
 export interface WorkRequest {

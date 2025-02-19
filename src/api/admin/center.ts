@@ -1,7 +1,6 @@
-import { AxiosError, AxiosResponse } from 'axios';
-import { privateApi } from '../../utils/http-commons';
-import { ApiResponseDefault } from '../../types/commons/commons';
-
+import { AxiosError, AxiosResponse } from "axios";
+import { privateApi } from "../../utils/http-commons";
+import { ApiResponseDefault } from "../../types/commons/commons";
 
 export const getCenterMatchingList = async (
   params: number,

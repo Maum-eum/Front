@@ -28,20 +28,18 @@ const Main = () => {
 
   /* 요양보호사 정보 조회 */
   const handleGetCaregiverInfo = async () => {
-    await getCaregiverInfo(
-      (response) => {
+    try {
+      const response = await getCaregiverInfo();
+      if (response) {
         console.log("요양보호사 정보 조회 성공:", response);
-        if (response.data.data != null) {
-          setCaregiverInfo(response.data.data);
-          store.setUserInfo(response.data.data.username, response.data.data.img);
-        }
-      },
-      (error) => {
-        console.log("요양보호사 정보 조회 실패:", error);
-        setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
-        setAlertOpen(true);
+        setCaregiverInfo(response);
+        store.setUserInfo(response.username, response.img);
       }
-    );
+    } catch (error) {
+      console.log("요양보호사 정보 조회 실패:", error);
+      setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 요양보호사 구직 상태 변경 */
@@ -51,47 +49,48 @@ const Main = () => {
       setAlertMessage("매칭은 근무 조건 등록 후에 이용할 수 있습니다!");
       setAlertOpen(true);
     }
-    await changeStatus(
-      (response) => {
+    try {
+      const response = await changeStatus();
+      if (response) {
         console.log("구직 상태 변경 성공:", response);
         setCaregiverInfo((prev) => {
           if (prev == null || prev.employmentStatus == null) return;
           return {
             ...prev,
-            employmentStatus: response.data.data,
+            employmentStatus: response,
           };
         });
-      },
-      (error) => {
-        console.log("구직 상태 변경 실패:", error);
-        setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
-        setAlertOpen(true);
       }
-    );
+    } catch (error) {
+      console.log("구직 상태 변경 실패:", error);
+      setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 근무 요청 리스트 조회 */
   const handleGetRequests = async () => {
-    await getRequests(
-      (response) => {
+    try {
+      const response = await getRequests();
+      if (response) {
         console.log("근무 요청 리스트 조회 성공:", response);
-        if (response.data.data != null) {
-          setRequests(
-            (response.data.data.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE")
-          );
+        if (response.list != null) {
+          setRequests((response.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE"));
           setTuneRequests(
-            (response.data.data.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
+            (response.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
           );
         }
-      },
-      (error) => {
-        console.log("근무 요청 리스트 조회 실패:", error);
       }
-    );
+    } catch (error) {
+      console.log("근무 요청 리스트 조회 실패:", error);
+      setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 요양보호사 근무 요청 NONE/TUNING 상세 보기 */
   const handleClickRequest = (recruitConditionId: number, centerId: number, elderId: number) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
@@ -116,7 +115,7 @@ const Main = () => {
             <span className="text-black">] 요양보호사님</span>
           </h1>
           <div className="w-[120px]">
-            <BasicBtn label="로그아웃" color="green" onClick={handleLogOut} />
+            <BasicBtn label="로그아웃" color="green" attribute="content" onClick={handleLogOut} />
           </div>
         </div>
         {/* 요양보호사 프로필 */}
@@ -136,7 +135,7 @@ const Main = () => {
               onClick={handleChangeStatus}
             />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn label="정보 변경" color="white" onClick={() => {}} />
+            <BasicBtn label="정보 변경" color="white" attribute="button" onClick={() => {}} />
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}
@@ -144,13 +143,19 @@ const Main = () => {
           <ImageBtn
             label="근무 조건"
             icon={EmptyImg}
-            onClick={() => navigate("/caregiver/conditions")}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              navigate("/caregiver/conditions");
+            }}
             color="white"
           />
           <ImageBtn
             label="일정 목록"
             icon={EmptyImg}
-            onClick={() => navigate("/caregiver/match")}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              navigate("/caregiver/match");
+            }}
             color="green"
           />
         </div>

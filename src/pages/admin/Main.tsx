@@ -12,11 +12,7 @@ const Main: React.FC = () => {
   const { centerName, name, centerId, logout } = useAdminStore();
   const [elderList, setElderList] = useState<elderInfo[]>([]);
 
-<<<<<<< HEAD
-  const handleGetElderList = useCallback(async () => {
-=======
   const getElderInfoList = useCallback(async () => {
->>>>>>> 17bdeebeffee690b7835a8f0ed4eef710c989458
     if (centerId === 0) return;
     await getElderList(
       centerId,
@@ -30,8 +26,6 @@ const Main: React.FC = () => {
     );
   }, [centerId]);
 
-<<<<<<< HEAD
-=======
   const getMatchingList = useCallback(async () => {
     if (centerId === 0) return;
     await getCenterMatchingList(
@@ -45,7 +39,6 @@ const Main: React.FC = () => {
     );
   }, [centerId]);
 
->>>>>>> 17bdeebeffee690b7835a8f0ed4eef710c989458
   const handleLogOut = async () => {
     logout();
     navigate("/");
@@ -60,13 +53,8 @@ const Main: React.FC = () => {
     <div className="flex flex-col items-center justify-center w-full">
       {/* 모바일 환경에서만 보이는 UI */}
       <div className="block md:hidden w-full">
-<<<<<<< HEAD
-        <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
-          <div className="w-full flex flex-col gap-2 text-xl font-bold text-black mb-6 font-gtr-B">
-=======
         <div className="h-dvh p-4 flex flex-col min-h-screen overflow-auto bg-base-white">
           <div className="w-full flex flex-col gap-2 text-xl font-bold text-black mb-4 font-gtr-B">
->>>>>>> 17bdeebeffee690b7835a8f0ed4eef710c989458
             <h1>{centerName}</h1>
             <div className="w-full flex gap-1">
               <p className="text-content flex-grow">
@@ -78,28 +66,11 @@ const Main: React.FC = () => {
               >
                 관리자 정보수정
               </button>
-<<<<<<< HEAD
               <button className="text-xs border px-1 rounded-lg bg-pale-red" onClick={handleLogOut}>
                 로그아웃
               </button>
             </div>
           </div>
-          <ElderList data={elderList} />
-        </div>
-      </div>
-
-      {/* 데스크탑 환경에서만 보이는 UI 추후 작업할지..?*/}
-      <div className="hidden md:block">데스크탑 화면입니다!</div>
-=======
-              <button
-                className="text-xs border px-1 rounded-lg bg-pale-red"
-                onClick={handleLogOut}
-              >
-                로그아웃
-              </button>
-            </div>
-          </div>
-
 
           <div className="flex flex-col gap-2 h-full">
             <div className="flex-1 overflow-hidden">
@@ -113,10 +84,7 @@ const Main: React.FC = () => {
       </div>
 
       {/* 데스크탑 환경에서만 보이는 UI (추후 개발) */}
-      <div className="hidden md:block">
-        데스크탑 화면입니다!
-      </div>
->>>>>>> 17bdeebeffee690b7835a8f0ed4eef710c989458
+      <div className="hidden md:block">데스크탑 화면입니다!</div>
     </div>
   );
 };

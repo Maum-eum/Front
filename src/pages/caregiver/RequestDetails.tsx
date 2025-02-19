@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
 import Alert from "../../components/commons/Alert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BasicBtn from "../../components/caregiver/BasicBtn";
-import { getRequestDetails, reponseToRecruit } from "../../api/caregiver/caregiverRequest";
+import { reponseToRecruit } from "../../api/caregiver/caregiverRequest";
 import AttributeCard from "../../components/caregiver/AttributeCard";
+import { requiredInfoApi } from "../../api/admin/required";
 // import { sendNotification } from "../../utils/fcm/notificationService";
 
 const RequestDetails = () => {
   const navigate = useNavigate();
+
+  const { recruitId, centerId, elderId } = useParams<{
+    recruitId: string;
+    centerId: string;
+    elderId: string;
+  }>();
 
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
@@ -23,69 +30,70 @@ const RequestDetails = () => {
 
   /* 매칭 거절 */
   const handleRefuseRequest = async () => {
-    await reponseToRecruit(
-      { matchId: 0, status: "DECLINED" },
-      (response) => {
+    try {
+      const response = await reponseToRecruit({ matchId: 0, status: "DECLINED" });
+      if (response) {
         console.log("매칭 거절 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
         handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 요청을 거절했어요...`);
-      },
-      (error) => {
-        console.log("매칭 거절 실패:", error);
-        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
-        setAlertOpen(true);
+        moveToBack();
       }
-    );
+    } catch (error) {
+      console.log("매칭 거절 실패:", error);
+      setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
+
   /* 매칭 조율 */
   const handleAttuneRequest = async () => {
-    await reponseToRecruit(
-      { matchId: 0, status: "TUNING" },
-      (response) => {
+    try {
+      const response = await reponseToRecruit({ matchId: 0, status: "TUNING" });
+      if (response) {
         console.log("매칭 조율 성공공:", response);
         // if (response.data != null) setRequest(response.data.data);
         handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 조건 조율을 원해요!`);
-      },
-      (error) => {
-        console.log("매칭 조율 실패:", error);
-        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
-        setAlertOpen(true);
+        moveToBack();
       }
-    );
+    } catch (error) {
+      console.log("매칭 조율 실패:", error);
+      setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 매칭 수락 */
   const handleAcceptRequest = async () => {
-    await reponseToRecruit(
-      { matchId: 0, status: "ACCEPTED" },
-      (response) => {
+    try {
+      const response = await reponseToRecruit({ matchId: 0, status: "ACCEPTED" });
+      if (response) {
         console.log("매칭 수락 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
         handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무 요청을 수락했어요!`);
-      },
-      (error) => {
-        console.log("매칭 수락 실패:", error);
-        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
-        setAlertOpen(true);
+        moveToBack();
       }
-    );
+    } catch (error) {
+      console.log("매칭 수락 실패:", error);
+      setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 매칭 끝내기 */
   const handleFinishMatch = async () => {
-    await reponseToRecruit(
-      { matchId: 0, status: "WITHDRAWN" },
-      (response) => {
+    try {
+      const response = await reponseToRecruit({ matchId: 0, status: "WITHDRAWN" });
+      if (response) {
         console.log("매칭 끝내기 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
         handleSaveFcmToken(`[${store.username}] 요양보호사님이 근무를 종료했어요...`);
-      },
-      (error) => {
-        console.log("매칭 끝내기 실패:", error);
-        setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
-        setAlertOpen(true);
+        moveToBack();
       }
-    );
+    } catch (error) {
+      console.log("매칭 끝내기 실패:", error);
+      setAlertMessage("오류가 났어요. 다시 한번 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 연락처 복사 */
@@ -114,26 +122,27 @@ const RequestDetails = () => {
   // };
 
   /* 요양보호사 근무 요청 상세 보기 */
-  const handleGetRequestsDetails = async () => {
-    await getRequestDetails(
-      (response) => {
+  const handleGetRequestsDetails = async (centerId: number, elderId: number, recruitId: number) => {
+    try {
+      const response = await requiredInfoApi(centerId, elderId, recruitId);
+      if (response) {
         console.log("근무 요청 상세 보기 성공:", response);
         // if (response.data != null) setRequest(response.data.data);
-      },
-      (error) => {
-        console.log("근무 요청 상세 보기 실패:", error);
-        // navigate(-1);
       }
-    );
+    } catch (error) {
+      console.log("근무 요청 상세 보기 실패:", error);
+      // navigate(-1);
+    }
   };
 
-  const handleLogOut = async () => {
-    store.logout();
-    navigate("/");
+  /* 뒤로 가기 */
+  const moveToBack = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(-1);
   };
 
   useEffect(() => {
-    handleGetRequestsDetails();
+    handleGetRequestsDetails(Number(recruitId), Number(elderId), Number(recruitId));
   }, []);
 
   return (
@@ -146,9 +155,6 @@ const RequestDetails = () => {
             <span className="text-red">{"희망 요양 센터"}</span>
             <span className="text-black">] 요청</span>
           </h1>
-          <div className="w-[120px]">
-            <BasicBtn label="로그아웃" color="green" attribute="content" onClick={handleLogOut} />
-          </div>
         </div>
         {/* 매칭 요청 정보 조회 */}
         {/* 요양보호사 프로필 */}
@@ -253,12 +259,7 @@ const RequestDetails = () => {
       {!isAlertOpen && (
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
           <div className="w-72 sm:w-[600px]">
-            <BasicBtn
-              label="뒤로 가기"
-              color="green"
-              attribute="button"
-              onClick={() => navigate(-1)}
-            />
+            <BasicBtn label="뒤로 가기" color="green" attribute="button" onClick={moveToBack} />
           </div>
         </div>
       )}

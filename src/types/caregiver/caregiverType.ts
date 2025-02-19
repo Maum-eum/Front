@@ -14,6 +14,7 @@ export interface CaregiverExperienceResponse {
 
 /* 요양보호사 정보 조회 */
 export interface CaregiverInfoResponse {
+  data(data: any): unknown;
   username: string;
   contact: string;
   car: boolean;

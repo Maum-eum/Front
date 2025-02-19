@@ -40,8 +40,8 @@ const ScheduleList: React.FC<ScheduleListProps> = ({ matches }) => {
   return (
     <div className="w-full text-content h-full flex flex-wrap gap-3 shadow bg-white rounded-lg mb-10 p-5">
       <div className="flex flex-col gap-2">
-        {[...weekMap.keys()].map((day) => (
-          <div className="flex gap-2">
+        {[...weekMap.keys()].map((day, key) => (
+          <div className="flex gap-2" key={key}>
             {[...weekMap.keys()][new Date().getDay()] == day ? (
               <div
                 key={day}

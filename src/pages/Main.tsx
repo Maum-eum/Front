@@ -67,7 +67,7 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-gradient-to-b from-white to-[#E3F7D0] py-10 px-4">
+    <div className="flex flex-col items-center w-full min-h-screen bg-gradient-to-b from-white to-[#E3F7D0] py-10 px-4 font-gtr-B">
       <div ref={topSectionRef} className="flex flex-col items-center w-full max-w-sm">
         <img src={PoongImage} alt="포옹" className="w-50 mx-auto mb-4" />
 

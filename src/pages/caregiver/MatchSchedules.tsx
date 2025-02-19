@@ -22,76 +22,35 @@ const MatchSchedules = () => {
 
   /* 요양보호사 일정 조회 */
   const handleGetMatches = async () => {
-    await getMatches(
-      (response) => {
+    try {
+      const response = await getMatches();
+      if (response) {
         console.log("요양보호사 일정 조회 성공:", response);
-        if (response.data.data != null) {
-          setMatches(response.data.data.list);
+        if (response != null) {
+          setMatches(response.list);
         }
-      },
-      (error) => {
-        console.log("요양보호사 일정 조회 실패:", error);
-        setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
-        setAlertOpen(true);
       }
-    );
+    } catch (error) {
+      console.log("요양보호사 일정 조회 실패:", error);
+      setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
+      setAlertOpen(true);
+    }
   };
 
   /* 요양보호사 근무 일정 상세 보기 */
   const handleClickMatch = (recruitConditionId: number, centerId: number, elderId: number) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
-  const handleLogOut = async () => {
-    store.logout();
-    navigate("/");
+  /* 뒤로 가기 */
+  const moveToBack = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(-1);
   };
-
-  /***** dummy *****/
 
   useEffect(() => {
     handleGetMatches();
-    setMatches([
-      {
-        elderId: 0,
-        elderName: "김성모",
-        recruitConditionId: 0,
-        centerId: 0,
-        mealAssistance: true,
-        toiletAssistance: true,
-        moveAssistance: true,
-        dailyLivingAssistance: true,
-        selfFeeding: true,
-        mealPreparation: false,
-        cookingAssistance: false,
-        enteralNutritionSupport: true,
-        selfToileting: false,
-        occasionalToiletingAssist: false,
-        diaperCare: false,
-        catheterOrStomaCare: false,
-        independentMobility: false,
-        mobilityAssist: false,
-        wheelchairAssist: false,
-        immobile: false,
-        cleaningLaundryAssist: false,
-        bathingAssist: false,
-        hospitalAccompaniment: false,
-        exerciseSupport: false,
-        emotionalSupport: false,
-        cognitiveStimulation: false,
-        times: [
-          { dayOfWeek: "MON", startTime: 1, endTime: 4 } as WorkTimes,
-          { dayOfWeek: "SUN", startTime: 5, endTime: 6 } as WorkTimes,
-          { dayOfWeek: "MON", startTime: 4, endTime: 8 } as WorkTimes,
-          { dayOfWeek: "SAT", startTime: 0, endTime: 1 } as WorkTimes,
-          { dayOfWeek: "FRI", startTime: 2, endTime: 3 } as WorkTimes,
-          { dayOfWeek: "WED", startTime: 2, endTime: 3 } as WorkTimes,
-          { dayOfWeek: "MON", startTime: 2, endTime: 3 } as WorkTimes,
-          { dayOfWeek: "THU", startTime: 2, endTime: 3 } as WorkTimes,
-          { dayOfWeek: "SAT", startTime: 13, endTime: 22 } as WorkTimes,
-        ],
-      },
-    ]);
   }, []);
 
   return (
@@ -104,9 +63,6 @@ const MatchSchedules = () => {
             <span className="text-red">{store.username}</span>
             <span className="text-black">] 요양보호사님의 일정</span>
           </h1>
-          <div className="w-[120px]">
-            <BasicBtn label="로그아웃" color="green" attribute="content" onClick={handleLogOut} />
-          </div>
         </div>
         {/* 일정 리스트 조회 */}
         <ScheduleList matches={matches ?? []} />
@@ -120,12 +76,7 @@ const MatchSchedules = () => {
       {!isAlertOpen && (
         <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
           <div className="w-72 sm:w-[600px]">
-            <BasicBtn
-              label="뒤로 가기"
-              color="green"
-              attribute="button"
-              onClick={() => navigate(-1)}
-            />
+            <BasicBtn label="뒤로 가기" color="green" attribute="button" onClick={moveToBack} />
           </div>
         </div>
       )}
