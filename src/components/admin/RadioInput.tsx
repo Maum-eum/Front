@@ -2,20 +2,20 @@ import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 
 type SelectOption = {
-  value: null | string | number | string[];
+  value: string | number | string[];
   label: string;
 }
 
 type RadioInputProps = {
     name: string;
     options: SelectOption[];
-    selectedValues? : (null | string | number | string[])[];
-    onChange?: (selected: (null | string | number | string[])) => void;
+    selectedValues? : (string | number | string[])[];
+    onChange?: (selected: (string | number | string[])) => void;
 }
 
 const RadioInput: React.FC<RadioInputProps> = ( { name, options, selectedValues = [], onChange } ) => {
   const [selected, setSelected] = useState<(null | string | number | string[])[]>(selectedValues);
-  const handleSelect = ( value: null | string | number | string[]) => {
+  const handleSelect = ( value: string | number | string[]) => {
     setSelected([value]);
     if (onChange) onChange(value);
   };

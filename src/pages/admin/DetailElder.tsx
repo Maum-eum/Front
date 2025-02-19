@@ -17,11 +17,12 @@ const inmateTypesMapping = [
 ];
 
 const rateMapping: Record<string, string> = {
-  RATE1: "1등급",
-  RATE2: "2등급",
-  RATE3: "3등급",
-  RATE4: "4등급",
-  RATE5: "5등급",
+  NORATE : "없음",
+  RATE1  : "1등급",
+  RATE2  : "2등급",
+  RATE3  : "3등급",
+  RATE4  : "4등급",
+  RATE5  : "5등급",
 };
 
 
@@ -44,9 +45,9 @@ const DetailElder: React.FC = () => {
     name                   : "",
     birth                  : "",
     gender                 : 0,
-    rate                   : "RATE1",
+    rate                   : "",
     weight                 : "",
-    isTemporarySave        : false,
+    temporarySave        : false,
     normal                 : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
@@ -162,7 +163,7 @@ const DetailElder: React.FC = () => {
                 )}
                 <div className="flex-1 flex flex-col justify-between items-end gap-1">
                   <span className="font-bold">{elderInfo.name} 어르신</span>
-                  <button className="border px-2 py-1 font-gtr-B rounded-lg bg-pale-yellow" onClick={() => navigate(`/admin/elder/modify/${elderId}`)}>정보 수정</button>
+                  <button className="border px-2 py-1 font-gtr-B rounded-lg bg-pale-yellow" onClick={() => navigate(`/admin/elder/modify/${elderId}/${"save"}`)}>정보 수정</button>
                   <button className="border px-2 py-1 font-gtr-B rounded-lg bg-pale-red" onClick={() => setShowModal(true)}>정보 삭제</button>
                 </div>
               </div>

@@ -50,9 +50,9 @@ export default function Router() {
       <Route path="/admin/modify" element={<ModifyAdmin />} />
       <Route path="/admin/elder/add" element={<AddElder />} />
       <Route path="/admin/elder/detail/:elderId" element={<DetailElder />} />
-      <Route path="/admin/elder/modify/:elderId" element={<ModifyElder />} />
+      <Route path="/admin/elder/modify/:elderId/:temp" element={<ModifyElder />} />
 
-      <Route path="/admin/recruit"                   element={<RecruitRegistration />} />
+      <Route path="/admin/recruit"                            element={<RecruitRegistration />} />
       {/* <Route path="/admin/:elderId/recruit"                   element={<RecruitRegistration />} /> */}
       <Route path="/admin/:elderId/recruit-modify"            element={<RecruitModify />} />
       <Route path="/admin/:elderId/recommended"               element={<RecommendedCaregiverList />} />

@@ -4,7 +4,7 @@ export interface elderInfo {
   inmateTypes            : string[];
   gender                 : number;
   birth                  : string;
-  rate                   : string | null;
+  rate                   : string;
   weight                 : number | string;
   normal                 : boolean;
   hasShortTermMemoryLoss : boolean;
@@ -12,7 +12,7 @@ export interface elderInfo {
   actsLikeChild          : boolean;
   hasDelusions           : boolean;
   hasAggressiveBehavior  : boolean;
-  isTemporarySave        : boolean;
+  temporarySave          : boolean;
   img?                   : string;
 }
 

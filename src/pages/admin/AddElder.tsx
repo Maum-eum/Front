@@ -12,14 +12,6 @@ import { useAdminStore } from "../../stores/admin/adminStore";
 
 const categories = {
     title: "치매 증상",
-    options: [
-      { label: "정상", name: "normal", value: false },
-      { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: false },
-      { label: "집 밖을 배회", name: "wandersOutside", value: false },
-      { label: "어린아이 같은 행동", name: "actsLikeChild", value: false },
-      { label: "사람을 의심하는 망상", name: "hasDelusions", value: false },
-      { label: "때리거나 욕설 등 공격적인 행동", name: "hasAggressiveBehavior", value: false },
-    ]
   }
 
 const AddElder: React.FC = () => {
@@ -32,9 +24,9 @@ const AddElder: React.FC = () => {
     name                   : "",
     birth                  : "",
     gender                 : 0,
-    rate                   : "RATE1",
+    rate                   : "",
     weight                 : "",
-    isTemporarySave        : false,
+    temporarySave          : false,
     normal                 : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
@@ -60,11 +52,11 @@ const AddElder: React.FC = () => {
   }
 
   // Radio 버튼 처리
-  const elderRadioDataChange = (selected: null | string | number | string[]) => {
+  const elderRadioDataChange = (selected: string | number | string[]) => {
     if (typeof selected === "number") {
       setElderData((prev) => ({ ...prev, gender: selected }));
     }
-    else if (typeof selected === "string" || selected === null) {
+    else if (typeof selected === "string") {
       setElderData((prev) => ({ ...prev, rate: selected }));
     }
     else {
@@ -96,12 +88,10 @@ const AddElder: React.FC = () => {
     } else {
       form.append("profileImg", "");
     }
-
+    
     form.append("inmateTypes", elderData.inmateTypes.join(','))
-    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined}))
-    for (const [key, value] of form.entries()) {
-      console.log(key, value);
-     };
+    form.append("data", JSON.stringify({...elderData, temporarySave:type, inmateTypes: undefined}))
+
     return form
   }
 
@@ -130,9 +120,9 @@ const AddElder: React.FC = () => {
         centerId: centerId,
         data: form
       },
-      () => {
+      (res) => {
         alert('등록 되었습니다.')
-        navigate("/admin/main")
+        navigate(`/admin/elder/required/${res.data.data.elderId}`)
       },
       (err) => {
         console.log(err.response?.data)
@@ -219,13 +209,14 @@ const AddElder: React.FC = () => {
               <RadioInput
                 name="rate"
                 options={[
-                  { value: "NONE",  label: "없음" },
+                  { value: "NORATE", label: "없음" },
                   { value: "RATE1", label: "1등급" },
                   { value: "RATE2", label: "2등급" },
                   { value: "RATE3", label: "3등급" },
                   { value: "RATE4", label: "4등급" },
                   { value: "RATE5", label: "5등급" }]}
                 onChange={elderRadioDataChange}
+                selectedValues={[elderData.rate]}
               />
               <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
               <RadioInput
@@ -236,8 +227,9 @@ const AddElder: React.FC = () => {
                   { value: ["LIVING_WITH_SPOUSE","AWAY_DURING_CARE"],    label: "배우자와 동거, 돌봄 시간 중 자리 비움" },
                   { value: ["LIVING_WITH_FAMILY","AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
                   { value: ["LIVING_WITH_FAMILY","AWAY_DURING_CARE"],    label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" },
-              ]} onChange={elderRadioDataChange}/>
-                  
+                ]} onChange={elderRadioDataChange}
+                selectedValues={[elderData.inmateTypes]}
+              />
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
@@ -260,7 +252,14 @@ const AddElder: React.FC = () => {
               <CheckList
                 type="치매"
                 name={categories.title}
-                options={categories.options}
+                options={[
+                  { label: "정상",          name: "normal", value: elderData.normal },
+                  { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: elderData.hasShortTermMemoryLoss },
+                  { label: "집 밖을 배회",   name: "wandersOutside", value: elderData.wandersOutside },
+                  { label: "어린아이 같은 행동",  name: "actsLikeChild", value: elderData.actsLikeChild },
+                  { label: "사람을 의심하는 망상",    name: "hasDelusions", value: elderData.hasDelusions },
+                  { label: "때리거나 욕설 등 공격적인 행동",    name: "hasAggressiveBehavior", value: elderData.hasAggressiveBehavior },
+                ]}
                 onChange={handleElderCheckList}
               /> 
             </div>

@@ -2,13 +2,13 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { noneApi, privateApi } from '../../utils/http-commons';
 
 import { SignUpParams, SignUpResponse } from '../../types/admin/singUpType';
-import { ApiResponseDefault } from '../../types/commons';
+import { ApiResponseDefault } from '../../types/commons/commons';
 import { SearchCenterData } from '../../types/admin/searchCenterData';
 
 export const signUp = async (
   params: SignUpParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<SignUpResponse>>) => void,
-  Error: (Error: AxiosError<null>) => void
+  Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
 ) => {
   await noneApi.post(`/admin/signup`, params).then(Response).catch(Error);
 };

@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { privateApi, formDataApi } from '../../utils/http-commons';
 import { AddElderResponse, AddElderParams, elderInfo, ModifyElderParams } from '../../types/admin/elderType';
-import { ApiResponseDefault } from '../../types/commons';
+import { ApiResponseDefault } from '../../types/commons/commons';
 
 // 센터 내 어르신 조회
 export const getElderList = async (
@@ -69,19 +69,10 @@ export const getTempElderDetail = async (
     centerId:number,
     elderId:number
   },
-  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo[]>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
   await privateApi.get(`/admin/${params.centerId}/elders/temp/${params.elderId}`).then(Response).catch(Error);
-};
-
-// 임시 저장된 어르신조회
-export const getTempElderList = async (
-  params: number,
-  Response: (Response: AxiosResponse<ApiResponseDefault<elderInfo[]>>) => void,
-  Error: (Error: AxiosError<null>) => void
-) => {
-  await privateApi.get(`/admin/${params}/elders/temp`).then(Response).catch(Error);
 };
 
 

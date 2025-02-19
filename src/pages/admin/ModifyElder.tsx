@@ -5,21 +5,13 @@ import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
 import CheckList from "../../components/admin/CheckList";
-import { modifyElder, getElderDetail } from "../../api/admin/elder";
+import { modifyElder, getElderDetail, getTempElderDetail } from "../../api/admin/elder";
 import { elderInfo, ServiceOption } from "../../types/admin/elderType";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../stores/admin/adminStore";
 
 const categories = {
     title: "치매 증상",
-    options: [
-      { label: "정상", name: "isNormal", value: false },
-      { label: "단기 기억 장애", name: "hasShortTermMemoryLoss", value: false },
-      { label: "집 밖을 배회", name: "wandersOutside", value: false },
-      { label: "어린아이 같은 행동", name: "actsLikeChild", value: false },
-      { label: "사람을 의심하는 망상", name: "hasDelusions", value: false },
-      { label: "때리거나 욕설 등 공격적인 행동", name: "hasAggressiveBehavior", value: false },
-    ]
 }
 
 const ModifyElder: React.FC = () => {
@@ -27,15 +19,16 @@ const ModifyElder: React.FC = () => {
   const [step, setStep] = useState(1);
   const { centerId } = useAdminStore();
   const { elderId } = useParams();
+  const { temp } = useParams();
   const [elderData, setElderData] = useState<elderInfo>({
     elderId                : 0,
     inmateTypes            : [],
     name                   : "",
     birth                  : "",
     gender                 : 0,
-    rate                   : "RATE1",
+    rate                   : "",
     weight                 : "",
-    isTemporarySave        : false,
+    temporarySave          : false,
     normal                 : false,
     hasShortTermMemoryLoss : false,
     wandersOutside         : false,
@@ -63,11 +56,11 @@ const ModifyElder: React.FC = () => {
   }
 
   // Radio 버튼 처리
-  const elderRadioDataChange = (selected: null | string | number | string[]) => {
+  const elderRadioDataChange = (selected: string | number | string[]) => {
     if (typeof selected === "number") {
       setElderData((prev) => ({ ...prev, gender: selected }));
     }
-    else if (typeof selected === "string" || selected === null) {
+    else if (typeof selected === "string") {
       setElderData((prev) => ({ ...prev, rate: selected }));
     }
     else {
@@ -77,8 +70,6 @@ const ModifyElder: React.FC = () => {
   
   // 치매항목 처리
   const handleElderCheckList = (selected: ServiceOption) => {
-    // console.log(3)
-    // console.log(selected)
     setElderData((prev) => ({
       ...prev,
       [selected.name]: selected.value, 
@@ -113,12 +104,13 @@ const ModifyElder: React.FC = () => {
     }
 
     form.append("inmateTypes", elderData.inmateTypes.join(','))
-    form.append("data", JSON.stringify({...elderData, isTemporarySave:type, inmateTypes: undefined, img: undefined}))
+    form.append("data", JSON.stringify({...elderData, temporarySave:type, inmateTypes: undefined, img: undefined}))
     return form
   }
 
   // 어르신 데이터 조회
   const getElderInfo = async () => {
+    if (temp !== "save") return;
     if (!elderId) {
       alert("잘못된 접근입니다.");
       navigate(-1);
@@ -141,6 +133,31 @@ const ModifyElder: React.FC = () => {
       }
     );
   };
+    // 어르신 데이터 조회
+    const getTempElderInfo = async () => {
+      if (temp !== "temp") return;
+      if (!elderId) {
+        alert("잘못된 접근입니다.");
+        navigate(-1);
+        return;
+      }
+  
+      await getTempElderDetail(
+        {
+          centerId: centerId,
+          elderId: parseInt(elderId),
+        },
+        (res) => {
+          setElderData(res.data.data);
+          if (res.data.data.img) {
+            urlToFile(res.data.data.img)
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    };
 
   // api 요청
   const sendModifyElder = async () => {
@@ -150,15 +167,23 @@ const ModifyElder: React.FC = () => {
       return;
     }
     const form = setIsTemp(false)
+    for (const [key, value] of form.entries()) {
+      console.log(key, value);
+     };
     await modifyElder(
       {
         centerId: centerId,
         elderId: parseInt(elderId),
         data: form
       },
-      () => {
-        alert('수정 되었습니다.')
-        navigate("/admin/main")
+      (res) => {
+        if(temp === "temp") {
+          alert('등록 되었습니다.')
+          navigate(`/admin/elder/required/${res.data.data.elderId}`)
+        } else {
+          alert('수정 되었습니다.')
+          navigate("/admin/main")
+        }
       },
       (err) => {
         console.log(err.response?.data)
@@ -169,6 +194,7 @@ const ModifyElder: React.FC = () => {
   // useEffect
   useEffect(() => {
     getElderInfo();
+    getTempElderInfo();
   }, []);
 
   return (
@@ -250,7 +276,7 @@ const ModifyElder: React.FC = () => {
               <RadioInput
                 name="rate"
                 options={[
-                  { value: "NONE",  label: "없음" },
+                  { value: "NORATE",  label: "없음" },
                   { value: "RATE1", label: "1등급" },
                   { value: "RATE2", label: "2등급" },
                   { value: "RATE3", label: "3등급" },
