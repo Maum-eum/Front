@@ -17,7 +17,8 @@ const AdminSignUp: React.FC = () => {
     connect:  "",
     username: "",
     password: "",
-    centerName: "test",
+    centerName: "",
+    centerCertification: "",
   });
 
   const signUpdataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +130,10 @@ const AdminSignUp: React.FC = () => {
               <div className="flex items-center justify-center">
                 <CenterSearch onSelect={handleCenterSelect} />
               </div>
+            </div>
+            <div>
+              <label className="block font-bold mb-1">센터 코드 입력</label>
+              <Input type="text" name="centerCertification" placeholder="센터 코드 입력" value={signUpData.centerCertification} onChange={signUpdataChange} />
             </div>
           </div>
 

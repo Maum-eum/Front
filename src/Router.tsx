@@ -13,6 +13,7 @@ import AddElder from "./pages/admin/AddElder";
 import ModifyAdmin from "./pages/admin/ModifyAdmin";
 import DetailElder from "./pages/admin/DetailElder";
 import ModifyElder from "./pages/admin/ModifyElder";
+import AddServiceElder from "./pages/admin/AddServiceElder";
 
 import RecruitRegistration from './pages/admin/RecruitRegistration';
 import RecruitModify from './pages/admin/RecruitModify';
@@ -35,11 +36,18 @@ import JobConditionEdit from "./pages/caregiver/JobConditionEdit";
 import JobConditionView from "./pages/caregiver/JobConditionView";
 import EditProfile from "./pages/caregiver/EditProfile";
 
-
-
 const ProtectedRoute: React.FC<{ element: React.ReactElement; allowedRoles: string[] }> = ({ element, allowedRoles }) => {
   const { role } = useAdminStore(); 
+
+  if (!role) {
+    return <Navigate to="/" replace />;
+  }
+
   const currentRole = role === "ROLE_ADMIN" ? "admin" : "caregiver";
+
+  if (!currentRole) {
+    return <Navigate to="/" replace />;
+  }
 
   return allowedRoles.includes(currentRole) ? element : <Navigate to={`/${currentRole}/main`} replace />;
 };
@@ -59,6 +67,7 @@ export default function Router() {
       <Route path="/admin/elder/add" element={<ProtectedRoute element={<AddElder />} allowedRoles={["admin"]} />} />
       <Route path="/admin/elder/detail/:elderId" element={<ProtectedRoute element={<DetailElder />} allowedRoles={["admin"]} />} />
       <Route path="/admin/elder/modify/:elderId/:temp" element={<ProtectedRoute element={<ModifyElder />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/elder/required/:elderId/" element={<ProtectedRoute element={<AddServiceElder />} allowedRoles={["admin"]} />} />
 
       <Route path="/admin/recruit" element={<ProtectedRoute element={<RecruitRegistration />} allowedRoles={["admin"]} />} />
       <Route path="/admin/:elderId/recruit-modify" element={<ProtectedRoute element={<RecruitModify />} allowedRoles={["admin"]} />} />

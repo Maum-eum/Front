@@ -4,6 +4,7 @@ export interface SignUpParams {
     name: string;
     connect: string;
     centerName: string;
+    centerCertification: string;
 };
 
 export interface SignUpResponse {

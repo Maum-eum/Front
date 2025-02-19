@@ -8,12 +8,13 @@ type CheckListProps = {
   options: string[];
   selectedopt: string[];
   onChange?: (selected: string[]) => void;
+  isPreOpen? :boolean;
 };
 
 
-const CheckBox: React.FC<CheckListProps> = ({ name, options, selectedopt, onChange }) => {
+const CheckBox: React.FC<CheckListProps> = ({ name, options, selectedopt, onChange, isPreOpen = false }) => {
   const [selected, setSelected] = useState<string[]>(selectedopt)
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isPreOpen || false);
   const toggleSelect = (opt: string) => {
     const isSelected = selected.some((item) => item === opt);
 

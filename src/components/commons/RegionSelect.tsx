@@ -161,5 +161,3 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 		</div>
 	);
 };
-
-
