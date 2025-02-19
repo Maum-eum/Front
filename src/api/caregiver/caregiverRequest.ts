@@ -3,7 +3,7 @@ import { formDataApi, privateApi } from "../../utils/http-commons";
 import {
   MatchedListResponse,
   RecruitRequest,
-  RequestsListResponse,
+  RequestsListRes,
 } from "../../types/caregiver/caregiverRequestType";
 import { ApiResponseDefault } from "../../types/commons";
 
@@ -26,7 +26,7 @@ export const getMatches = async (
 
 /* 요양보호사 근무 요청 리스트 조회 */
 export const getRequests = async (
-  Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListResponse>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListRes>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
   await privateApi.get(`/match/requests`).then(Response).catch(Error);
@@ -34,7 +34,7 @@ export const getRequests = async (
 
 /* 요양보호사 근무 요청 상세 정보 조회 */
 export const getRequestDetails = async (
-  Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListResponse>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<RequestsListRes>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
   await privateApi.get(`/match/requests/detail`).then(Response).catch(Error);

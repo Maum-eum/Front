@@ -74,13 +74,13 @@ const Main = () => {
   const handleGetRequests = async () => {
     await getRequests(
       (response) => {
-        console.log("근무 요청 리스트 조회 성공:", response.status);
+        console.log("근무 요청 리스트 조회 성공:", response);
         if (response.data.data != null) {
           setRequests(
-            (response.data.data.list as WorkRequest[]).filter((e) => e.MatchStatus === "NONE")
+            (response.data.data.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE")
           );
           setTuneRequests(
-            (response.data.data.list as WorkRequest[]).filter((e) => e.MatchStatus === "TUNING")
+            (response.data.data.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
           );
         }
       },

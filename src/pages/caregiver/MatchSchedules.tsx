@@ -6,7 +6,6 @@ import { MatchedStatus, WorkTimes } from "../../types/caregiver/caregiverRequest
 import { getMatches } from "../../api/caregiver/caregiverRequest";
 import MatchList from "../../components/caregiver/MatchList";
 import ScheduleList from "../../components/caregiver/ScheduleList";
-import Btn from "../../components/commons/Btn";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 
 const MatchSchedules = () => {
@@ -108,12 +107,13 @@ const MatchSchedules = () => {
           onRefresh={handleGetMatches}
         />
       </div>
-      {/* 뒤로 가기 */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
-        <div className="w-72 sm:w-[600px]">
-          <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+      {!isAlertOpen && (
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
+          <div className="w-72 sm:w-[600px]">
+            <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+          </div>
         </div>
-      </div>
+      )}
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
         <div>{alertMessage}</div>

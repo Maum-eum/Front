@@ -1,4 +1,4 @@
-import { CareTypes, MatchStatus, Rate, Sexual, Week } from "./stringType";
+import { CareType, MatchStatus, ElderRate, RecruitStatus, Sexual, Week } from "./stringType";
 
 /* 요양보호사 근무 요청 응답 */
 export interface RecruitRequest {
@@ -48,19 +48,19 @@ export interface WorkTimes {
 }
 
 /* 요양보호사 근무 요청 리스트 조회 */
-export interface RequestsListResponse {
+export interface RequestsListRes {
   list: WorkRequest[];
 }
 export interface WorkRequest {
   elderId: number;
-  MatchStatus: MatchStatus;
   recruitConditionId: number;
   centerId: number;
   centerName: string;
   imgUrl: string | null;
   desiredHourlyWage: number;
-  rate: Rate;
+  rate: ElderRate;
   age: number;
   sexual: Sexual;
-  careTypes: CareTypes[];
+  matchStatus: MatchStatus;
+  careTypes: CareType[];
 }

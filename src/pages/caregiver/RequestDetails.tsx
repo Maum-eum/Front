@@ -125,9 +125,9 @@ const RequestDetails = () => {
         <div className="text-content w-full h-auto sm:h-auto shadow bg-white rounded-lg mb-6 p-5">
           <div className="flex flex-wrap gap-3">
             {[].length > 0 ? (
-              <img src={""} className="w-24 h-24 sm:w-48 sm:h-48 border rounded-lg object-cover" />
+              <img src={""} className="w-20 h-20 sm:w-48 sm:h-48 border rounded-lg object-cover" />
             ) : (
-              <div className="w-24 h-24 sm:w-48 sm:h-48 border rounded-lg bg-empty-green"></div>
+              <div className="w-20 h-20 sm:w-48 sm:h-48 border rounded-lg bg-empty-green"></div>
             )}
             <div className="flex-1 flex flex-col justify-between items-center">
               <span className="font-bold">[비공개] 어르신</span>
@@ -212,11 +212,13 @@ const RequestDetails = () => {
           </div>
         )}
       </div>
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
-        <div className="w-72 sm:w-[600px]">
-          <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+      {!isAlertOpen && (
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full h-20 bg-gradient-to-t from-base-white to-white/0 flex justify-center items-center">
+          <div className="w-72 sm:w-[600px]">
+            <BasicBtn label="뒤로 가기" color="green" onClick={() => navigate(-1)} />
+          </div>
         </div>
-      </div>
+      )}
       {/* 알림 추가 */}
       <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
         <div>{alertMessage}</div>
