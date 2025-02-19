@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getJobCondition, updateJobCondition } from "../../api/caregiver/jobcondition";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 import { RegionSelect } from "../../components/commons/RegionSelect";
-import type { JobConditionRequest } from "../../types/caregiver/jobcondition";
+import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
 import CheckList from "../../components/commons/CheckList";
 import Btn from "../../components/commons/Btn";
 
@@ -31,6 +31,9 @@ const JobConditionEdit = () => {
         const data = await getJobCondition();
         setJobCondition(data);
 
+        console.log("🟢 선택된 요일 (dayOfWeek):", timeData[0]?.dayofweek);
+        console.log("🟢 선택된 시작 시간 (startTime):", timeData[0]?.starttime);
+        console.log("🟢 선택된 종료 시간 (endTime):", timeData[0]?.endtime);
         // ✅ 기존 값들 상태에 저장
         setHourlyWage(data.desiredHourlyWage);
         setSelectedOptions({
@@ -69,10 +72,12 @@ const JobConditionEdit = () => {
     const updatedData: JobConditionRequest = {
       ...selectedOptions, // ✅ 기존 선택된 지원 항목 상태 추가
       desiredHourlyWage: hourlyWage,
-      dayOfWeek: timeData[0]?.dayofweek || "0000000",
-      startTime: timeData[0]?.starttime || 0,
-      endTime: timeData[0]?.endtime || 0,
+      dayOfWeek: timeData[0]?.dayofweek || jobCondition.dayOfWeek,  // ✅ 기존 데이터 유지
+      startTime: timeData[0]?.starttime || jobCondition.startTime,  // ✅ 기존 데이터 유지
+      endTime: timeData[0]?.endtime || jobCondition.endTime,        // ✅ 기존 데이터 유지
       locationRequestDTOList: selectedLocations.map((id) => ({ locationId: id })),
+
+      
   
       // ✅ 누락된 필수 속성 기본값 추가
       flexibleSchedule: selectedOptions.flexibleSchedule || "IMPOSSIBLE",
@@ -95,16 +100,16 @@ const JobConditionEdit = () => {
       emotionalSupport: selectedOptions.emotionalSupport || "IMPOSSIBLE",
       cognitiveStimulation: selectedOptions.cognitiveStimulation || "IMPOSSIBLE"
     };
+    console.log("🟢 [전송 데이터]:", updatedData);  // ✅ API 요청 전에 확인!
   
 
     try {
-      await updateJobCondition(updatedData);
+      await updateJobCondition(updatedData); // ✅ PUT 요청 수행
       alert("근무 조건이 수정되었습니다!");
   
       // ✅ 최신 데이터 다시 불러오기
       const newData = await getJobCondition();
-      setJobCondition(newData);
-  
+      setJobCondition(newData);  // ✅ 상태 업데이트
       navigate("/caregiver/main");
     } catch (error) {
       console.error("❌ 근무 조건 수정 실패:", error);
@@ -114,7 +119,7 @@ const JobConditionEdit = () => {
   
 
   return (
-    <div className="p-6 w-full max-w-3xl overflow-auto mx-auto">
+    <div className="p-6 w-full max-w-3xl overflow-auto mx-auto font-gtr-B">
       <h2 className="text-2xl font-bold text-center mb-6">근무 조건 수정</h2>
     
 

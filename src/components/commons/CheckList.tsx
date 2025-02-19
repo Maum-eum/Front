@@ -19,7 +19,7 @@ const SERVICE_MAP: Record<string, string> = {
   mealPreparation: "식사 차리기",
   cookingAssistance: "구토물 정리",
   enteralNutritionSupport: "경관식 보조",
-  selfFeeding: "경관식 보조",
+  selfFeeding: "음식물 조리 및 설거지",
 
   // ✅ 배변 보조
   selfToileting: "화장실 이동 지원",
@@ -39,10 +39,6 @@ const SERVICE_MAP: Record<string, string> = {
   hospitalAccompaniment: "구강 청결 도움",
   exerciseSupport: "몸 단장 도움",
 
-  // ✅ 기타
-  flexibleSchedule: "유연한 일정",
-  emotionalSupport: "감정적 지원",
-  cognitiveStimulation: "인지 자극",
 };
 
 const STATUS_MAP: Record<"POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE", string> = {
@@ -50,7 +46,6 @@ const STATUS_MAP: Record<"POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE", string> = {
   NEGOTIABLE: "조율",
   IMPOSSIBLE: "불가능",
 };
-
 
 
 // ✅ 한글이 아닌 백엔드 ENUM 값으로 상태 변경 (이전: "불가능" | "가능" | "조율")
@@ -82,7 +77,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
   };
 
   return (
-    <div className="w-full font-pre-SB">
+    <div className="w-full font-gtr-B">
       {/* ✅ 드롭다운 버튼 */}
       <div className="w-full p-2 border border-green rounded-lg flex items-center" onClick={() => setIsOpen(!isOpen)}>
         <img src={isOpen ? dropdown_open : dropdown} className="w-4 h-2 mx-2 text-green"/>
@@ -109,7 +104,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, selectedValues = {
                 <span className="ml-1 flex-1">{SERVICE_MAP[item] || item}</span> {/* ✅ 한글 변환 적용 */}
                 <span
                   className={clsx(
-                    "p-2 text-xs rounded-md w-12 text-center",
+                    "p-2 text-xs rounded-md w-14 text-center",
                     {
                       "bg-green"  : status === "POSSIBLE",
                       "bg-yellow" : status === "NEGOTIABLE",

@@ -7,8 +7,6 @@ import { updateCaregiverProfile } from "../../api/caregiver/updateprofile"; // �
 import CertificationModal from "../../components/caregiver/CertificationModal"; // ✅ 자격증 추가 모달
 import CareerModal from "../../components/caregiver/CareerModal"; // ✅ 경력 추가 모달
 
-
-
 const EditProfile = () => {
   const navigate = useNavigate();
 
@@ -147,7 +145,7 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
     
     
   return (
-      <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 py-8">
+      <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 py-8 font-gtr-B">
         <h1 className="text-title font-bold text-black mb-6">정보 변경</h1>
         <div className="w-full max-w-xs bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col items-center mb-4">
