@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { noneApi, privateApi } from '../../utils/http-commons';
 
 import { SignUpParams, SignUpResponse } from '../../types/admin/singUpType';
-import { ApiResponseDefault } from '../../types/commons';
+import { ApiResponseDefault } from '../../types/commons/commons';
 import { SearchCenterData } from '../../types/admin/searchCenterData';
 
 export const signUp = async (
@@ -32,7 +32,7 @@ export const modifyAdmin = async (
   params: {
     name: string,
     connect: string
-  }, 
+  },
   Response: (Response: AxiosResponse<ApiResponseDefault<SignUpParams>>) => void,
   Error: (Error: AxiosError<ApiResponseDefault<null>>) => void
 ) => {

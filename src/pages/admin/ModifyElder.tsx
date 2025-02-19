@@ -35,6 +35,7 @@ const ModifyElder: React.FC = () => {
     gender                 : 0,
     rate                   : "RATE1",
     weight                 : "",
+    careId:null,
     isTemporarySave        : false,
     normal                 : false,
     hasShortTermMemoryLoss : false,
@@ -49,15 +50,15 @@ const ModifyElder: React.FC = () => {
   // Input 데이터 처리
   const elderDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
+
     let newValue: string | number = value;
-  
+
     // ✅ 몸무게(`weight`) 필드일 경우 숫자로 변환
     if (name === "weight") {
       newValue = value.replace(/[^0-9.]/g, ""); // 숫자와 소수점만 허용
       if ((newValue.match(/\./g) || []).length > 1) return; // 소수점 1개만 허용
     }
-  
+
     setElderData((prev) => ({ ...prev, [name]: newValue }));
   }
 
@@ -159,8 +160,8 @@ const ModifyElder: React.FC = () => {
         {step === 1 && (
           <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 기본 정보 등록</h1> 
-            
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 기본 정보 등록</h1>
+
             <Steps step={step}/>
 
             {/* 프로필 이미지 업로드 */}
@@ -178,7 +179,7 @@ const ModifyElder: React.FC = () => {
 
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm">
-              <label className="block text-item sm:text-2xl font-bold text-black mb-2">어르신 성함</label> 
+              <label className="block text-item sm:text-2xl font-bold text-black mb-2">어르신 성함</label>
               <Input
                 type="text"
                 name="name"
@@ -186,7 +187,7 @@ const ModifyElder: React.FC = () => {
                 value={elderData.name}
                 onChange={elderDataChange}
               />
-              <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">생년월일</label> 
+              <label className="block text-item sm:text-2xl font-bold text-black mt-4 mb-2">생년월일</label>
               <Input
                 type="text"
                 name="birth"
@@ -200,7 +201,7 @@ const ModifyElder: React.FC = () => {
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
-              <Btn text="취소하기" color="white" onClick={() => navigate(-1)} /> 
+              <Btn text="취소하기" color="white" onClick={() => navigate(-1)} />
               <Btn text="다음" onClick={() => setStep(2)} />
             </div>
           </div>
@@ -210,13 +211,13 @@ const ModifyElder: React.FC = () => {
         {step === 2 && (
           <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 세부 정보 등록</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 세부 정보 등록</h1>
 
             <Steps step={step}/>
 
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm">
-              <label className="block text-item sm:text-xl font-bold text-black mt-3 mb-2">몸무게(Kg)</label> 
+              <label className="block text-item sm:text-xl font-bold text-black mt-3 mb-2">몸무게(Kg)</label>
               {/*몸무게입렵은 별도로..*/}
               <input
                 className="w-full p-2 border-2 bg-white border-gray-300 focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0"
@@ -226,7 +227,7 @@ const ModifyElder: React.FC = () => {
                 value={elderData.weight}
                 onChange={elderDataChange}
               />
-              <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label> 
+              <label className="block text-item sm:text-xl font-bold text-black mb-2">장기 요양 등급</label>
               <RadioInput
                 name="rate"
                 options={[
@@ -238,9 +239,9 @@ const ModifyElder: React.FC = () => {
                   { value: "RATE5", label: "5등급" }]}
                 onChange={elderRadioDataChange}
               />
-              <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label> 
+              <label className="block text-item sm:text-xl font-bold text-black mb-2">동거인 여부</label>
               <RadioInput
-                name="inmate" 
+                name="inmate"
                 options={[
                   { value: ["LIVING_ALONE"], label: "독거" },
                   { value: ["LIVING_WITH_SPOUSE","AT_HOME_DURING_CARE"], label: "배우자와 동거, 돌봄 시간 중 집에 있음" },
@@ -248,11 +249,11 @@ const ModifyElder: React.FC = () => {
                   { value: ["LIVING_WITH_FAMILY","AT_HOME_DURING_CARE"], label: "다른 가족과 동거, 돌봄 시간 중 집에 있음" },
                   { value: ["LIVING_WITH_FAMILY","AWAY_DURING_CARE"],    label: "다른 가족과 동거, 돌봄 시간 중 자리 비움" },
               ]} onChange={elderRadioDataChange}/>
-                  
+
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
-              <Btn text="이전" color="white" onClick={() => setStep(1)} /> 
+              <Btn text="이전" color="white" onClick={() => setStep(1)} />
               <Btn text="다음" onClick={() => setStep(3)} />
             </div>
           </div>
@@ -262,10 +263,10 @@ const ModifyElder: React.FC = () => {
         {step === 3 && (
           <div className="w-full p-4 flex flex-col items-center justify-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
-            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 치매 증상</h1> 
+            <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 치매 증상</h1>
 
             <Steps step={step}/>
-            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">증상을<span className="text-red"> 모두 선택 </span>해 주세요.</h2> 
+            <h2 className="mt-4 w-44 text-center sm:text-xl text-black mb-6 font-gtr-B">증상을<span className="text-red"> 모두 선택 </span>해 주세요.</h2>
             {/* 입력 폼 */}
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col justify-center gap-2">
               <CheckList
@@ -273,14 +274,14 @@ const ModifyElder: React.FC = () => {
                 name={categories.title}
                 options={categories.options}
                 onChange={handleElderCheckList}
-              /> 
+              />
             </div>
 
             <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-2 mt-auto">
               <div className="w-full flex gap-1">
                 <Btn text="이전" color="white" onClick={() => setStep(2)} />
               </div>
-            
+
               <Btn text="수정" onClick={sendModifyElder} />
             </div>
           </div>

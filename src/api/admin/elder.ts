@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { privateApi, formDataApi } from '../../utils/http-commons';
 import { AddElderResponse, AddElderParams, elderInfo } from '../../types/admin/elderType';
-import { ApiResponseDefault } from '../../types/commons';
+import { ApiResponseDefault } from '../../types/commons/commons';
 
 // 센터 내 어르신 조회
 export const getElderList = async (

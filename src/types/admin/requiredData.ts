@@ -1,10 +1,6 @@
-interface Caretype {
-	caretype : string;
-}
-
 interface RequiredData {
-	caretypes : Caretype[];
-	locationId : number;
+	caretypes : string[];
+	careLocation : number;
 	mealAssistance : boolean;
 	toiletAssistance : boolean;
 	moveAssistance : boolean;
@@ -39,8 +35,8 @@ interface Response {
 	{
 		recruitConditionId : number;
 		elderId : number;
-		caretypes : Caretype[];
-		locationId : number;
+		caretypes : string[];
+		careLocation : number;
 		mealAssistance : boolean;
 		toiletAssistance : boolean;
 		moveAssistance : boolean;

@@ -6,6 +6,7 @@ import { elderInfo } from "../../types/admin/elderType";
 import AttributeCard from "../../components/caregiver/AttributeCard";
 import DeleteAdminModal from "../../components/admin/DeleteModal";
 import { deleteElder } from "../../api/admin/elder";
+import { RequiredInfo } from "../../components/admin/RequiredInfo";
 
 
 const inmateTypesMapping = [
@@ -46,6 +47,7 @@ const DetailElder: React.FC = () => {
     gender                 : 0,
     rate                   : "RATE1",
     weight                 : "",
+    careId                 : null,
     isTemporarySave        : false,
     normal                 : false,
     hasShortTermMemoryLoss : false,
@@ -104,7 +106,7 @@ const DetailElder: React.FC = () => {
   const getRateLabel = (rate: string | null) => {
     return rate ? rateMapping[rate] || rate : "없음";
   };
-  
+
   const getDementiaLabel = (data:elderInfo) => {
     return attributes.filter((attr) => data[attr.value]).map((item) => item.label)
   }
@@ -144,8 +146,8 @@ const DetailElder: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="block md:hidden w-full">        
-        <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 py-8">
+      <div className="block md:hidden w-full">
+        <div className="flex flex-col items-center min-w-screen min-h-screen bg-base-white sm:px-6 pt-8">
           {/* 제목 */}
           <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
             <span className="text-black"> 어르신 상세 정보</span>
@@ -182,7 +184,7 @@ const DetailElder: React.FC = () => {
               <hr className="border my-4" />
               <div className="font-title font-bold">치매 증상</div>
               <AttributeCard content={getDementiaLabel(elderInfo)} />
-              
+
               <hr className="border my-4" />
               <div className="font-title font-bold">동거인 여부</div>
               <AttributeCard content={getInmateTypeLabel(elderInfo.inmateTypes)} />
@@ -191,6 +193,8 @@ const DetailElder: React.FC = () => {
             {showModal && <DeleteAdminModal onConfirm={deleteElderInfo} onCancel={() => setShowModal(false)} />}
           </div>
         </div>
+        <RequiredInfo />
+
       </div>
       {/* ✅ 데스크탑 UI (추후 작업 예정) */}
       <div className="hidden md:block">

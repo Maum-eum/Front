@@ -6,6 +6,7 @@ export interface elderInfo {
   birth                  : string;
   rate                   : string | null;
   weight                 : number | string;
+  careId                 : number | null | undefined;
   normal                 : boolean;
   hasShortTermMemoryLoss : boolean;
   wandersOutside         : boolean;
@@ -33,7 +34,7 @@ export interface elderService {
   mealPreparation:           boolean; //식사준비
   mealAssistance :           boolean; //식사보조(구토물정리)
   enteralNutritionSupport:   boolean; //경관식보조
-  
+
   selfToileting:             boolean; //자기 배변 가능
   toiletAssistance :         boolean; //화장실 이용 보조
   occasionalToiletingAssist: boolean; //간헐적 배변 보조

@@ -1,13 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Time } from "../../types/commons/timeData";
-
+import type { RecruitData } from "../../types/admin/recruitData";
+import { requiredInfoApi } from "../../api/admin/required";
+import { elderInfo } from "../../types/admin/elderType";
+import { getElderDetail } from "../../api/admin/elder";
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import { TimeSelect } from "../../components/commons/TimeSelect";
+import { useAdminStore } from "../../stores/admin/adminStore";
+import { useParams } from "react-router-dom";
 
 const RecruitRegistration: React.FC = () => {
+    const navigate = useNavigate();
+    const store = useAdminStore();
+    const elderId = Number(useParams());
+    const [elderInfo, setElderInfo] = useState<elderInfo>();
 	const [timeData, setTimeData] = useState<Time[]>([]);
 	const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+    const [recruitData, setRecruitData] = useState<RecruitData>();
 
+
+    useEffect(() => {
+          const getElderInfo = async () => {
+            if (!elderId) {
+              alert("잘못된 접근입니다.");
+              navigate(-1);
+              return;
+            }
+            await getElderDetail(
+              {
+                centerId: store.centerId,
+                elderId: elderId,
+              },
+              (res) => {
+                console.log(res.data.data);
+                setElderInfo(res.data.data);
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
+          };
+          getElderInfo();
+    }, []);
+
+    useEffect(() => {
+          /* 필요 상세정보 받아오는 api */
+          const handleGetRequiresInfo = async () => {
+            try{
+                const response = await requiredInfoApi(
+                    store.centerId,
+                    elderId,
+                    elderInfo?.careId as number,
+                );
+                setRecruitData(response?.data?.data);
+            } catch (error) {
+                console.error('error get required info', error);
+            }
+          };
+        handleGetRequiresInfo();
+      }, [elderInfo]);
 
 
 	return (
