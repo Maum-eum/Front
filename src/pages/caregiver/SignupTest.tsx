@@ -10,7 +10,6 @@ import { signUpCaregiver } from "../../api/caregiver/auth";
 import axios, { AxiosError } from "axios"; 
 import { Login } from "../../api/commons/User";  // ✅ Login API 가져오기
 
-
 const SignupTest = () => {
   const navigate = useNavigate();
   const { setSignupData, profileImg, certificateRequestDTOList, experienceRequestDTOList, ...signupData } = useSignupStore();
@@ -37,7 +36,7 @@ const SignupTest = () => {
   
       // ✅ 회원가입 성공했는지 체크
       if (response.status === "success") {
-        alert("회원가입 성공! 자동 로그인 중...");
+        alert("회원가입 성공!");
   
         // ✅ 2. 회원가입 성공 후 자동 로그인 요청
         await Login(
@@ -120,7 +119,7 @@ const SignupTest = () => {
   
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8">
+    <div className="flex flex-col items-center w-full min-h-screen bg-gray-100 px-4 sm:px-6 py-8 font-gtr-B">
       <h2 className="text-title font-bold text-black text-center mb-4">회원가입</h2>
       <Steps step={step} />
 

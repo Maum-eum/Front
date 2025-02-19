@@ -83,10 +83,10 @@ const Main: React.FC = () => {
         </div>
       </div>
 
-<<<<<<< HEAD
+
       {/* 데스크탑 환경에서만 보이는 UI (추후 개발) */}
       <div className="hidden md:block">데스크탑 화면입니다!</div>
-=======
+
       {/* ✅ 데스크탑 환경 (새롭게 추가) */}
       <div className="hidden md:flex flex-col w-full h-screen p-8 bg-gray-100">
         <div className="w-full flex justify-between items-center bg-white p-4 rounded-lg shadow mb-6">
@@ -137,7 +137,7 @@ const Main: React.FC = () => {
         </div>
 
       </div>
->>>>>>> feat/admin/dashboard
+
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { JobConditionRequest } from "../../types/caregiver/jobcondition";
+import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
 
 const API_URL = "https://api.gyeotae.site/caregiver/jobcondition";
 
@@ -38,25 +38,6 @@ export const registerJobCondition = async (data: JobConditionRequest) => {
   }
 };
 
-
-// ✅ 근무 조건 조회 API
-export const getJobCondition = async () => {
-  try {
-    const response = await axios.get(API_URL, {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // ✅ 토큰 추가
-      },
-    });
-
-    console.log("🟢 [근무 조건 조회 성공] response.data:", response.data);
-    return response.data.data; // 서버 응답에서 'data' 부분만 반환
-  } catch (error) {
-    console.error("❌ [근무 조건 조회 실패]:", error);
-    return null;
-  }
-};
-
 // ✅ 근무 조건 수정 (PUT 요청)
 export const updateJobCondition = async (jobConditionData: JobConditionRequest) => {
   try {
@@ -92,3 +73,23 @@ export const updateJobCondition = async (jobConditionData: JobConditionRequest) 
     throw error;
   }
 };
+
+
+// ✅ 근무 조건 조회 API
+export const getJobCondition = async () => {
+  try {
+    const response = await axios.get(API_URL, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // ✅ 토큰 추가
+      },
+    });
+
+    console.log("🟢 [근무 조건 조회 성공] response.data:", response.data);
+    return response.data.data; // 서버 응답에서 'data' 부분만 반환
+  } catch (error) {
+    console.error("❌ [근무 조건 조회 실패]:", error);
+    return null;
+  }
+};
+

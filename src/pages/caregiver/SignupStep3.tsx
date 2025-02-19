@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import { registerJobCondition } from "../../api/caregiver/jobcondition";
-import type { JobConditionRequest } from "../../types/caregiver/jobcondition";
+import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
 
 import CheckList from "../../components/commons/CheckList";
 import Steps from "../../components/commons/Steps";
@@ -80,7 +80,7 @@ export default function SignupStep3() {
       console.log("🟢 서버 응답 데이터:", response?.data);
       if (response?.status === "success") {
         alert("구직 조건이 등록되었습니다!");
-        navigate("/caregiver/main");
+        navigate("/");
       } else {
         alert(response?.message || "등록 실패!");
       }

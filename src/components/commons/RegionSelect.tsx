@@ -12,37 +12,44 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 	const [sido, setSido] = useState<Sido[] | undefined>(undefined);
 	const [sigungu, setSigungu] = useState<Sigungu[] | undefined>(undefined);
 	const [location, setLocation] = useState<Location[] | undefined>(undefined);
-	const [selectedSido, setSelectedSido] = useState<number | undefined>(1);
+	const [selectedSido, setSelectedSido] = useState<number | undefined>(undefined);
 	const [selectedSigungu, setSelectedSigungu] = useState<number | undefined>(undefined);
 
 	useEffect(() => {
 		const fetchSido = async () => {
-			try {
-				const response = await sidoInfoApi();
-				if (response?.status && response.data) {
-					setSido(response.data);
-				}
-			} catch (error) {
-				console.error('Error get Sido Data');
+		  try {
+			const response = await sidoInfoApi();
+			if (response?.status && response.data) {
+			  setSido(response.data);
 			}
-		}
+		  } catch (error) {
+			console.error('Error fetching Sido Data');
+		  }
+		};
 		fetchSido();
-	}, []);
-
-	const handleSidoChange = async (sidoId: number) => {
+	  }, []);
+	  
+	  const handleSidoChange = async (sidoId: number) => {
+		if (selectedSido === sidoId) return; // ✅ 이미 선택된 시/도라면 변경 안 함.
+	  
 		setSelectedSido(sidoId);
 		setSelectedSigungu(undefined);
-		setSelectedLocations([]);
+	  
+		// ✅ 사용자가 직접 변경한 경우에만 초기화
+		if (selectedLocations.length > 0) {
+		  setSelectedLocations([]);
+		}
+	  
 		try {
-			const response = await sigunguInfoApi(sidoId);
-			if (response?.status) {
+		  const response = await sigunguInfoApi(sidoId);
+		  if (response?.status) {
 			setSigungu(response.data);
-			}
+		  }
 		} catch (error) {
-				console.error("Error fetching Sigungu Data", error);
-			}
-	};
-
+		  console.error("Error fetching Sigungu Data", error);
+		}
+	  };
+	  
 	const handleSigunguChange = async (sigunguId: number) => {
 		setSelectedSigungu(sigunguId);
 		setSelectedLocations([]);
