@@ -8,6 +8,8 @@ import CareerModal from "../../components/caregiver/CareerModal";
 import CertificationModal from "../../components/caregiver/CertificationModal";
 import { signUpCaregiver } from "../../api/caregiver/auth";
 import axios, { AxiosError } from "axios"; 
+import { Login } from "../../api/commons/User";  // ✅ Login API 가져오기
+
 
 const SignupTest = () => {
   const navigate = useNavigate();
@@ -18,36 +20,72 @@ const SignupTest = () => {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
- const handleSignup = async () => {
-  if (loading) return;
-  setLoading(true);
-
-  try {
-    const response = await signUpCaregiver({
-      ...signupData,
-      profileImg,
-      certificateRequestDTOList,
-      experienceRequestDTOList,
-    });
-
-    console.log("✅ 회원가입 성공:", response);
-    alert("회원가입 성공!");
-    navigate("/");
-  } catch (error) {
-    console.error("❌ 회원가입 실패:", error);
-
-    // ✅ `error`를 `AxiosError`로 캐스팅
-    if (axios.isAxiosError(error)) {
-      console.error("🛑 서버 응답 에러:", error.response?.data);
-    } else {
-      console.error("🛑 예상치 못한 에러:", (error as Error).message);
+  const handleSignup = async () => {
+    if (loading) return;
+    setLoading(true);
+  
+    try {
+      // ✅ 1. 회원가입 API 요청
+      const response = await signUpCaregiver({
+        ...signupData,
+        profileImg,
+        certificateRequestDTOList,
+        experienceRequestDTOList,
+      });
+  
+      console.log("✅ 회원가입 성공:", response);
+  
+      // ✅ 회원가입 성공했는지 체크
+      if (response.status === "success") {
+        alert("회원가입 성공! 자동 로그인 중...");
+  
+        // ✅ 2. 회원가입 성공 후 자동 로그인 요청
+        await Login(
+          { username: signupData.username, password: signupData.password },
+          (loginResponse) => {
+            console.log("✅ 로그인 응답 데이터:", JSON.stringify(loginResponse.data, null, 2));
+            console.log("✅ 로그인 응답 헤더:", loginResponse.headers); // 헤더 확인!
+        
+            // ✅ Authorization 헤더에서 accessToken 가져오기
+            const token = loginResponse.headers.authorization?.split("Bearer ")[1];
+        
+            if (!token) {
+              alert("로그인 성공했지만, 토큰을 가져올 수 없습니다!");
+              return;
+            }
+        
+            // ✅ 3. Access Token을 localStorage에 저장
+            localStorage.setItem("accessToken", token);
+        
+            // ✅ 4. 필수 정보 등록 페이지 (SignupStep3)으로 이동
+            alert("회원가입 및 자동 로그인 성공! 필수 정보 등록으로 이동합니다.");
+            navigate("/caregiver/signup/step3");
+          },
+          (loginError) => {
+            console.error("❌ 자동 로그인 실패:", loginError);
+            alert("자동 로그인 실패! 로그인 페이지로 이동합니다.");
+            navigate("/login");
+          }
+        );
+        
+      } else {
+        alert("회원가입 실패! 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("❌ 회원가입 실패:", error);
+  
+      if (axios.isAxiosError(error)) {
+        console.error("🛑 서버 응답 에러:", error.response?.data);
+      } else {
+        console.error("🛑 예상치 못한 에러:", (error as Error).message);
+      }
+  
+      alert("회원가입 실패 ㅠㅠ");
+    } finally {
+      setLoading(false);
     }
-
-    alert("회원가입 실패 ㅠㅠ");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+  
   
   // ✅ 경력 추가 함수
   const addExperience = (newExperience: { title: string; duration: number; description: string }) => {

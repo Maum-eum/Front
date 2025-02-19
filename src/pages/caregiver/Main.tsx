@@ -144,12 +144,13 @@ const Main = () => {
         </div>
         {/* 메뉴 (화면 이동) */}
         <div className="w-full flex gap-3 mb-10">
-          <ImageBtn
-            label="근무 조건"
-            icon={EmptyImg}
-            onClick={() => navigate("/caregiver/conditions")}
-            color="white"
-          />
+        <ImageBtn
+          label="근무 조건"
+          icon={EmptyImg}
+          onClick={() => navigate("/caregiver/jobcondition")} // ✅ 새 페이지로 이동
+          color="white"
+        />
+
           <ImageBtn
             label="일정 목록"
             icon={EmptyImg}

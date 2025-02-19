@@ -6,6 +6,7 @@ import { Login } from "../api/commons/User";
 import { useAdminStore } from "../stores/admin/adminStore";
 import PoongImage from "../assets/image/포옹.png";
 
+
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { setAdminInfo } = useAdminStore();
