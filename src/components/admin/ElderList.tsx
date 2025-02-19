@@ -54,7 +54,16 @@ const ElderList: React.FC<ElderListProps> = ({ data = [] }) => {
     <div className="w-full flex flex-col p-1 rounded-lg font-gtr-B h-full">
       {/* 검색창 & 정렬 옵션 (고정됨) */}
       <div className="w-full flex flex-col p-2 sticky top-0 z-10">
-        <span className="text-content text-black text-lg">센터 어르신 리스트</span>
+        <div className="flex items-center justify-between">
+          <span className="text-content text-black text-lg">센터 어르신 리스트</span>
+          <button 
+            className="text-sm border p-1 px-3 rounded-lg bg-pale-green hover:bg-green transition"
+            onClick={() => navigate("/admin/elder/add")}
+          >
+            + 등록
+          </button>
+        </div>
+
         <div className="flex gap-2 mt-2">
           <input
             type="text"

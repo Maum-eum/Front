@@ -192,9 +192,78 @@ const DetailElder: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* ✅ 데스크탑 UI (추후 작업 예정) */}
-      <div className="hidden md:block">
-        데스크탑 화면입니다!
+      {/* ✅ 데스크탑 환경 (새롭게 추가) */}
+      
+      <div className="hidden md:flex  w-full h-screen items-center justify-center bg-gray-100 p-10">
+        <div className="bg-white shadow-lg rounded-lg p-8 flex flex-col w-5/6 max-w-5xl">
+          {/* 🔹 헤더 영역 (제목 + 버튼) */}
+          <div className="flex justify-between items-center border-b pb-4 mb-6">
+            <h1 className="text-2xl font-bold">어르신 상세 정보</h1>
+            <div className="flex gap-2">
+              <button
+                className="border px-4 py-2 rounded-lg bg-pale-yellow hover:bg-yellow-300 transition"
+                onClick={() => navigate(`/admin/elder/modify/${elderId}/${"save"}`)}
+              >
+                정보 수정
+              </button>
+              <button
+                className="border px-4 py-2 rounded-lg bg-pale-red hover:bg-red-400 transition"
+                onClick={() => setShowModal(true)}
+              >
+                정보 삭제
+              </button>
+            </div>
+          </div>
+
+          {/* 🔹 메인 콘텐츠 (왼쪽: 프로필 + 기본 정보 / 오른쪽: 상세 정보) */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* ✅ 왼쪽 - 프로필 이미지 & 기본 정보 */}
+            <div className="flex flex-col items-center gap-4">
+              {elderInfo.img ? (
+                <img
+                  src={elderInfo.img}
+                  className="w-48 h-48 border rounded-lg object-cover"
+                />
+              ) : (
+                <div className="w-48 h-48 border rounded-lg bg-empty-green"></div>
+              )}
+              <h2 className="text-xl font-bold">{elderInfo.name} 어르신</h2>
+            </div>
+
+            {/* ✅ 오른쪽 - 상세 정보 */}
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-bold mb-1">성별</label>
+                <AttributeCard content={[elderInfo.gender === 1 ? "남성" : "여성"]} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1">생년월일</label>
+                <AttributeCard content={[`${elderInfo.birth}`, `${calAge(elderInfo.birth)}세`]} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1">체중</label>
+                <AttributeCard content={[`${elderInfo.weight} kg`]} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1">장기 요양 등급</label>
+                <AttributeCard content={[`${getRateLabel(elderInfo.rate)}`]} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1">치매 증상</label>
+                <AttributeCard content={getDementiaLabel(elderInfo)} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-1">동거인 여부</label>
+                <AttributeCard content={getInmateTypeLabel(elderInfo.inmateTypes)} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
