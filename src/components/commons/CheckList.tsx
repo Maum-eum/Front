@@ -18,7 +18,7 @@ const SERVICE_MAP: Record<string, string> = {
   // ✅ 식사 보조
   mealPreparation: "식사 차리기",
   cookingAssistance: "구토물 정리",
-  enteralNutritionSupport: "음식물 조리 및 설거지",
+  enteralNutritionSupport: "경관식 보조",
   selfFeeding: "경관식 보조",
 
   // ✅ 배변 보조
@@ -37,7 +37,7 @@ const SERVICE_MAP: Record<string, string> = {
   cleaningLaundryAssist: "컨디션 외 도움",
   bathingAssist: "세면 도움",
   hospitalAccompaniment: "구강 청결 도움",
-  exerciseSupport: "물 단장 도움",
+  exerciseSupport: "몸 단장 도움",
 
   // ✅ 기타
   flexibleSchedule: "유연한 일정",

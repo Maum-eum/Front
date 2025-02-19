@@ -135,7 +135,8 @@ const Main = () => {
               onClick={handleChangeStatus}
             />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn label="정보 변경" color="white" attribute="button" onClick={() => {}} />
+            <BasicBtn label="정보 변경" color="white" attribute="button" onClick={() => navigate("/caregiver/edit/profile")} />
+
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}
