@@ -1,5 +1,6 @@
-// import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAdminStore } from "./stores/admin/adminStore";
+
 
 // 화면정리 필수...! 추후 정리 할 예정이지만 다같이 화이팅 부탁드립니다 -박병조...25/02/12
 import Main from "./pages/Main";
@@ -36,6 +37,14 @@ import EditProfile from "./pages/caregiver/EditProfile";
 
 
 
+const ProtectedRoute: React.FC<{ element: React.ReactElement; allowedRoles: string[] }> = ({ element, allowedRoles }) => {
+  const { role } = useAdminStore(); 
+  const currentRole = role === "ROLE_ADMIN" ? "admin" : "caregiver";
+
+  return allowedRoles.includes(currentRole) ? element : <Navigate to={`/${currentRole}/main`} replace />;
+};
+
+
 export default function Router() {
   //const navi = useNavigate();
 
@@ -43,35 +52,32 @@ export default function Router() {
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<Main />} />
 
-
-      {/* 관리자 */}
+      {/*관리자 전용*/}
       <Route path="/admin/signUp" element={<AdminSignUp />} />
-      <Route path="/admin/main" element={<AdminMain />} />
-      <Route path="/admin/modify" element={<ModifyAdmin />} />
-      <Route path="/admin/elder/add" element={<AddElder />} />
-      <Route path="/admin/elder/detail/:elderId" element={<DetailElder />} />
-      <Route path="/admin/elder/modify/:elderId/:temp" element={<ModifyElder />} />
+      <Route path="/admin/main" element={<ProtectedRoute element={<AdminMain />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/modify" element={<ProtectedRoute element={<ModifyAdmin />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/elder/add" element={<ProtectedRoute element={<AddElder />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/elder/detail/:elderId" element={<ProtectedRoute element={<DetailElder />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/elder/modify/:elderId/:temp" element={<ProtectedRoute element={<ModifyElder />} allowedRoles={["admin"]} />} />
 
-      <Route path="/admin/recruit"                            element={<RecruitRegistration />} />
-      {/* <Route path="/admin/:elderId/recruit"                   element={<RecruitRegistration />} /> */}
-      <Route path="/admin/:elderId/recruit-modify"            element={<RecruitModify />} />
-      <Route path="/admin/:elderId/recommended"               element={<RecommendedCaregiverList />} />
-      <Route path="/admin/:elderId/recommended/:caregiverId"  element={<RecommendedCaregiverInfo />} />
-      <Route path="/admin/negotiation/:matchId"               element={<NegotiationInfo />} />
-      <Route path="/admin/ongoing/:matchId"                   element={<OngoingServiceInfo />} />
+      <Route path="/admin/recruit" element={<ProtectedRoute element={<RecruitRegistration />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/:elderId/recruit-modify" element={<ProtectedRoute element={<RecruitModify />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/:elderId/recommended" element={<ProtectedRoute element={<RecommendedCaregiverList />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/:elderId/recommended/:caregiverId" element={<ProtectedRoute element={<RecommendedCaregiverInfo />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/negotiation/:matchId" element={<ProtectedRoute element={<NegotiationInfo />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/ongoing/:matchId" element={<ProtectedRoute element={<OngoingServiceInfo />} allowedRoles={["admin"]} />} />
 
-      {/* */}
-      <Route path="/test"                   element={<ApiTest />} />
-
-      {/* 요양보호사 */}
-
+      {/*요양보호사 전용*/}
       <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
       <Route path="/caregiver/signup" element={<SignupTest />} />
-      <Route path="/caregiver/edit/profile" element={<EditProfile />} />
+      <Route path="/caregiver/edit/profile" element={<ProtectedRoute element={<EditProfile />} allowedRoles={["caregiver"]} />} />
 
-      <Route path="/caregiver/main" element={<CaregiverMain />} />
-      <Route path="/caregiver/request/details/:recruitConditionId" element={<RequestDetails />} />
-      <Route path="/caregiver/match" element={<MatchSchedules />} />
+      <Route path="/caregiver/main" element={<ProtectedRoute element={<CaregiverMain />} allowedRoles={["caregiver"]} />} />
+      <Route path="/caregiver/request/details/:recruitConditionId" element={<ProtectedRoute element={<RequestDetails />} allowedRoles={["caregiver"]} />} />
+      <Route path="/caregiver/match" element={<ProtectedRoute element={<MatchSchedules />} allowedRoles={["caregiver"]} />} />
+
+      {/*테스트 페이지 */}
+      <Route path="/test" element={<ProtectedRoute element={<ApiTest />} allowedRoles={["admin", "caregiver"]} />} />
     </Routes>
   );
 }
