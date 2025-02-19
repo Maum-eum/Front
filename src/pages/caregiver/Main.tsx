@@ -51,7 +51,7 @@ const Main = () => {
     }
     try {
       const response = await changeStatus();
-      if (response) {
+      if (response != null) {
         console.log("구직 상태 변경 성공:", response);
         setCaregiverInfo((prev) => {
           if (prev == null || prev.employmentStatus == null) return;
@@ -145,7 +145,7 @@ const Main = () => {
             icon={EmptyImg}
             onClick={() => {
               window.scrollTo({ top: 0, behavior: "smooth" });
-              navigate("/caregiver/conditions");
+              navigate("/caregiver/jobcondition");
             }}
             color="white"
           />

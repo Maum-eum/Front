@@ -1,4 +1,4 @@
-export type JobConditionRequest = {
+export interface JobConditionRequest {
     flexibleSchedule: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
     desiredHourlyWage: number;
     selfFeeding: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
@@ -19,23 +19,18 @@ export type JobConditionRequest = {
     exerciseSupport: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
     emotionalSupport: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
     cognitiveStimulation: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
-    dayOfWeek: string; // "1001010" (월~일)
+    dayOfWeek: string; // "1001010" 형식 (월~일 순서)
     startTime: number;
     endTime: number;
     locationRequestDTOList: { locationId: number }[];
-  };
+  }
   
-  export type JobConditionResponse = {
-    status: string;
+  export interface JobConditionResponse {
+    status: "success" | "fail";
     message: string;
     data: {
       jobConditionId: number;
-      flexibleSchedule: string;
-      desiredHourlyWage: number;
-      dayOfWeek: string;
-      startTime: number;
-      endTime: number;
-      locationRequestDtoList: { workLocationId: number; locationName: string }[];
-    };
-  };
+      createAt: string;
+    } | null;
+  }
   

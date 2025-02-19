@@ -7,6 +7,7 @@ import { useAdminStore } from "../stores/admin/adminStore";
 import { useCaregiverStore } from "../stores/caregiver/caregiverStore";
 import PoongImage from "../assets/image/포옹.png";
 
+
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { setAdminInfo } = useAdminStore();

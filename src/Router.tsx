@@ -30,6 +30,7 @@ import SignupStep3 from "./pages/caregiver/SignupStep3";
 import CaregiverMain from "./pages/caregiver/Main";
 import RequestDetails from "./pages/caregiver/RequestDetails";
 import MatchSchedules from "./pages/caregiver/MatchSchedules";
+import JobCondition from "./pages/caregiver/JobCondition";
 
 //유저
 import EditProfile from "./pages/caregiver/EditProfile";
@@ -68,6 +69,7 @@ export default function Router() {
       <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
       <Route path="/caregiver/signup" element={<SignupTest />} />
       <Route path="/caregiver/edit/profile" element={<EditProfile />} />
+      <Route path="/caregiver/jobcondition" element={<JobCondition />} />
 
       <Route path="/caregiver/main" element={<CaregiverMain />} />
       <Route path="/caregiver/match" element={<MatchSchedules />} />

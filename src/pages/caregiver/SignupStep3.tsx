@@ -1,151 +1,184 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TimeSelect } from "../../components/commons/TimeSelect";
+import { RegionSelect } from "../../components/commons/RegionSelect";
+import { registerJobCondition } from "../../api/caregiver/jobcondition";
+import type { JobConditionRequest } from "../../types/caregiver/jobcondition";
+
+import CheckList from "../../components/commons/CheckList";
 import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
-import CheckList from "../../components/commons/CheckList";
-import Input from "../../components/commons/Input";
-import { RegionSelect } from "../../components/commons/RegionSelect";
-import { TimeSelect } from "../../components/commons/TimeSelect";
-import { postJobCondition } from "../../api/caregiver/jobCondition"; // API 호출 함수
-import type { Time } from "../../types/commons/timeData";
 
-const categories = [
-  { title: "식사 보조", services: ["식사 차리기", "구토물 정리", "수급자를 위한 음식물 조리 및 설거지", "경관식 보조"] },
-  { title: "배변 보조", services: ["화장실 이동 지원", "유치도뇨 / 방광루 / 장루 관리 및 처리 지원", "배뇨, 배변 도움 후 처리 지원", "기저귀 교환"] },
-  { title: "이동 보조", services: ["침대 ↔ 휠체어 이동 보조", "보행 도움 (부축)", "보조 기구 이동 보조 (휠체어, 지팡이)", "신체 기능의 유지 및 증진 도움"] },
-  { title: "일상 생활", services: ["컨디션 외 도움", "세면 도움", "구강 청결 도움", "몸 단장 도움"] },
-];
 
-const SignupStep3 = () => {
+  // ✅ 카테고리 그룹을 위한 컴포넌트
+  const CategorySection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div className="mb-6">
+      <h3 className="font-bold text-lg mb-2">{title}</h3>
+      {children}
+    </div>
+  );
+
+export default function SignupStep3() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // ✅ step 1: 서비스 선택, step 2: 근무 조건 입력
-  const [selectedServices, setSelectedServices] = useState<Record<string, "불가능" | "가능" | "조율">>({}); // 서비스 선택 상태
-  const [wage, setWage] = useState("13,000");
-  const [schedule, setSchedule] = useState<{ [key: string]: { 오전: string; 오후: string } }>({
-    월: { 오전: "", 오후: "" },
-  });
-  const [selectedLocations, setSelectedLocations] = useState<number[]>([]); // 지역 선택 상태
-  const [timeData, setTimeData] = useState<Time[]>([]); // 시간 선택 상태
 
-  const handleServiceChange = (updated: Record<string, "불가능" | "가능" | "조율">) => {
-    setSelectedServices((prev) => ({ ...prev, ...updated }));
-  };
 
-  const handleNext = () => {
-    if (step === 1) {
-      setStep(2); // ✅ 다음 단계(근무 조건 입력)로 이동
-    } else {
-      // 모든 데이터를 하나의 객체로 묶어서 API 요청
-      const jobConditionData = {
-        flexibleSchedule: "NEGOTIABLE" as "NEGOTIABLE", // "NEGOTIABLE", "POSSIBLE", "IMPOSSIBLE"로 설정
-        desiredHourlyWage: parseInt(wage.replace(",", ""), 10),
-        selfFeeding: selectedServices["식사 차리기"] || "불가능",
-        mealPreparation: selectedServices["구토물 정리"] || "불가능",
-        cookingAssistance: selectedServices["수급자를 위한 음식물 조리 및 설거지"] || "불가능",
-        enteralNutritionSupport: selectedServices["경관식 보조"] || "불가능",
-        selfToileting: "NEGOTIABLE", // 예시값
-        occasionalToiletingAssist: "NEGOTIABLE", // 예시값
-        diaperCare: "IMPOSSIBLE", // 예시값
-        catheterOrStomaCare: "POSSIBLE", // 예시값
-        independentMobility: "POSSIBLE", // 예시값
-        mobilityAssist: "IMPOSSIBLE", // 예시값
-        wheelchairAssist: "POSSIBLE", // 예시값
-        immobile: "IMPOSSIBLE", // 예시값
-        cleaningLaundryAssist: "NEGOTIABLE", // 예시값
-        bathingAssist: "IMPOSSIBLE", // 예시값
-        hospitalAccompaniment: "IMPOSSIBLE", // 예시값
-        exerciseSupport: "NEGOTIABLE", // 예시값
-        emotionalSupport: "POSSIBLE", // 예시값
-        cognitiveStimulation: "POSSIBLE", // 예시값
-        dayOfWeek: "1001010", // 예시값
-        startTime: 12,
-        endTime: 19,
-        locationRequestDTOList: selectedLocations.map((locationId) => ({ locationId })), // 선택된 지역 정보
-        timeData, // 시간 정보
-      };
+  // ✅ 단계 상태 추가 (1: 가능 여부 선택, 2: 시간 & 장소 선택)
+  const [step, setStep] = useState<number>(1);
 
-     ///
+  // ✅ 선택된 데이터 저장
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE">>({});
+  const [timeData, setTimeData] = useState<{ dayofweek: string; starttime: number; endtime: number }[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+  const [hourlyWage, setHourlyWage] = useState<number>(15000); // 기본값
+
+  const handleSubmit = async () => {
+    console.log("🟢 selectedOptions 값 확인:", selectedOptions); 
+    console.log("🟢 시간 데이터 확인:", timeData);
+    console.log("🟢 선택된 지역 ID:", selectedLocations);
+
+    if (!timeData.length || !selectedLocations.length) {
+      alert("근무 시간과 지역을 선택해주세요!");
+      return;
     }
-  };
 
-  const handlePrev = () => {
-    if (step === 2) {
-      setStep(1); // ✅ 서비스 선택으로 돌아가기
-    } else {
-      navigate("/caregiver/signup"); // ✅ 이전 페이지로 이동
+    const requestData: JobConditionRequest = {
+      ...selectedOptions, // ✅ 기존 옵션 추가
+      desiredHourlyWage: hourlyWage,
+      dayOfWeek: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+        .map((day) => (timeData.some((t) => t.dayofweek === day) ? "1" : "0"))
+        .join(""), // ✅ 요일을 "1001010" 형식으로 변환
+      startTime: timeData[0]?.starttime || 0, 
+      endTime: timeData[0]?.endtime || 0, 
+      locationRequestDTOList: selectedLocations.map((id) => ({ locationId: id })),
+
+      // ✅ 사용자가 선택한 상태 반영!
+      flexibleSchedule: selectedOptions["flexibleSchedule"] || "IMPOSSIBLE",
+      selfFeeding: selectedOptions["selfFeeding"] || "IMPOSSIBLE",
+      mealPreparation: selectedOptions["mealPreparation"] || "IMPOSSIBLE",
+      cookingAssistance: selectedOptions["cookingAssistance"] || "IMPOSSIBLE",
+      enteralNutritionSupport: selectedOptions["enteralNutritionSupport"] || "IMPOSSIBLE",
+      selfToileting: selectedOptions["selfToileting"] || "IMPOSSIBLE",
+      occasionalToiletingAssist: selectedOptions["occasionalToiletingAssist"] || "IMPOSSIBLE",
+      diaperCare: selectedOptions["diaperCare"] || "IMPOSSIBLE",
+      catheterOrStomaCare: selectedOptions["catheterOrStomaCare"] || "IMPOSSIBLE",
+      independentMobility: selectedOptions["independentMobility"] || "IMPOSSIBLE",
+      mobilityAssist: selectedOptions["mobilityAssist"] || "IMPOSSIBLE",
+      wheelchairAssist: selectedOptions["wheelchairAssist"] || "IMPOSSIBLE",
+      immobile: selectedOptions["immobile"] || "IMPOSSIBLE",
+      cleaningLaundryAssist: selectedOptions["cleaningLaundryAssist"] || "IMPOSSIBLE",
+      bathingAssist: selectedOptions["bathingAssist"] || "IMPOSSIBLE",
+      hospitalAccompaniment: selectedOptions["hospitalAccompaniment"] || "IMPOSSIBLE",
+      exerciseSupport: selectedOptions["exerciseSupport"] || "IMPOSSIBLE",
+      emotionalSupport: selectedOptions["emotionalSupport"] || "IMPOSSIBLE",
+      cognitiveStimulation: selectedOptions["cognitiveStimulation"] || "IMPOSSIBLE"
+    };
+    
+    console.log("🟢 최종 requestData:", requestData);
+
+    try {
+      const response = await registerJobCondition(requestData);
+      console.log("🟢 서버 응답 데이터:", response?.data);
+      if (response?.status === "success") {
+        alert("구직 조건이 등록되었습니다!");
+        navigate("/caregiver/main");
+      } else {
+        alert(response?.message || "등록 실패!");
+      }
+    } catch (error) {
+      console.error("❌ 구직 조건 등록 실패:", error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-base-white px-4 sm:px-6 py-8">
-      <h1 className="text-title font-bold text-black mb-6">근무 조건 등록</h1>
-      <Steps step={3} />
+    <div className="p-6 w-full max-w-3xl mx-auto">
 
-      {/* 🔥 Step 1: 서비스 선택 */}
+      {/* ✅ 타이틀 */}
+      <h2 className="text-2xl font-bold text-center mb-6">근무 조건 등록</h2>
+
+      {/* ✅ Steps를 감싸는 div에 여백 추가 */}
+      <div className="mb-6">
+        <Steps step={3} />
+      </div>
+
+      {/* ✅ 1단계: 가능/불가능/조율 체크리스트 */}
       {step === 1 && (
         <>
-          <p className="text-center text-[18px] font-bold text-black mt-6">
-            제공 가능한 서비스를 <span className="text-red-500">모두 선택</span>해 주세요
-          </p>
+          <CategorySection title="식사 보조">
+            <CheckList 
+              options={["mealPreparation", "cookingAssistance", "enteralNutritionSupport", "selfFeeding"]}
+              selectedValues={selectedOptions}
+              onChange={setSelectedOptions} name={""}            />
+          </CategorySection>
 
-          <div className="w-full max-w-xs sm:max-w-sm mt-6 space-y-6">
-            {categories.map((category) => (
-              <CheckList
-                key={category.title}
-                name={category.title}
-                options={category.services}
-                selectedValues={selectedServices}
-                onChange={handleServiceChange}
-              />
-            ))}
-          </div>
+          <CategorySection title="배변 보조">
+            <CheckList 
+              options={["selfToileting", "occasionalToiletingAssist", "diaperCare", "catheterOrStomaCare"]}
+              selectedValues={selectedOptions}
+              onChange={setSelectedOptions} name={""}            />
+          </CategorySection>
+
+          <CategorySection title="이동 보조">
+            <CheckList 
+              options={["independentMobility", "mobilityAssist", "wheelchairAssist", "immobile"]}
+              selectedValues={selectedOptions}
+              onChange={setSelectedOptions} name={""}            />
+          </CategorySection>
+
+          <CategorySection title="일상 생활">
+            <CheckList 
+              options={["cleaningLaundryAssist", "bathingAssist", "hospitalAccompaniment", "exerciseSupport"]}
+              selectedValues={selectedOptions}
+              onChange={setSelectedOptions} name={""}            />
+          </CategorySection>
+
+          {/* ✅ "다음" 버튼 */}
+          <Btn 
+            text="다음"
+            color="green"
+            onClick={() => setStep(3)}
+          />
         </>
       )}
 
-      {/* 🔥 Step 2: 근무 조건 입력 */}
-      {step === 2 && (
+      {/* ✅ 3단계: 시간 및 지역 선택 */}
+      {step === 3 && (
         <>
-          <p className="text-center text-[18px] font-bold text-black mt-6">
-            근무 조건을 <span className="text-red-500">입력</span>해 주세요
-          </p>
+          {/* ✅ 근무 가능 요일 및 시간 선택 */}
+          <TimeSelect setTimeData={setTimeData} />
 
-          <div className="w-full max-w-xs sm:max-w-sm mt-8">
-            {/* 근무 지역 */}
-            <div className="w-full mb-6">
-              <h3 className="text-item font-bold text-black mb-2">근무 지역</h3>
-              <RegionSelect
-                selectedLocations={selectedLocations}
-                setSelectedLocations={setSelectedLocations}
-              />
-            </div>
-
-            {/* 근무 시간 */}
-            <div className="w-full mb-6">
-              <h3 className="text-item font-bold text-black mb-2">근무 시간</h3>
-              <TimeSelect setTimeData={setTimeData} />
-            </div>
-
-            {/* 급여 입력 */}
-            <div className="w-full">
-              <h3 className="text-item font-bold text-black mb-2">급여(시급)</h3>
-              <Input
-                type="text"
-                placeholder="13,000 원"
-                value={wage}
-                onChange={(e) => setWage(e.target.value)}
-              />
-            </div>
+          {/* ✅ 지역 선택 */}
+          <RegionSelect selectedLocations={selectedLocations} setSelectedLocations={setSelectedLocations} />
+          
+          {/* ✅ 희망 시급 입력 */}
+          <div className="mt-4 mb-4">
+            <label className="block font-bold">희망 시급 (원)</label>
+            <input
+              type="number"
+              value={hourlyWage}
+              onChange={(e) => setHourlyWage(Number(e.target.value))}
+              className="w-full p-2 border rounded"
+              min={10000}
+            />
           </div>
+
+{/* ✅ "이전" 버튼을 위쪽으로 배치 */}
+<Btn 
+  text="이전"
+  color="white"
+  onClick={() => setStep(1)}
+  
+/>
+
+{/* ✅ "구직 조건 등록하기" 버튼 */}
+<Btn 
+  text="구직 조건 등록하기"
+  color="green"
+  onClick={handleSubmit}
+/>
+
+
         </>
       )}
-
-      {/* 버튼 */}
-      <div className="w-full max-w-xs sm:max-w-sm flex flex-col gap-4 mt-auto">
-        <Btn text="이전" color="white" onClick={handlePrev} />
-        <Btn text={step === 1 ? "다음" : "근무 조건 등록 완료"} color="green" onClick={handleNext} />
-      </div>
     </div>
   );
-};
-
-export default SignupStep3;
+}
