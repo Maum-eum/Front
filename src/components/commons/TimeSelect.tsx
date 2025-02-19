@@ -11,16 +11,17 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
   const [selectedStartTime, setSelectedStartTime] = useState<number | undefined>(undefined);
   const [selectedEndTime, setSelectedEndTime] = useState<number | undefined>(undefined);
 
-  // ✅ 기존 데이터가 있을 경우, 초기화
   useEffect(() => {
     if (initialTimeData) {
       console.log("🟢 기존 데이터 적용:", initialTimeData);
+      console.log("🔍 기존 데이터 dayOfWeek:", initialTimeData.dayofweek);
       setSelectedDayOfWeek(convertBinaryToDayArray(initialTimeData.dayofweek));
       setSelectedStartTime(reverseTimeMapping(initialTimeData.starttime));
       setSelectedEndTime(reverseTimeMapping(initialTimeData.endtime));
     }
   }, [initialTimeData]);
-
+  
+  
   // ✅ 요일을 한글로 변환
   const convertBinaryToDayArray = (binaryString: string): string[] => {
     const days = ["월", "화", "수", "목", "금", "토", "일"];
@@ -70,7 +71,6 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
     15: 30, 15.5: 31, 16: 32, 16.5: 33, 17: 34, 17.5: 35,
     18: 36, 18.5: 37, 19: 38, 19.5: 39, 20: 40, 20.5: 41, 21: 42,
   };
-
   useEffect(() => {
     if (selectedDayOfWeek.length > 0 && selectedStartTime !== undefined && selectedEndTime !== undefined) {
       setTimeData([
@@ -82,7 +82,7 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
       ]);
     }
   }, [selectedDayOfWeek, selectedStartTime, selectedEndTime]);
-
+  
   return (
     <div className="p-4 w-full max-w-3xl mx-auto">
       <h3 className="text-lg font-gtr-B mb-3 text-center">요일 - 시간 선택</h3>
