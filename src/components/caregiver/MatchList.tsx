@@ -16,6 +16,7 @@ const MatchList: React.FC<MatchListProps> = ({ matches, onClick, onRefresh }) =>
       {matches && matches.length > 0 ? (
         <>
           <label className="text-item font-bold mb-3">진행 중인 서비스가 있어요</label>
+          <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
               {matches.map((match) => (

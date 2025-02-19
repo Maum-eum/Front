@@ -116,7 +116,7 @@ const RequestDetails = () => {
         <h1 className="w-full text-center text-[20px] sm:text-3xl font-bold mb-6">
           <span className="text-black">[</span>
           <span className="text-red">{"센터으에에이름이에요"}</span>
-          <span className="text-black">]</span>
+          <span className="text-black">] </span>
           <br className="sm:hidden"></br>
           <span className="text-black">센터의 근무 요청</span>
         </h1>
