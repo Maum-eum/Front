@@ -39,6 +39,7 @@ const AdminSignUp: React.FC = () => {
       },
       (err) => {
         console.log(err.response?.data)
+        alert(`${err.response?.data.message}`)
       }
     )
   };
