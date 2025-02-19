@@ -14,20 +14,19 @@ type CheckListProps = {
   name: string;
   options: option[];
   onChange?: (selected: option) => void;
+  isPreOpen? :boolean;
 };
 
 
-const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
+const CheckList: React.FC<CheckListProps> = ({ name, options, onChange, isPreOpen = false }) => {
   
   const [selected, setSelected] = useState<option[]>(options)
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isPreOpen || false);
 
   const toggleSelect = (opt: option) => {
     const newSelected = selected.map((item) => {
 
       if(item.name === opt.name) {
-
-        console.log(item.name, opt.name, item.value)
         item.value = !item.value;
       }
       return item
@@ -67,7 +66,7 @@ const CheckList: React.FC<CheckListProps> = ({ name, options, onChange }) => {
                 <span className="ml-1  flex-1">{item.label}</span>
                 <span
                   className={clsx(
-                    "p-2 text-xs rounded-md w-12 text-center",
+                    "p-1 text-xs rounded-md w-12 text-center",
                     {
                       "bg-green"  : status ,
                       "bg-red"    : !status,

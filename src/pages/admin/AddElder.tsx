@@ -187,7 +187,7 @@ const AddElder: React.FC = () => {
 
         {/* 몸무게, 장애등급, 동거인여부 */}
         {step === 2 && (
-          <div className="w-full h-dvh p-4 flex flex-col items-center min-h-screen bg-base-white px-4 sm:px-6 py-8">
+          <div className="w-full p-4 flex flex-col items-center h-screen bg-base-white px-4 sm:px-6 py-8">
             {/* 타이틀 */}
             <h1 className="text-title sm:text-3xl font-bold text-black mb-6 font-gtr-B">어르신 세부 정보 등록</h1> 
 

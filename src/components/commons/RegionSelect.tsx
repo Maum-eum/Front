@@ -23,7 +23,7 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 					setSido(response.data);
 				}
 			} catch (error) {
-				console.error('Error get Sido Data');
+				console.log(error);
 			}
 		}
 		fetchSido();
@@ -154,5 +154,3 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 		</div>
 	);
 };
-
-

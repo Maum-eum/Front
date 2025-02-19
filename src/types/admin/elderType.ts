@@ -23,11 +23,13 @@ export interface ServiceOption {
 }
 
 export interface elderService {
-  // 방문요양, 요양원, 입주요양, 병원, 방문목욕, 병원동행, 주야간보호
-  careTypes: string[];
+  address:                   string;
+  recruitConditionId:        number;
+  elderId:                   number;
+  careTypes:                 string[];
 
   // 지역
-  location_id:              number;
+  recruitLocation :           number;
 
   selfFeeding:               boolean; //스스로식사가능
   mealPreparation:           boolean; //식사준비
@@ -57,12 +59,17 @@ export interface elderService {
 
   desiredHourlyWage:         number;  //희망 시급
   flexibleSchedule:          boolean; //유연한 일정 가능
+
+
+  recruitTimes: ServiceTime[];        // 요일별 모집 시간
+
+  detailRequiredService:     string;  // 세부 요구 서비스 설명
 }
 
 export interface ServiceTime {
   dayOfWeek: string;
-  startTime: string;
-  endTime:   string;
+  startTime: number;
+  endTime:   number;
 }
 
 export interface AddElderParams {
@@ -80,9 +87,70 @@ export interface AddElderServiceParams {
   data: elderService;
 }
 
-
 export interface AddElderResponse {
   elderId : number;
   name    : string;
   gender  : number;
+}
+
+export interface RecommendedCareGiver {
+	jobConditionId : number;
+	score : number;
+	imgUrl : string;
+	caregiverName : string;
+	matchStatus : string;
+}
+
+export interface RecommendedList {
+  list: RecommendedCareGiver[]
+}
+
+export interface MatchInfo {
+  matchId: number;
+  careGiverInfoDto: {
+    useranme: string;
+    img: string;
+    careGiverId: number;
+  },
+  elderInfoDto: {
+    name: string;
+    imgUrl: string;
+    elderId: number;
+  },
+  status: string,
+  requirementCondition: elderService,
+  jobCondition: {
+    jobConditionId: number,
+    flexibleSchedule: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    desiredHourlyWage: number;
+    selfFeeding: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    mealPreparation: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    cookingAssistance: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    enteralNutritionSupport: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    selfToileting: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    occasionalToiletingAssist: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    diaperCare: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    catheterOrStomaCare: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    independentMobility: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    mobilityAssist: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    wheelchairAssist: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    immobile: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    cleaningLaundryAssist: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    bathingAssist: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    hospitalAccompaniment: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    exerciseSupport: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    emotionalSupport: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    cognitiveStimulation: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
+    dayOfWeek: string; // "1001010" 형식 (월~일 순서)
+    startTime: number;
+    endTime: number;
+    locationResponseDTOList: [
+      {
+        workLocationId: 0,
+        locationName: "string"
+      }
+    ]
+  },
+  deletedAt: string,
+  version: number
 }

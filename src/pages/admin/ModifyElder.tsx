@@ -168,19 +168,17 @@ const ModifyElder: React.FC = () => {
       return;
     }
     const form = setIsTemp(false)
-    for (const [key, value] of form.entries()) {
-      console.log(key, value);
-     };
+
     await modifyElder(
       {
         centerId: centerId,
         elderId: parseInt(elderId),
         data: form
       },
-      (res) => {
+      () => {
         if(temp === "temp") {
           alert('등록 되었습니다.')
-          navigate(`/admin/elder/required/${res.data.data.elderId}`)
+          navigate(`/admin/elder/required/${elderId}`)
         } else {
           alert('수정 되었습니다.')
           navigate("/admin/main")
