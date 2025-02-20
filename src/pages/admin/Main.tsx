@@ -26,7 +26,7 @@ const Main: React.FC = () => {
       '대기',
     ],
     datasets: [{
-      data: [40, 300, 50, 100],
+      data: [0.50, 0.32, 0.1, 0.08],
       backgroundColor: [
         "#90FF86",
         "#FFE695",
@@ -56,7 +56,7 @@ const Main: React.FC = () => {
           label: function (context) {
             const labels = [ "수락", "조율", "거절", "대기",]; 
             const value = context.raw;
-            return `${labels[context.dataIndex]}: ${value}`;
+            return `${labels[context.dataIndex]}: ${typeof value === "number" ? value * 100 + '%' : value}`;
           },
         },
       },
@@ -132,23 +132,39 @@ const Main: React.FC = () => {
       <div className="grid grid-cols-2 gap-4 w-full flex-1 overflow-hidden">
 
         <div className="grid grid-rows-2 gap-4 h-[calc(100vh-130px)] overflow-hidden">
-
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-center items-center">
-              <h2 className="text-lg font-bold">영역 1</h2>
-              <p className="text-gray-500">내용 추가 가능</p>
+            {/* 첫 번째 컬럼 */}
+            <div className="flex flex-col justify-center items-center w-full">
+              <div className="relative flex-1 flex flex-col justify-center items-center bg-white shadow rounded-lg p-4 w-full pt-12">
+                <h2 className="absolute top-0 text-lg font-bold p-4">센터 어르신 수</h2>
+                <p className="text-xl font-semibold text-gray-700">{elderList.length} 명</p>
+              </div>
+              <div className="relative flex-1 flex flex-col justify-center items-center bg-white shadow rounded-lg p-4 w-full mt-4 pt-12">
+                <h2 className="absolute top-0 text-lg font-bold p-4">센터 직원 수</h2>
+                <p className="text-xl font-semibold text-gray-700">12 명</p>
+              </div>
             </div>
-            <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-center items-center">
-              <h2 className="text-content font-bold m-2">통계 데이터</h2>
-              <div className="w-full h-full flex items-center justify-center">
-                <Doughnut options={options} data={data} />
+
+            {/* 두 번째 컬럼 */}
+            <div className="flex flex-col justify-center items-center w-full">
+              <div className="relative flex-1 flex flex-col justify-center items-center bg-white shadow rounded-lg p-4 w-full pt-12">
+                <h2 className="absolute top-0 text-lg font-bold p-4">진행 중인 매칭</h2>
+                <p className="text-xl font-semibold text-gray-700">4 건</p>
+              </div>
+              <div className="relative flex-1 flex flex-col justify-center items-center bg-white shadow rounded-lg p-4 w-full mt-4 pt-12">
+                <h2 className="absolute top-0 text-lg font-bold p-4">완료된 매칭</h2>
+                <p className="text-xl font-semibold text-gray-700">25 건</p>
               </div>
             </div>
           </div>
 
+
           {/* ✅ 하단 - 차트 공간 (절반 높이) */}
           <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-center items-center">
-
+            <h2 className="text-content font-bold m-2">센터 누적 매칭 현황 비율</h2>
+            <div className="w-full h-full flex items-center justify-center">
+              <Doughnut options={options} data={data} />
+            </div>
           </div>
         </div>
 
