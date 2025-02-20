@@ -36,14 +36,6 @@ const attributes: { value: keyof elderInfo; label: string }[]  = [
   { value: "hasAggressiveBehavior", label: "공격적 행동" },
 ];
 
-const dummy =  {
-	jobConditionId : 1,
-	score : 57,
-	imgUrl : "",
-	caregiverName : "string",
-	matchStatus : "string"
-}
-
 
 const DetailElder: React.FC = () => {
   const { centerId } = useAdminStore();
@@ -346,7 +338,7 @@ const DetailElder: React.FC = () => {
                 </button>
               </div>
               <div className="flex-1 overflow-auto">
-                <CaregiverList  data={[dummy]} recruitId={conditionId}/>
+                <CaregiverList  data={caregiverList} recruitId={conditionId}/>
               </div>
             </div>
           </div>
