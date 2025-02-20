@@ -15,14 +15,6 @@ import DetailElder from "./pages/admin/DetailElder";
 import ModifyElder from "./pages/admin/ModifyElder";
 import AddServiceElder from "./pages/admin/AddServiceElder";
 
-import RecruitRegistration from './pages/admin/RecruitRegistration';
-import RecruitModify from './pages/admin/RecruitModify';
-import RecommendedCaregiverList from './pages/admin/RecommendedCaregiverList';
-import RecommendedCaregiverInfo from './pages/admin/RecommendedCaregiverInfo';
-import NegotiationInfo from './pages/admin/NegotiationInfo';
-import OngoingServiceInfo from './pages/admin/OngoingServiceInfo';
-
-import ApiTest from './pages/admin/ApiTest';
 
 //유저회원가입
 import SignupTest from "./pages/caregiver/SignupTest";
@@ -70,13 +62,6 @@ export default function Router() {
       <Route path="/admin/elder/modify/:elderId/:temp" element={<ProtectedRoute element={<ModifyElder />} allowedRoles={["admin"]} />} />
       <Route path="/admin/elder/required/:elderId/" element={<ProtectedRoute element={<AddServiceElder />} allowedRoles={["admin"]} />} />
 
-      <Route path="/admin/recruit" element={<ProtectedRoute element={<RecruitRegistration />} allowedRoles={["admin"]} />} />
-      <Route path="/admin/:elderId/recruit-modify" element={<ProtectedRoute element={<RecruitModify />} allowedRoles={["admin"]} />} />
-      <Route path="/admin/:elderId/recommended" element={<ProtectedRoute element={<RecommendedCaregiverList />} allowedRoles={["admin"]} />} />
-      <Route path="/admin/:elderId/recommended/:caregiverId" element={<ProtectedRoute element={<RecommendedCaregiverInfo />} allowedRoles={["admin"]} />} />
-      <Route path="/admin/negotiation/:matchId" element={<ProtectedRoute element={<NegotiationInfo />} allowedRoles={["admin"]} />} />
-      <Route path="/admin/ongoing/:matchId" element={<ProtectedRoute element={<OngoingServiceInfo />} allowedRoles={["admin"]} />} />
-
       {/*요양보호사 전용*/}
       <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
       <Route path="/caregiver/signup" element={<SignupTest />} />
@@ -91,9 +76,6 @@ export default function Router() {
       <Route path="/caregiver/main" element={<ProtectedRoute element={<CaregiverMain />} allowedRoles={["caregiver"]} />} />
       <Route path="/caregiver/request/details/:recruitConditionId" element={<ProtectedRoute element={<RequestDetails />} allowedRoles={["caregiver"]} />} />
       <Route path="/caregiver/match" element={<ProtectedRoute element={<MatchSchedules />} allowedRoles={["caregiver"]} />} />
-
-      {/*테스트 페이지 */}
-      <Route path="/test" element={<ProtectedRoute element={<ApiTest />} allowedRoles={["admin", "caregiver"]} />} />
     </Routes>
   );
 }
