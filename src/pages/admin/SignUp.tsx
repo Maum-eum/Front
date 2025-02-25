@@ -18,7 +18,7 @@ const AdminSignUp: React.FC = () => {
     username: "",
     password: "",
     centerName: "",
-    centerCertification: "",
+    centerCertification: "ruxdp",
   });
 
   const signUpdataChange = (e: React.ChangeEvent<HTMLInputElement>) => {

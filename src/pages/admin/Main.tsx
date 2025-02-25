@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useAdminStore } from "../../stores/admin/adminStore";
+import { useUserStore } from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import ElderList from "../../components/admin/ElderList";
 import MatchingList from "../../components/admin/MatchingList"; // 나중에 추가할 리스트
@@ -13,7 +14,8 @@ Chart.register(ArcElement,Tooltip, Legend);
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
-  const { centerName, name, centerId, logout } = useAdminStore();
+  const { userLogout } = useUserStore();
+  const { centerName, name, centerId, adminLogout } = useAdminStore();
   const [ elderList, setElderList ] = useState<elderInfo[]>([]);
   const [ matchList, setMatchList ] = useState<MatchInfo[]>([]);
 
@@ -93,7 +95,8 @@ const Main: React.FC = () => {
   }, [centerId]);
 
   const handleLogOut = async () => {
-    logout();
+    userLogout();
+    adminLogout();
     navigate("/");
   };
 

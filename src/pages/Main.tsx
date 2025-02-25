@@ -3,6 +3,7 @@ import Input from "../components/commons/Input";
 import Btn from "../components/commons/Btn";
 import { useNavigate } from "react-router-dom";
 import { Login } from "../api/commons/User";
+import { useUserStore } from "../stores/userStore";
 import { useAdminStore } from "../stores/admin/adminStore";
 import { useCaregiverStore } from "../stores/caregiver/caregiverStore";
 import PoongImage from "../assets/image/logo.png";
@@ -10,6 +11,7 @@ import PoongImage from "../assets/image/logo.png";
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
+  const { setAccessToken, setUserInfo } = useUserStore();
   const { setAdminInfo } = useAdminStore();
   const { setCaregiverInfo } = useCaregiverStore();
   const registerSectionRef = useRef<HTMLDivElement>(null);
@@ -34,17 +36,13 @@ const Main: React.FC = () => {
         const role = res.data.data.role;
         const token = res.headers.authorization;
 
-        if (token) {
-          localStorage.setItem("token", token);
-          console.log("✅ 로그인 성공! 토큰 저장 완료:", token);
-        } else {
-          console.error("🚨 로그인 성공했지만 토큰이 없습니다.");
-          return;
-        }
+        //  2025-02-25 박병조 수정 공용스토어에 저장으로 변경
+        setAccessToken(token)
+        setUserInfo(userId, role);
 
         if (role === "ROLE_ADMIN") {
           const { centerId, centerName, name } = res.data.data;
-          setAdminInfo(token, userId, role, name, centerId, centerName);
+          setAdminInfo(name, centerId, centerName);
           navigate("/admin/main");
         } else if (role === "ROLE_CAREGIVER") {
           setCaregiverInfo(userId, token);
