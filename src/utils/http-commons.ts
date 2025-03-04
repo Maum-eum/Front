@@ -6,7 +6,6 @@ const BASE_URL = "https://api.gyeotae.site";
 export const noneApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   },
 });
@@ -21,6 +20,7 @@ export const publicApi: AxiosInstance = axios.create({
 export const privateApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "application/json",
   },
 });
@@ -28,13 +28,14 @@ export const privateApi: AxiosInstance = axios.create({
 export const formDataApi: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
+    "Access-Control-Allow-Origin": "*",
     "Content-Type": "multipart/form-data",
   },
 });
 
 privateApi.interceptors.request.use(
   (config) => {
-    const stored = localStorage.getItem("ADMIN_STORE");
+    const stored = localStorage.getItem("USER_STORE");
     if (stored) {
       const obj = JSON.parse(stored);
       if (obj.state.accessToken !== "") {
@@ -58,7 +59,7 @@ privateApi.interceptors.request.use(
 
 formDataApi.interceptors.request.use(
   (config) => {
-    const stored = localStorage.getItem("ADMIN_STORE");
+    const stored = localStorage.getItem("USER_STORE");
     if (stored) {
       const obj = JSON.parse(stored);
       if (obj.state.accessToken !== "") {

@@ -96,7 +96,7 @@ const DetailElder: React.FC = () => {
       },
       ()=> {
         alert('정상적으로 삭제되었습니다.')
-        navigate(-1)
+        navigate('/admin/main')
       },
       (err) => {
         console.log(err)

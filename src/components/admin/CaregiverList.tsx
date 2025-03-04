@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RecommendedCareGiver } from "../../types/admin/elderType";
 import CaregiverInfoModal from "./CaregiverInfoModal"; // 모달 임포트
+import { createRequest } from "../../api/admin/service";
 
 type CaregiverListProps = {
   data: RecommendedCareGiver[];
@@ -20,9 +21,27 @@ const CaregiverList: React.FC<CaregiverListProps> = ({ data = [], recruitId }) =
 
   // 🔹 요청 전송 핸들러 (추후 API 연동 가능)
   const handleRequest = () => {
-    console.log("요청 전송:", selectedCaregiver, "Recruit ID:", recruitId);
+    if(selectedCaregiver){
+      console.log(selectedCaregiver.jobConditionId, recruitId)
+      clickCreateRequestEvent(selectedCaregiver.jobConditionId, recruitId)
+    }
     setIsModalOpen(false); // 요청 후 모달 닫기
   };
+
+  const clickCreateRequestEvent = async(jobConditionId: number, recruitId: number) => {
+    await createRequest(
+      {
+        jobId: jobConditionId,
+        recruitId: recruitId
+      },
+      (res) => {
+        console.log(res)
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
 
   return (
     <div className="w-full flex flex-col p-1 rounded-lg font-gtr-B h-full">

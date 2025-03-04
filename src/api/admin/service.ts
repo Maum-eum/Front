@@ -5,6 +5,7 @@ import { MatchInfo } from '../../types/admin/elderType';
 
 import { AddElderServiceParams, elderService,  RecommendedList } from '../../types/admin/elderType';
 
+// 구인 조건 등록
 export const addElderService = async (
   params: AddElderServiceParams,
   Response: (Response: AxiosResponse<ApiResponseDefault<elderService>>) => void,
@@ -13,6 +14,7 @@ export const addElderService = async (
   await privateApi.post(`/admin/${params.centerId}/recruit/${params.elderId}`, params.data).then(Response).catch(Error);
 };
 
+// 구인 조건 조회
 export const getRecruitList = async (
   params: {
     centerId: number;
@@ -24,6 +26,7 @@ export const getRecruitList = async (
   await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}`).then(Response).catch(Error);
 };
 
+// 조건에 따른 요양보호사 리스트 조회
 export const getCaregiverList = async (
   params: {
     recruitId: number;
@@ -34,15 +37,17 @@ export const getCaregiverList = async (
   await privateApi.get(`/match/recommends/${params.recruitId}`).then(Response).catch(Error);
 };
 
+
+// 요청 생성
 export const createRequest = async (
   params: {
     jobId: number,
     recruitId: number;
   },
-  Response: (Response: AxiosResponse<ApiResponseDefault<RecommendedList>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<null>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.post(`/recommends/${params.jobId}/${params.recruitId}`).then(Response).catch(Error);
+  await privateApi.post(`/match/recommends/${params.jobId}/${params.recruitId}`).then(Response).catch(Error);
 };
 
 export const getMatchingList = async (
