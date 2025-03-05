@@ -63,7 +63,6 @@ const ElderList: React.FC<ElderListProps> = ({ data = [] }) => {
             + 등록
           </button>
         </div>
-
         <div className="flex gap-2 mt-2">
           <input
             type="text"
