@@ -65,7 +65,7 @@ const DetailElder: React.FC = () => {
   const getElderInfo = async () => {
     if (!elderId) {
       alert("잘못된 접근입니다.");
-      navigate(-1);
+      navigate('/admin/main');
       return;
     }
 
@@ -86,7 +86,7 @@ const DetailElder: React.FC = () => {
   const deleteElderInfo = async () => {
     if (!elderId) {
       alert("잘못된 접근입니다.");
-      navigate(-1);
+      navigate('/admin/main');
       return;
     }
     await deleteElder(

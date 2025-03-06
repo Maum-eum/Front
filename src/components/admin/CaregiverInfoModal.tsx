@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Btn from "../commons/Btn";
 import { RecommendedCareGiver } from "../../types/admin/elderType";
+import { getPrevMatchInfo } from "../../api/admin/service";
 
 interface CareGiverModalProps {
-  recruitId: number,
+  recruitId: number;
   isOpen: boolean;
   onClose: () => void;
   caregiver: RecommendedCareGiver | null;
-  onRequest: () => void; // 요청 전송 핸들러 추가
+  onRequest: () => void;
 }
 
-const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ isOpen, onClose, caregiver, onRequest }) => {
-  if (!isOpen || !caregiver) return null;
+const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, onClose, caregiver, onRequest }) => {
   
+  const getPrevMatch = async () => {
+    if (!caregiver) return; // caregiver가 null이면 실행 X
+
+    await getPrevMatchInfo(
+      {
+        jobId: caregiver.jobConditionId,
+        recruitId: recruitId
+      },
+      (res) => {
+        console.log("이전 매칭 정보:", res);
+      },
+      (err) => {
+        console.error("이전 매칭 정보 가져오기 실패:", err);
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (caregiver) {
+      getPrevMatch();
+    }
+  }, [caregiver, recruitId]); // caregiver가 변경될 때마다 실행
+
+  if (!isOpen || !caregiver) return null;
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">

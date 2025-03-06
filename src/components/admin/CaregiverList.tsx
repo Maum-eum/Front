@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RecommendedCareGiver } from "../../types/admin/elderType";
 import CaregiverInfoModal from "./CaregiverInfoModal"; // 모달 임포트
-import { createRequest } from "../../api/admin/service";
+import { createMatch } from "../../api/admin/service";
 
 type CaregiverListProps = {
   data: RecommendedCareGiver[];
@@ -47,7 +47,7 @@ const CaregiverList: React.FC<CaregiverListProps> = ({ data = [], recruitId }) =
   };
 
   const clickCreateRequestEvent = async(jobConditionId: number, recruitId: number) => {
-    await createRequest(
+    await createMatch(
       {
         jobId: jobConditionId,
         recruitId: recruitId
