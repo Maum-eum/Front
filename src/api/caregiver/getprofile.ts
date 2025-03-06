@@ -1,8 +1,9 @@
 import axios from "axios";
+import { useUserStore } from "../../stores/userStore"; // ✅ zustand 스토어 import
 
 export const getCaregiverProfile = async () => {
     try {
-        const token = localStorage.getItem("token");
+        const token = useUserStore.getState().accessToken; // ✅ zustand에서 토큰 가져오기
 
         if (!token) {
             console.error("🚨 토큰이 없습니다. 로그인을 먼저 해주세요.");
@@ -24,9 +25,7 @@ export const getCaregiverProfile = async () => {
 
         console.log("✅ 요양보호사 정보 조회 성공:", response.data);
         
-        // ✅ 최신 프로필 데이터를 로컬 스토리지에도 저장 (자동 로그인 시 반영)
-        localStorage.setItem("caregiverProfile", JSON.stringify(response.data.data));
-
+        // ✅ 최신 프로필 데이터를 `localStorage`가 아닌 zustand에 저장 가능 (선택 사항)
         return response.data.data;
     } catch (error: any) {
         console.error("🚨 요양보호사 정보 조회 실패:", error.response?.data || error.message);
