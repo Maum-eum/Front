@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobCondition, updateJobCondition } from "../../api/caregiver/jobcondition";
+import { getJobCondition, updateJobCondition } from "../../api/caregiver/jobCondition";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
