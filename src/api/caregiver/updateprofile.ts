@@ -1,21 +1,18 @@
 import axios from "axios";
-
+import { useUserStore } from "../../stores/userStore";
 const API_BASE_URL = "https://api.gyeotae.site"; // ✅ 배포 서버 주소
+
 
 export const updateCaregiverProfile = async (params: any) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = useUserStore.getState().accessToken; // ✅ zustand에서 토큰 가져오기
 
     if (!token) {
       console.error("🚨 토큰이 없습니다. 로그인을 먼저 해주세요.");
       return null;
     }
 
-    const formattedToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
-
-    // ✅ FormData 생성
     const formData = new FormData();
-
     formData.append("data", JSON.stringify({
       username: params.username,
       contact: params.contact,
@@ -34,7 +31,7 @@ export const updateCaregiverProfile = async (params: any) => {
 
     const response = await axios.put(`${API_BASE_URL}/caregiver/profile`, formData, {
       headers: {
-        Authorization: formattedToken,
+        Authorization: token, // ✅ 수정: `useUserStore`에서 가져온 토큰을 사용
         "Content-Type": "multipart/form-data",
       },
     });
