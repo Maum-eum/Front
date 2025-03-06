@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobCondition } from "../../api/caregiver/jobcondition";
+import { getJobCondition } from "../../api/caregiver/jobCondition";
 import Btn from "../../components/commons/Btn";
 
 // ✅ 요일 이진 문자열 → 요일 리스트 변환 함수
