@@ -10,17 +10,73 @@ import { changeStatus, getCaregiverInfo } from "../../api/caregiver/caregiver";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 import { getRequests } from "../../api/caregiver/caregiverRequest";
 import { CaregiverInfoResponse } from "../../types/caregiver/caregiverType";
-import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
+import { useSignupStore } from "../../stores/caregiver/useSignupStore";
+import { useUserStore } from "../../stores/userStore";
+import { MatchStatus } from "../../types/caregiver/stringType";
 
 const Main = () => {
   const navigate = useNavigate();
 
   /* 요양보호사 정보 store */
-  const store = useCaregiverStore();
-
+  const caregiverStore = useSignupStore();
+  const userStore = useUserStore();
   const [caregiverInfo, setCaregiverInfo] = useState<CaregiverInfoResponse>();
-  const [requests, setRequests] = useState<WorkRequest[]>();
-  const [tuneRequests, setTuneRequests] = useState<WorkRequest[]>();
+  const [requests, setRequests] = useState<WorkRequest[]>([
+    {
+      recruitConditionId: 1,
+      elderId: 1,
+      centerId: 1,
+      centerName: "한마음",
+      imgUrl: null,
+      desiredHourlyWage: 40000,
+      rate: "NORATE",
+      age: 11,
+      sexual: "FEMALE",
+      careTypes: ["방문요양", "방문목욕", "입주요양"],
+      matchStatus: "NONE",
+    },
+    {
+      recruitConditionId: 1,
+      elderId: 1,
+      centerId: 1,
+      centerName: "한마음",
+      imgUrl: null,
+      desiredHourlyWage: 40000,
+      rate: "RATE1",
+      age: 11,
+      sexual: "FEMALE",
+      careTypes: ["방문요양", "방문목욕", "입주요양"],
+      matchStatus: "NONE",
+    },
+  ]);
+  const [tuneRequests, setTuneRequests] = useState<WorkRequest[]>([
+    {
+      recruitConditionId: 1,
+      elderId: 1,
+      centerId: 1,
+      centerName: "한마음",
+      imgUrl: null,
+      desiredHourlyWage: 40000,
+      rate: "NORATE",
+      age: 11,
+      sexual: "FEMALE",
+      careTypes: ["방문요양", "방문목욕", "입주요양"],
+      matchStatus: "TUNING",
+    },
+    {
+      recruitConditionId: 1,
+      elderId: 1,
+      centerId: 1,
+      centerName: "한마음",
+      imgUrl: null,
+      desiredHourlyWage: 40000,
+      rate: "RATE1",
+      age: 11,
+      sexual: "FEMALE",
+      careTypes: ["방문요양", "방문목욕", "입주요양"],
+      matchStatus: "TUNING",
+    },
+  ]);
 
   /* 모달 */
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
@@ -33,7 +89,7 @@ const Main = () => {
       if (response) {
         console.log("요양보호사 정보 조회 성공:", response);
         setCaregiverInfo(response);
-        store.setUserInfo(response.username, response.img);
+        caregiverStore.setSignupData({ username: response.username });
       }
     } catch (error) {
       console.log("요양보호사 정보 조회 실패:", error);
@@ -75,10 +131,10 @@ const Main = () => {
       if (response) {
         console.log("근무 요청 리스트 조회 성공:", response);
         if (response.list != null) {
-          setRequests((response.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE"));
-          setTuneRequests(
-            (response.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
-          );
+          // setRequests((response.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE"));
+          // setTuneRequests(
+          //   (response.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
+          // );
         }
       }
     } catch (error) {
@@ -89,13 +145,19 @@ const Main = () => {
   };
 
   /* 요양보호사 근무 요청 NONE/TUNING 상세 보기 */
-  const handleClickRequest = (recruitConditionId: number, centerId: number, elderId: number) => {
+  const handleClickRequest = (
+    recruitConditionId: number,
+    centerId: number,
+    elderId: number,
+    matchStatus: MatchStatus
+  ) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
+    navigate(`/caregiver/match/${matchStatus}/${recruitConditionId}/${centerId}/${elderId}`);
   };
 
+  /* 로그아웃 */
   const handleLogOut = async () => {
-    store.logout();
+    userStore.userLogout();
     navigate("/");
   };
 
@@ -135,8 +197,12 @@ const Main = () => {
               onClick={handleChangeStatus}
             />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn label="정보 변경" color="white" attribute="button" onClick={() => navigate("/caregiver/edit/profile")} />
-
+            <BasicBtn
+              label="정보 변경"
+              color="white"
+              attribute="button"
+              onClick={() => navigate("/caregiver/edit/profile")}
+            />
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}

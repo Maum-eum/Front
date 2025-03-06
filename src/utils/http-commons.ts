@@ -34,15 +34,7 @@ export const formDataApi: AxiosInstance = axios.create({
 
 privateApi.interceptors.request.use(
   (config) => {
-    const stored = localStorage.getItem("ADMIN_STORE");
-    if (stored) {
-      const obj = JSON.parse(stored);
-      if (obj.state.accessToken !== "") {
-        config.headers["authorization"] = obj.state.accessToken;
-        return config;
-      }
-    }
-    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    const stored2 = localStorage.getItem("USER_STORE");
     if (stored2) {
       const obj = JSON.parse(stored2);
       if (obj.state.accessToken !== "") {
@@ -58,15 +50,7 @@ privateApi.interceptors.request.use(
 
 formDataApi.interceptors.request.use(
   (config) => {
-    const stored = localStorage.getItem("ADMIN_STORE");
-    if (stored) {
-      const obj = JSON.parse(stored);
-      if (obj.state.accessToken !== "") {
-        config.headers["authorization"] = obj.state.accessToken;
-        return config;
-      }
-    }
-    const stored2 = localStorage.getItem("CAREGIVER_STORE");
+    const stored2 = localStorage.getItem("USER_STORE");
     if (stored2) {
       const obj = JSON.parse(stored2);
       if (obj.state.accessToken !== "") {

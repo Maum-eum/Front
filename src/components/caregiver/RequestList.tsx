@@ -2,11 +2,17 @@ import EmptyImg from "../../assets/image/empty.png";
 import CaregiverRequestCard from "../../components/caregiver/RequestCard";
 import ScrollListBox from "../../components/commons/ScrollListBox";
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
+import { MatchStatus } from "../../types/caregiver/stringType";
 
 type RequestListProps = {
   requests: WorkRequest[];
   tuneRequests: WorkRequest[];
-  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
+  onClick: (
+    recruitConditionId: number,
+    centerId: number,
+    elderId: number,
+    matchStatus: MatchStatus
+  ) => void;
   onRefresh: () => void;
 };
 
@@ -21,7 +27,7 @@ const RequestList: React.FC<RequestListProps> = ({
       {/* 근무 요청 알림 */}
       {requests && requests.length > 0 && (
         <>
-          <label className="text-item font-bold mb-10">근무 요청이 있어요</label>
+          <label className="text-item font-bold mb-3">근무 요청이 있어요</label>
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">

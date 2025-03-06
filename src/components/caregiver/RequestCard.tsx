@@ -1,10 +1,16 @@
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
+import { MatchStatus } from "../../types/caregiver/stringType";
 import AttributeCard from "./AttributeCard";
 import BasicBtn from "./BasicBtn";
 
 type CaregiverRequestCardProps = {
   request: WorkRequest;
-  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
+  onClick: (
+    recruitConditionId: number,
+    centerId: number,
+    elderId: number,
+    matchStatus: MatchStatus
+  ) => void;
 };
 
 const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, onClick }) => {
@@ -33,7 +39,7 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
           `${request.desiredHourlyWage}원`,
           `${request.age}세`,
           `${request.sexual == "FEMALE" ? "여" : "남"}`,
-          `${request.rate.charAt(4)}급`,
+          `${request.rate == "NORATE" ? "등급 없음" : request.rate.charAt(4) + "급"}`,
           ...request.careTypes,
         ]}
       />
@@ -41,7 +47,14 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
         label="상세 정보 보기"
         color="green"
         attribute="button"
-        onClick={() => onClick(request.recruitConditionId, request.centerId, request.elderId)}
+        onClick={() =>
+          onClick(
+            request.recruitConditionId,
+            request.centerId,
+            request.elderId,
+            request.matchStatus
+          )
+        }
       />
     </div>
   );
