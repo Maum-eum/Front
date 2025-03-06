@@ -7,8 +7,10 @@ import Input from "../../components/commons/Input";
 import CareerModal from "../../components/caregiver/CareerModal";
 import CertificationModal from "../../components/caregiver/CertificationModal";
 import { signUpCaregiver } from "../../api/caregiver/auth";
-import axios, { AxiosError } from "axios"; 
-import { Login } from "../../api/commons/User";  // ✅ Login API 가져오기
+import axios from "axios"; 
+import { Login } from "../../api/commons/User";  //  Login API 가져오기
+import { useUserStore } from "../../stores/userStore";
+
 
 const SignupTest = () => {
   const navigate = useNavigate();
@@ -34,29 +36,37 @@ const SignupTest = () => {
   
       console.log("✅ 회원가입 성공:", response);
   
-      // ✅ 회원가입 성공했는지 체크
       if (response.status === "success") {
         alert("회원가입 성공!");
   
-        // ✅ 2. 회원가입 성공 후 자동 로그인 요청
+        // ✅ 2. 회원가입 성공 후 자동 로그인 요청 (기존 데이터 초기화 후 로그인 진행)
         await Login(
           { username: signupData.username, password: signupData.password },
           (loginResponse) => {
             console.log("✅ 로그인 응답 데이터:", JSON.stringify(loginResponse.data, null, 2));
-            console.log("✅ 로그인 응답 헤더:", loginResponse.headers); // 헤더 확인!
-        
+            console.log("✅ 로그인 응답 헤더:", loginResponse.headers);
+  
+            // ✅ 기존 localStorage 초기화 (이전 계정 정보 제거)
+            localStorage.clear();
+  
             // ✅ Authorization 헤더에서 accessToken 가져오기
             const token = loginResponse.headers.authorization?.split("Bearer ")[1];
-        
+  
             if (!token) {
               alert("로그인 성공했지만, 토큰을 가져올 수 없습니다!");
               return;
             }
-        
-            // ✅ 3. Access Token을 localStorage에 저장
-            localStorage.setItem("accessToken", token);
-        
-            // ✅ 4. 필수 정보 등록 페이지 (SignupStep3)으로 이동
+  
+            // ✅ 3. zustand 스토어에서 사용자 정보 업데이트 (새로운 계정 정보 저장)
+            useUserStore.setState({
+              accessToken: token,
+              userId: loginResponse.data.data.userId,
+              role: loginResponse.data.data.role,
+            });
+  
+            console.log("✅ zustand에 저장된 사용자 정보:", useUserStore.getState());
+  
+            // ✅ 5. 필수 정보 등록 페이지로 이동
             alert("회원가입 성공! 필수 정보 등록으로 이동합니다.");
             navigate("/caregiver/signup/step3");
           },
@@ -66,7 +76,6 @@ const SignupTest = () => {
             navigate("/login");
           }
         );
-        
       } else {
         alert("회원가입 실패! 다시 시도해주세요.");
       }
@@ -79,7 +88,7 @@ const SignupTest = () => {
         console.error("🛑 예상치 못한 에러:", (error as Error).message);
       }
   
-      alert("회원가입 실패 ㅠㅠ");
+      alert("회원가입 실패");
     } finally {
       setLoading(false);
     }
@@ -98,7 +107,7 @@ const SignupTest = () => {
     });
   };
 
-  // ✅ 자격증 추가 함수 (페이지에도 즉시 반영)
+  // ✅ 자격증 추가 함수
   const addCertificate = (newCertificate: { certNum: string; certType: string; certRate: string }) => {
     setSignupData({ certificateRequestDTOList: [newCertificate] }); // ✅ 기존 값 덮어쓰기
   };
