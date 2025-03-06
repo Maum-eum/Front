@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
-import { getCaregiverProfile } from "../../api/caregiver/profile";
+import { getCaregiverProfile } from "../../api/caregiver/getprofile";
 import { updateCaregiverProfile } from "../../api/caregiver/updateprofile"; // ✅ 수정 API 추가
 import CertificationModal from "../../components/caregiver/CertificationModal"; // ✅ 자격증 추가 모달
 import CareerModal from "../../components/caregiver/CareerModal"; // ✅ 경력 추가 모달
