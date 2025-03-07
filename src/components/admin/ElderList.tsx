@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { elderInfo } from "../../types/admin/elderType";
+import { elderInfo } from "../../types/admin/elder";
 import { useNavigate } from "react-router-dom";
 
 type ElderListProps = {

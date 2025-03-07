@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MatchInfo } from "../../types/admin/elderType";
+import { MatchInfo } from "../../types/admin/service";
 import { useNavigate } from "react-router-dom";
 
 type MatchingListProps = {

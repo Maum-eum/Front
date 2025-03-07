@@ -4,10 +4,10 @@ import { useUserStore } from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import ElderList from "../../components/admin/ElderList";
 import MatchingList from "../../components/admin/MatchingList"; // 나중에 추가할 리스트
-import { elderInfo } from "../../types/admin/elderType";
+import { elderInfo } from "../../types/admin/elder";
 import { getElderList } from "../../api/admin/elder";
 import { getMatchingList } from "../../api/admin/service";
-import { MatchInfo } from "../../types/admin/elderType";
+import { MatchInfo } from "../../types/admin/service";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend, ChartOptions  } from "chart.js";
 Chart.register(ArcElement,Tooltip, Legend);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RecommendedCareGiver } from "../../types/admin/elderType";
+import { RecommendedCareGiver } from "../../types/admin/service";
 import CaregiverInfoModal from "./CaregiverInfoModal"; // 모달 임포트
 import { createMatch } from "../../api/admin/service";
 

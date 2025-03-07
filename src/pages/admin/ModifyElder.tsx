@@ -6,7 +6,8 @@ import Input from "../../components/commons/Input";
 import RadioInput from "../../components/admin/RadioInput";
 import CheckList from "../../components/admin/CheckList";
 import { modifyElder, getElderDetail, getTempElderDetail } from "../../api/admin/elder";
-import { elderInfo, ServiceOption } from "../../types/admin/elderType";
+import { elderInfo } from "../../types/admin/elder";
+import { ServiceOption } from "../../types/admin/service";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../stores/admin/adminStore";
 

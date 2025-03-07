@@ -1,5 +1,5 @@
 import React from "react";
-import { elderService } from "../../types/admin/elderType";
+import { elderService } from "../../types/admin/service";
 
 type RecruitListProps = {
   data: elderService[];

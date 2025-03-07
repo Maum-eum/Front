@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { privateApi, formDataApi } from '../../utils/http-commons';
-import { AddElderResponse, AddElderParams, elderInfo, ModifyElderParams } from '../../types/admin/elderType';
+import { AddElderResponse, AddElderParams, elderInfo, ModifyElderParams } from '../../types/admin/elder';
 import { ApiResponseDefault } from '../../types/commons/commons';
 
 // 센터 내 어르신 조회

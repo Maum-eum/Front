@@ -1,9 +1,9 @@
 import { AxiosResponse, AxiosError } from 'axios';
 import { privateApi } from '../../utils/http-commons';
 import { ApiResponseDefault } from '../../types/commons/commons';
-import { MatchInfo } from '../../types/admin/elderType';
+import { MatchInfo } from '../../types/admin/service';
 
-import { AddElderServiceParams, elderService,  RecommendedList } from '../../types/admin/elderType';
+import { AddElderServiceParams, elderService,  RecommendedList } from '../../types/admin/service';
 
 // 구인 조건 등록
 export const addElderService = async (

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Btn from "../commons/Btn";
-import { RecommendedCareGiver } from "../../types/admin/elderType";
+import { RecommendedCareGiver } from "../../types/admin/service";
 import { getPrevMatchInfo } from "../../api/admin/service";
 
 interface CareGiverModalProps {

@@ -1,27 +1,3 @@
-export interface elderInfo {
-  elderId                : number;
-  name                   : string;
-  inmateTypes            : string[];
-  gender                 : number;
-  birth                  : string;
-  rate                   : string;
-  weight                 : number | string;
-  normal                 : boolean;
-  hasShortTermMemoryLoss : boolean;
-  wandersOutside         : boolean;
-  actsLikeChild          : boolean;
-  hasDelusions           : boolean;
-  hasAggressiveBehavior  : boolean;
-  temporarySave          : boolean;
-  img?                   : string;
-}
-
-export interface ServiceOption {
-  label: string;
-  name: string;
-  value: boolean;
-}
-
 export interface elderService {
   address:                   string;
   recruitConditionId:        number;
@@ -72,25 +48,16 @@ export interface ServiceTime {
   endTime:   number;
 }
 
-export interface AddElderParams {
-  centerId: number;
-  data: FormData;
-}
-
-export interface ModifyElderParams extends AddElderParams{
-  elderId: number;
+export interface ServiceOption {
+  label: string;
+  name: string;
+  value: boolean;
 }
 
 export interface AddElderServiceParams {
   centerId: number;
   elderId: number;
   data: elderService;
-}
-
-export interface AddElderResponse {
-  elderId : number;
-  name    : string;
-  gender  : number;
 }
 
 export interface RecommendedCareGiver {
