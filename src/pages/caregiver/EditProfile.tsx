@@ -25,8 +25,8 @@ const EditProfile = () => {
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
   const [selectedCertIndex, setSelectedCertIndex] = useState<number | null>(null);
   const [selectedCareerIndex, setSelectedCareerIndex] = useState<number | null>(null);
-const [previewImage, setPreviewImage] = useState<string | null>(null); // 미리보기 이미지 URL
-const [selectedImage, setSelectedImage] = useState<File | null>(null);
+ const [previewImage, setPreviewImage] = useState<string | null>(null); // 미리보기 이미지 URL
+ const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
 
   // ✅ 기존 데이터 불러오기
@@ -110,7 +110,7 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
     
     const handleUpdateProfile = async () => {
-      const updatedProfile = {
+      const updatedProfile: any = {
         username,
         contact: phone,
         car: hasCar,
@@ -120,25 +120,27 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
         address,
         certificateRequestDTOList: Array.isArray(certifications) ? certifications : [certifications],  
         experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],   
-        profileImg: selectedImage || profileImage,  // ✅ 추가됨!   
+        profileImg: selectedImage ? selectedImage : profileImage, // ✅ 기존 사진 유지
       };
     
       console.log("📌 보내는 데이터 확인:", updatedProfile);
     
-      const response = await updateCaregiverProfile(updatedProfile);
+      try {
+        const response = await updateCaregiverProfile(updatedProfile);
     
-      if (response) {
-        alert("✅ 정보가 성공적으로 수정되었습니다!");
-        navigate("/caregiver/main");
-         // ✅ 최신 프로필 정보 다시 불러오기!
-         // 얘때문에 최신화가 안됏엇다
-         const updatedData = await getCaregiverProfile();
-        setProfileImage(updatedData.img); // 🔥 변경된 이미지 적용
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-      } else {
+        if (response) {
+          alert("✅ 정보가 성공적으로 수정되었습니다!");
+          navigate("/caregiver/main");
+    
+          // ✅ 최신 프로필 정보 다시 불러오기
+          const updatedData = await getCaregiverProfile();
+          setProfileImage(updatedData.img); // 🔥 변경된 이미지 적용
+    
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        }
+      } catch (error) {
         alert("🚨 정보 수정에 실패했습니다. 다시 시도해주세요.");
       }
     };
