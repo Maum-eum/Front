@@ -7,14 +7,18 @@ import Btn from "../../components/commons/Btn";
 const dayOfWeekMapping = (dayOfWeekString: string) => {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
   
-  if (!dayOfWeekString || dayOfWeekString.length !== 7) return "없음";
+  if (!dayOfWeekString) return "없음";
 
-  return dayOfWeekString
+  // ✅ 7자리 유지: 앞쪽에 0 채우기
+  const paddedDayOfWeek = dayOfWeekString.padStart(7, "0");
+
+  return paddedDayOfWeek
     .split("")
     .map((char, index) => (char === "1" ? days[index] : null))
     .filter(Boolean)
     .join(", ") || "없음";
 };
+
 
 // ✅ 숫자 시간을 9시, 9시 30분 형식으로 변환
 const convertTime = (time?: number) => {

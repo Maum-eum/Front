@@ -72,7 +72,7 @@ const JobConditionEdit = () => {
     const updatedData: JobConditionRequest = {
       ...selectedOptions, // ✅ 기존 선택된 지원 항목 상태 추가
       desiredHourlyWage: hourlyWage,
-      dayOfWeek: timeData[0]?.dayofweek || jobCondition.dayOfWeek,  // ✅ 기존 데이터 유지
+      dayOfWeek: String(timeData[0]?.dayofweek || jobCondition.dayOfWeek),  // ✅ 항상 문자열로 변환
       startTime: timeData[0]?.starttime || jobCondition.startTime,  // ✅ 기존 데이터 유지
       endTime: timeData[0]?.endtime || jobCondition.endTime,        // ✅ 기존 데이터 유지
       locationRequestDTOList: selectedLocations.map((id) => ({ locationId: id })),
