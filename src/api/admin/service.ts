@@ -43,7 +43,7 @@ export const getPrevMatchInfo = async (
     jobId: number,
     recruitId: number;
   },
-  Response: (Response: AxiosResponse<ApiResponseDefault<MatchInfo[]>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<MatchInfo>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
   await privateApi.get(`/match/recommends/${params.jobId}/${params.recruitId}`).then(Response).catch(Error);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import { MatchInfo } from "../../types/admin/service";
 import { useNavigate } from "react-router-dom";
 
@@ -6,11 +7,22 @@ type MatchingListProps = {
   data: MatchInfo[];
 };
 
-const statusColors: { [key: string]: string } = {
-  대기: "bg-gray-200 text-gray-700",
-  수락: "bg-green-200 text-green-800",
-  조율: "bg-yellow-200 text-yellow-800",
-  거절: "bg-red-200 text-red-800",
+const matchStatusMap: { [key: string]: string } = {
+  WAITING: "응답 대기 중",
+  MATCHED: "진행 중",
+  TUNING: "조율 중",
+  DECLINED: "거절됨",
+  NONE: "미진행",
+  ENDED: "서비스 종료",
+};
+
+const matchStatusStyles: { [key: string]: string } = {
+  WAITING:  "text-yellow",
+  MATCHED:  "text-green",
+  TUNING:   "text-blue",
+  DECLINED: "text-red",
+  NONE: "",
+  ENDED: "",
 };
 
 const MatchingList: React.FC<MatchingListProps> = ({ data = [] }) => {
@@ -62,7 +74,7 @@ const MatchingList: React.FC<MatchingListProps> = ({ data = [] }) => {
             <div
               key={index}
               className="p-1 pl-2 border rounded-md flex min-h-16 items-center cursor-pointer"
-              onClick={() => navigate(`/admin/matching/${match.version}`)}
+              onClick={() => navigate(`/admin/matching/${match.matchId}`)}
             >
               {/* 어르신 이미지 */}
               <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden bg-gray-600 mr-4">
@@ -87,12 +99,8 @@ const MatchingList: React.FC<MatchingListProps> = ({ data = [] }) => {
               </div>
 
               {/* 매칭 상태 */}
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  statusColors[match.status] || "bg-gray-300 text-gray-700"
-                }`}
-              >
-                {match.status}
+              <span className={clsx("font-gtr-R px-2 py-1 rounded", matchStatusStyles[match.status] || "text-gray-500")}>
+                {matchStatusMap[match.status] || "알 수 없음"}
               </span>
             </div>
           ))

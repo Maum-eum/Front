@@ -74,6 +74,7 @@ export interface RecommendedList {
 
 export interface MatchInfo {
   matchId: number;
+  adminContact: string;
   careGiverInfoDto: {
     useranme: string;
     img: string;
@@ -85,8 +86,8 @@ export interface MatchInfo {
     elderId: number;
   },
   status: string,
-  requirementCondition: elderService,
-  jobCondition: {
+  recruitCondRes: elderService,
+  jobCondRes: {
     jobConditionId: number,
     flexibleSchedule: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE";
     desiredHourlyWage: number;
