@@ -25,8 +25,8 @@ const EditProfile = () => {
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
   const [selectedCertIndex, setSelectedCertIndex] = useState<number | null>(null);
   const [selectedCareerIndex, setSelectedCareerIndex] = useState<number | null>(null);
- const [previewImage, setPreviewImage] = useState<string | null>(null); // 미리보기 이미지 URL
- const [selectedImage, setSelectedImage] = useState<File | null>(null);
+const [previewImage, setPreviewImage] = useState<string | null>(null); // 미리보기 이미지 URL
+const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
 
   // ✅ 기존 데이터 불러오기
@@ -118,12 +118,20 @@ const EditProfile = () => {
         employmentStatus,
         intro: introduction,
         address,
-        certificateRequestDTOList: Array.isArray(certifications) ? certifications : [certifications],  
-        experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],   
-        profileImg: selectedImage ? selectedImage : profileImage, // ✅ 기존 사진 유지
+        certificateRequestDTOList: certifications,
+        experienceRequestDTOList: experiences,
       };
     
-      console.log("📌 보내는 데이터 확인:", updatedProfile);
+      // ✅ 기존 프로필 이미지를 유지하도록 보장
+      if (selectedImage) {
+        updatedProfile.profileImg = selectedImage; // 새 이미지가 있는 경우 추가
+      } else if (profileImage) {
+        updatedProfile.profileImg = profileImage; // 기존 이미지 유지
+      } else {
+        updatedProfile.profileImg = ""; // 🚨 null이 아닌 빈 문자열을 보내서 삭제 방지
+      }
+    
+      console.log("📌 최종 API 요청 데이터 (updatedProfile):", updatedProfile);
     
       try {
         const response = await updateCaregiverProfile(updatedProfile);
@@ -134,16 +142,18 @@ const EditProfile = () => {
     
           // ✅ 최신 프로필 정보 다시 불러오기
           const updatedData = await getCaregiverProfile();
-          setProfileImage(updatedData.img); // 🔥 변경된 이미지 적용
+          setProfileImage(updatedData.img);
     
           setTimeout(() => {
             window.location.reload();
           }, 100);
         }
       } catch (error) {
+        console.error("🚨 API 요청 실패:", error);
         alert("🚨 정보 수정에 실패했습니다. 다시 시도해주세요.");
       }
     };
+    
     
     
   return (
