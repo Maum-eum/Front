@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Btn from "../commons/Btn";
-import { RecommendedCareGiver } from "../../types/admin/service";
+import { RecommendedCareGiver, MatchInfo } from "../../types/admin/service";
 import { getPrevMatchInfo } from "../../api/admin/service";
-import { MatchInfo } from '../../types/admin/service';
+
 interface CareGiverModalProps {
   recruitId: number;
   isOpen: boolean;
@@ -43,7 +43,7 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
   if (!isOpen || !caregiver) return null;
 
   // 🔹 ENUM 값을 한국어로 변환하는 객체
-  const conditionMap: { [key: string]: string } = {
+  const conditionMap = {
     bathingAssist: "목욕 지원",
     catheterOrStomaCare: "카테터 및 스토마 관리",
     cleaningLaundryAssist: "청소 및 세탁 지원",
@@ -65,14 +65,17 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
     wheelchairAssist: "휠체어 보조",
   };
 
-  // 🔹 상태 스타일링 (POSSIBLE / IMPOSSIBLE)
-  const getStatusIcon = (jobValue: string, recruitValue: boolean) => {
-    if (jobValue === "POSSIBLE" && recruitValue) {
+  // 🔹 `prevMatchData.jobCondRes` 및 `prevMatchData.recruitCondRes`의 키 타입 정의
+  type JobCondKeys = keyof typeof conditionMap;
+
+  // 🔹 상태 스타일링 (POSSIBLE / NEGOTIABLE / IMPOSSIBLE)
+  const getStatusIcon = (jobValue: "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE") => {
+    if (jobValue === "POSSIBLE") {
       return <span className="text-green-600 font-bold">🟢 가능</span>;
-    } else if (jobValue === "IMPOSSIBLE" && !recruitValue) {
-      return <span className="text-gray-500">⚪ 불필요</span>;
+    } else if (jobValue === "NEGOTIABLE") {
+      return <span className="text-yellow-600 font-bold">🟡 조율 필요</span>;
     } else {
-      return <span className="text-red-600 font-bold">🔴 불일치</span>;
+      return <span className="text-red-600 font-bold">🔴 불가능</span>;
     }
   };
 
@@ -100,28 +103,30 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         {/* 🔹 조건 비교 테이블 */}
         {prevMatchData && (
           <div className="border-t pt-4">
-            <h3 className="text-lg font-semibold text-black text-center mb-3">매칭 조건 비교</h3>
+            <h3 className="text-lg font-semibold text-black text-center mb-3">필요한 서비스 조건</h3>
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
                   <th className="border p-2 text-xs">서비스 항목</th>
-                  <th className="border p-2 text-xs">보호사</th>
-                  <th className="border p-2 text-xs">요청 조건</th>
+                  <th className="border p-2 text-xs">보호사 상태</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(conditionMap).map((key) => (
+                {Object.keys(conditionMap).map((key) => {
+                  const typedKey = key as JobCondKeys; // 👈 keyof 활용하여 안전하게 타입 변환
                   
-                  <tr key={key} className="border-b">
-                    <td className="border p-2 text-xs">{conditionMap[key]}</td>
-                    {/* <td className="border p-2 text-xs text-center">
-                      {getStatusIcon(prevMatchData.jobCondRes[key], prevMatchData.recruitCondRes[key])}
-                    </td>
-                    <td className="border p-2 text-xs text-center">
-                      {prevMatchData.recruitCondRes[key] ? "요청함" : "요청 안 함"}
-                    </td> */}
-                  </tr>
-                ))}
+                  // 어르신이 해당 조건을 요청한 경우만 표시
+                  if (!prevMatchData.recruitCondRes[typedKey]) return null;
+
+                  return (
+                    <tr key={typedKey} className="border-b">
+                      <td className="border p-2 text-xs">{conditionMap[typedKey]}</td>
+                      <td className="border p-2 text-xs text-center">
+                        {getStatusIcon(prevMatchData.jobCondRes[typedKey])}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
