@@ -3,6 +3,7 @@ import Input from "../../components/commons/Input";
 import Btn from "../../components/commons/Btn";
 import { getAdminDetail, modifyAdmin, deleteAdmin } from "../../api/admin/auth";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../stores/userStore";
 import { useAdminStore } from "../../stores/admin/adminStore";
 import DeleteAdminModal from "../../components/admin/DeleteModal";
 
@@ -10,7 +11,8 @@ const ModifyAdmin: React.FC = () => {
   const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [connect, setConnect] = useState<string>(""); 
-  const { setNameStore, logout } = useAdminStore();
+  const { userLogout } = useUserStore();
+  const { setAdminName, adminLogout } = useAdminStore();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const getAdminInfo = async () => {
@@ -32,7 +34,7 @@ const ModifyAdmin: React.FC = () => {
         connect: connect
       },
       () => {
-        setNameStore(name)
+        setAdminName(name)
         alert("저장되었습니다.")
         navigate(-1);
       },
@@ -45,7 +47,8 @@ const ModifyAdmin: React.FC = () => {
   const deleteAdminInfo = async () => {
     await deleteAdmin(
       () => {
-        logout();
+        userLogout();
+        adminLogout();
         navigate("/");
       },
       (err) => {

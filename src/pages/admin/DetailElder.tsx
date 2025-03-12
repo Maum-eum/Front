@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdminStore } from "../../stores/admin/adminStore";
 import { getElderDetail } from "../../api/admin/elder";
-import { elderInfo, elderService, RecommendedCareGiver } from "../../types/admin/elderType";
+import { elderInfo } from "../../types/admin/elder";
+import { elderService, RecommendedCareGiver } from "../../types/admin/service";
 import AttributeCard from "../../components/caregiver/AttributeCard";
 import DeleteAdminModal from "../../components/admin/DeleteModal";
 import { deleteElder } from "../../api/admin/elder";
@@ -65,7 +66,7 @@ const DetailElder: React.FC = () => {
   const getElderInfo = async () => {
     if (!elderId) {
       alert("잘못된 접근입니다.");
-      navigate(-1);
+      navigate('/admin/main');
       return;
     }
 
@@ -86,7 +87,7 @@ const DetailElder: React.FC = () => {
   const deleteElderInfo = async () => {
     if (!elderId) {
       alert("잘못된 접근입니다.");
-      navigate(-1);
+      navigate('/admin/main');
       return;
     }
     await deleteElder(

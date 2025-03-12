@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ServiceTime } from "../../types/admin/elderType";
+import type { ServiceTime } from "../../types/admin/service";
 
 interface TimeSelectProps {
   setTimeData: (newTimeData: ServiceTime[]) => void;
