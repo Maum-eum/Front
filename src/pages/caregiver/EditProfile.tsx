@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Btn from "../../components/commons/Btn";
 import Input from "../../components/commons/Input";
-import { getCaregiverProfile } from "../../api/caregiver/profile";
+import { getCaregiverProfile } from "../../api/caregiver/getprofile";
 import { updateCaregiverProfile } from "../../api/caregiver/updateprofile"; // ✅ 수정 API 추가
 import CertificationModal from "../../components/caregiver/CertificationModal"; // ✅ 자격증 추가 모달
 import CareerModal from "../../components/caregiver/CareerModal"; // ✅ 경력 추가 모달
@@ -110,7 +110,7 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
     
     const handleUpdateProfile = async () => {
-      const updatedProfile = {
+      const updatedProfile: any = {
         username,
         contact: phone,
         car: hasCar,
@@ -118,30 +118,42 @@ const [selectedImage, setSelectedImage] = useState<File | null>(null);
         employmentStatus,
         intro: introduction,
         address,
-        certificateRequestDTOList: Array.isArray(certifications) ? certifications : [certifications],  
-        experienceRequestDTOList: Array.isArray(experiences) ? experiences : [experiences],   
-        profileImg: selectedImage || profileImage,  // ✅ 추가됨!   
+        certificateRequestDTOList: certifications,
+        experienceRequestDTOList: experiences,
       };
     
-      console.log("📌 보내는 데이터 확인:", updatedProfile);
-    
-      const response = await updateCaregiverProfile(updatedProfile);
-    
-      if (response) {
-        alert("✅ 정보가 성공적으로 수정되었습니다!");
-        navigate("/caregiver/main");
-         // ✅ 최신 프로필 정보 다시 불러오기!
-         // 얘때문에 최신화가 안됏엇다
-         const updatedData = await getCaregiverProfile();
-        setProfileImage(updatedData.img); // 🔥 변경된 이미지 적용
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
+      // ✅ 기존 프로필 이미지를 유지하도록 보장
+      if (selectedImage) {
+        updatedProfile.profileImg = selectedImage; // 새 이미지가 있는 경우 추가
+      } else if (profileImage) {
+        updatedProfile.profileImg = profileImage; // 기존 이미지 유지
       } else {
+        updatedProfile.profileImg = ""; // 🚨 null이 아닌 빈 문자열을 보내서 삭제 방지
+      }
+    
+      console.log("📌 최종 API 요청 데이터 (updatedProfile):", updatedProfile);
+    
+      try {
+        const response = await updateCaregiverProfile(updatedProfile);
+    
+        if (response) {
+          alert("✅ 정보가 성공적으로 수정되었습니다!");
+          navigate("/caregiver/main");
+    
+          // ✅ 최신 프로필 정보 다시 불러오기
+          const updatedData = await getCaregiverProfile();
+          setProfileImage(updatedData.img);
+    
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        }
+      } catch (error) {
+        console.error("🚨 API 요청 실패:", error);
         alert("🚨 정보 수정에 실패했습니다. 다시 시도해주세요.");
       }
     };
+    
     
     
   return (

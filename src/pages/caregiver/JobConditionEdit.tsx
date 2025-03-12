@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobCondition, updateJobCondition } from "../../api/caregiver/jobcondition";
+import { getJobCondition, updateJobCondition } from "../../api/caregiver/jobCondition";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 import { RegionSelect } from "../../components/commons/RegionSelect";
 import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
@@ -24,99 +24,124 @@ const JobConditionEdit = () => {
     const [step, setStep] = useState<number>(1);
 
 
-  // ✅ 기존 근무 조건 불러오기
-  useEffect(() => {
-    const fetchJobCondition = async () => {
-      try {
-        const data = await getJobCondition();
-        setJobCondition(data);
+    useEffect(() => {
+      const fetchJobCondition = async () => {
+        try {
+          const data = await getJobCondition();
+          setJobCondition(data);
+    
+          console.log("🟢 기존 근무 조건 데이터:", data); // 디버깅 로그
+    
+          // ✅ 기존 옵션 데이터 설정 (수정 전 데이터 유지)
+          setSelectedOptions({
+            selfFeeding: data.selfFeeding,
+            mealPreparation: data.mealPreparation,
+            cookingAssistance: data.cookingAssistance,
+            enteralNutritionSupport: data.enteralNutritionSupport,
+            selfToileting: data.selfToileting,
+            occasionalToiletingAssist: data.occasionalToiletingAssist,
+            diaperCare: data.diaperCare,
+            catheterOrStomaCare: data.catheterOrStomaCare,
+            independentMobility: data.independentMobility,
+            mobilityAssist: data.mobilityAssist,
+            wheelchairAssist: data.wheelchairAssist,
+            immobile: data.immobile,
+            cleaningLaundryAssist: data.cleaningLaundryAssist,
+            bathingAssist: data.bathingAssist,
+            hospitalAccompaniment: data.hospitalAccompaniment,
+            exerciseSupport: data.exerciseSupport,
+            emotionalSupport: data.emotionalSupport,
+            cognitiveStimulation: data.cognitiveStimulation,
+          });
+    
+          // ✅ 기존 시간 데이터 유지
+          const formattedDayOfWeek =
+            typeof data.dayOfWeek === "string"
+              ? data.dayOfWeek.padStart(7, "0") // 앞에 0이 사라지는 걸 방지
+              : "0000000"; // 기본값
+    
+          setTimeData([
+            {
+              dayofweek: formattedDayOfWeek,
+              starttime: data.startTime ?? -1, // 기본값 유지
+              endtime: data.endTime ?? -1,
+            },
+          ]);
+    
+        // ✅ 기존 지역 데이터 유지하도록 수정
+      setSelectedLocations((prev) =>
+        data.locationResponseDtoList?.length > 0
+          ? data.locationResponseDtoList.map((loc: any) => loc.workLocationId)
+          : prev ?? [] // 🔥 기존 데이터 유지
+      );
+          // ✅ 기존 시급 유지
+          setHourlyWage(data.desiredHourlyWage ?? 15000);
+        } catch (error) {
+          console.error("❌ 근무 조건 조회 실패:", error);
+        }
+      };
+    
+      fetchJobCondition();
+    }, []);
+    
 
-        console.log("🟢 선택된 요일 (dayOfWeek):", timeData[0]?.dayofweek);
-        console.log("🟢 선택된 시작 시간 (startTime):", timeData[0]?.starttime);
-        console.log("🟢 선택된 종료 시간 (endTime):", timeData[0]?.endtime);
-        // ✅ 기존 값들 상태에 저장
-        setHourlyWage(data.desiredHourlyWage);
-        setSelectedOptions({
-          selfFeeding: data.selfFeeding,
-          mealPreparation: data.mealPreparation,
-          cookingAssistance: data.cookingAssistance,
-          enteralNutritionSupport: data.enteralNutritionSupport,
-          selfToileting: data.selfToileting,
-          occasionalToiletingAssist: data.occasionalToiletingAssist,
-          diaperCare: data.diaperCare,
-          catheterOrStomaCare: data.catheterOrStomaCare,
-          independentMobility: data.independentMobility,
-          mobilityAssist: data.mobilityAssist,
-          wheelchairAssist: data.wheelchairAssist,
-          immobile: data.immobile,
-          cleaningLaundryAssist: data.cleaningLaundryAssist,
-          bathingAssist: data.bathingAssist,
-          hospitalAccompaniment: data.hospitalAccompaniment,
-          exerciseSupport: data.exerciseSupport,
-          emotionalSupport: data.emotionalSupport,
-          cognitiveStimulation: data.cognitiveStimulation,
-        });
+// ✅ 근무 조건 수정 요청
+const handleUpdate = async () => {
+  if (!jobCondition) {
+    alert("근무 조건을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+    return;
+  }
 
-        setTimeData([{ dayofweek: data.dayOfWeek, starttime: data.startTime, endtime: data.endTime }]);
-        setSelectedLocations(data.locationResponseDtoList.map((loc: any) => loc.workLocationId));
-      } catch (error) {
-        console.error("❌ 근무 조건 조회 실패:", error);
-      }
-    };
+  // ✅ 선택된 값이 없으면 기존 값 유지
+  const updatedData: JobConditionRequest = {
+    ...jobCondition, // 기존 데이터 유지
+    ...selectedOptions, // 선택된 옵션 반영
 
-    fetchJobCondition();
-  }, []);
+    // ✅ 시급이 변경되지 않았으면 기존 값 유지
+    desiredHourlyWage: hourlyWage ?? jobCondition.desiredHourlyWage,
 
-  // ✅ 근무 조건 수정 요청
-  const handleUpdate = async () => {
-    const updatedData: JobConditionRequest = {
-      ...selectedOptions, // ✅ 기존 선택된 지원 항목 상태 추가
-      desiredHourlyWage: hourlyWage,
-      dayOfWeek: timeData[0]?.dayofweek || jobCondition.dayOfWeek,  // ✅ 기존 데이터 유지
-      startTime: timeData[0]?.starttime || jobCondition.startTime,  // ✅ 기존 데이터 유지
-      endTime: timeData[0]?.endtime || jobCondition.endTime,        // ✅ 기존 데이터 유지
-      locationRequestDTOList: selectedLocations.map((id) => ({ locationId: id })),
+    // ✅ `dayOfWeek`가 7자리 이진 문자열인지 확인하고, 아니라면 기존 값 유지
+    dayOfWeek:
+      timeData.length > 0 &&
+      typeof timeData[0]?.dayofweek === "string" &&
+      /^[01]{7}$/.test(timeData[0]?.dayofweek)
+        ? timeData[0].dayofweek
+        : jobCondition.dayOfWeek, // 기존 값 유지
 
-      
-  
-      // ✅ 누락된 필수 속성 기본값 추가
-      flexibleSchedule: selectedOptions.flexibleSchedule || "IMPOSSIBLE",
-      selfFeeding: selectedOptions.selfFeeding || "IMPOSSIBLE",
-      mealPreparation: selectedOptions.mealPreparation || "IMPOSSIBLE",
-      cookingAssistance: selectedOptions.cookingAssistance || "IMPOSSIBLE",
-      enteralNutritionSupport: selectedOptions.enteralNutritionSupport || "IMPOSSIBLE",
-      selfToileting: selectedOptions.selfToileting || "IMPOSSIBLE",
-      occasionalToiletingAssist: selectedOptions.occasionalToiletingAssist || "IMPOSSIBLE",
-      diaperCare: selectedOptions.diaperCare || "IMPOSSIBLE",
-      catheterOrStomaCare: selectedOptions.catheterOrStomaCare || "IMPOSSIBLE",
-      independentMobility: selectedOptions.independentMobility || "IMPOSSIBLE",
-      mobilityAssist: selectedOptions.mobilityAssist || "IMPOSSIBLE",
-      wheelchairAssist: selectedOptions.wheelchairAssist || "IMPOSSIBLE",
-      immobile: selectedOptions.immobile || "IMPOSSIBLE",
-      cleaningLaundryAssist: selectedOptions.cleaningLaundryAssist || "IMPOSSIBLE",
-      bathingAssist: selectedOptions.bathingAssist || "IMPOSSIBLE",
-      hospitalAccompaniment: selectedOptions.hospitalAccompaniment || "IMPOSSIBLE",
-      exerciseSupport: selectedOptions.exerciseSupport || "IMPOSSIBLE",
-      emotionalSupport: selectedOptions.emotionalSupport || "IMPOSSIBLE",
-      cognitiveStimulation: selectedOptions.cognitiveStimulation || "IMPOSSIBLE"
-    };
-    console.log("🟢 [전송 데이터]:", updatedData);  // ✅ API 요청 전에 확인!
-  
+    startTime:
+      timeData.length > 0 && timeData[0]?.starttime !== undefined
+        ? timeData[0].starttime
+        : jobCondition.startTime,
+    endTime:
+      timeData.length > 0 && timeData[0]?.endtime !== undefined
+        ? timeData[0].endtime
+        : jobCondition.endTime,
 
-    try {
-      await updateJobCondition(updatedData); // ✅ PUT 요청 수행
-      alert("근무 조건이 수정되었습니다!");
-  
-      // ✅ 최신 데이터 다시 불러오기
-      const newData = await getJobCondition();
-      setJobCondition(newData);  // ✅ 상태 업데이트
-      navigate("/caregiver/main");
-    } catch (error) {
-      console.error("❌ 근무 조건 수정 실패:", error);
-      alert("수정 실패! 다시 시도해주세요.");
-    }
+// ✅ 기존 값 유지 로직 적용
+locationRequestDTOList:
+  selectedLocations.length > 0
+    ? selectedLocations.map((id) => ({ locationId: id }))
+    : jobCondition.locationResponseDtoList && jobCondition.locationResponseDtoList.length > 0
+      ? jobCondition.locationResponseDtoList.map((loc: any) => ({ locationId: loc.workLocationId }))
+      : null, // 🔥 빈 배열이 아닌 `null`을 보내서 서버가 기본값을 할당하지 않도록 함.
+
   };
-  
+
+  console.log("🟢 [전송 데이터]:", updatedData); // 디버깅 로그
+
+  try {
+    await updateJobCondition(updatedData);
+    alert("근무 조건이 수정되었습니다!");
+
+    const newData = await getJobCondition();
+    setJobCondition(newData);
+    navigate("/caregiver/main");
+  } catch (error) {
+    console.error("❌ 근무 조건 수정 실패:", error);
+    alert("수정 실패! 다시 시도해주세요.");
+  }
+};
+
 
   return (
     <div className="p-6 w-full max-w-3xl overflow-auto mx-auto font-gtr-B">

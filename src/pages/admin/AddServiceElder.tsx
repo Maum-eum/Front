@@ -6,7 +6,7 @@ import Btn from "../../components/commons/Btn";
 import CheckList from "../../components/admin/CheckList";
 import CheckBox from "../../components/admin/CheckBox";
 
-import { elderService, ServiceOption, ServiceTime } from "../../types/admin/elderType";
+import { elderService, ServiceOption, ServiceTime } from "../../types/admin/service";
 
 import { useAdminStore } from "../../stores/admin/adminStore";
 

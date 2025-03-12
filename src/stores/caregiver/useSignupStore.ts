@@ -12,7 +12,7 @@ interface SignupState {
   employmentStatus: boolean;
   certificateRequestDTOList: { certNum: string; certType: string; certRate: string }[];
   experienceRequestDTOList: { duration: number; title: string; description: string }[];
-  profileImg: File | null;
+  profileImg: File | null; // ✅ 기존 이미지 URL 저장 가능하도록 수정
 
   setSignupData: (data: Partial<SignupState>) => void;
 }
@@ -29,7 +29,15 @@ export const useSignupStore = create<SignupState>((set) => ({
   employmentStatus: false,
   certificateRequestDTOList: [],
   experienceRequestDTOList: [],
-  profileImg: null,
+  profileImg: null, // ✅ 기존 이미지 URL도 저장할 수 있도록 유지
 
-  setSignupData: (data) => set((state) => ({ ...state, ...data })),
+  setSignupData: (data) =>
+    set((state) => {
+      // ✅ profileImg가 null이 아닐 때만 업데이트
+      if ("profileImg" in data && data.profileImg === null) {
+        delete data.profileImg;
+      }
+      return { ...state, ...data };
+    }),
+  
 }));

@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TimeSelect } from "../../components/commons/TimeSelect";
 import { RegionSelect } from "../../components/commons/RegionSelect";
-import { registerJobCondition } from "../../api/caregiver/jobcondition";
+import { registerJobCondition } from "../../api/caregiver/jobCondition";
 import type { JobConditionRequest } from "../../types/caregiver/jobCondition";
-
+import { useUserStore } from "../../stores/userStore";  // ✅ 추가
 import CheckList from "../../components/commons/CheckList";
 import Steps from "../../components/commons/Steps";
 import Btn from "../../components/commons/Btn";
@@ -20,7 +20,6 @@ import Btn from "../../components/commons/Btn";
 
 export default function SignupStep3() {
   const navigate = useNavigate();
-
 
   // ✅ 단계 상태 추가 (1: 가능 여부 선택, 2: 시간 & 장소 선택)
   const [step, setStep] = useState<number>(1);
@@ -38,6 +37,14 @@ export default function SignupStep3() {
 
     if (!timeData.length || !selectedLocations.length) {
       alert("근무 시간과 지역을 선택해주세요!");
+      return;
+    }  
+    
+    // ✅ `useUserStore`에서 토큰 가져오기
+    const token = useUserStore.getState().accessToken;
+    if (!token) {
+      alert("로그인이 필요합니다!");
+      navigate("/login");
       return;
     }
 

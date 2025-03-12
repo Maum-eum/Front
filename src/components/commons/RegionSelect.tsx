@@ -34,11 +34,11 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 	  
 		setSelectedSido(sidoId);
 		setSelectedSigungu(undefined);
-	  
+		
 		// ✅ 사용자가 직접 변경한 경우에만 초기화
 		if (selectedLocations.length > 0) {
-		  setSelectedLocations([]);
-		}
+			setSelectedLocations(selectedLocations); // 🔥 기존 값 유지
+		  }
 	  
 		try {
 		  const response = await sigunguInfoApi(sidoId);
@@ -50,19 +50,24 @@ export function RegionSelect({ selectedLocations, setSelectedLocations }: Region
 		}
 	  };
 	  
-	const handleSigunguChange = async (sigunguId: number) => {
+	  
+	  const handleSigunguChange = async (sigunguId: number) => {
 		setSelectedSigungu(sigunguId);
-		setSelectedLocations([]);
-		try {
-			const response = await locationInfoApi(sigunguId);
-			if (response?.status) {
-				setLocation(response.data);
-			}
-		} catch (error) {
-			console.error("Error fetching Location Data", error);
+	  
+		if (selectedLocations.length > 0) {
+		  setSelectedLocations([]);
 		}
-	};
-
+	  
+		try {
+		  const response = await locationInfoApi(sigunguId);
+		  if (response?.status) {
+			setLocation(response.data);
+		  }
+		} catch (error) {
+		  console.error("Error fetching Location Data", error);
+		}
+	  };
+	  
 	const toggleLocation = (locationId: number) => {
 		setSelectedLocations((prev) => {
 			if (prev.includes(locationId)) {
