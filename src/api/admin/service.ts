@@ -61,7 +61,17 @@ export const createMatch = async (
   await privateApi.post(`/match/recommends/${params.jobId}/${params.recruitId}`).then(Response).catch(Error);
 };
 
-
+export const controlService = async (
+  params: {
+    status: boolean,
+    jobId: number,
+    recruitId: number
+  },
+  Response: (Response: AxiosResponse<ApiResponseDefault<null>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.put(`/match/recommends/${params.status}/${params.jobId}/${params.recruitId}`).then(Response).catch(Error);
+};
 
 
 export const getMatchingList = async (

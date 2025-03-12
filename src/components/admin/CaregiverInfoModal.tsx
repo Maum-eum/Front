@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Btn from "../commons/Btn";
 import { RecommendedCareGiver, MatchInfo } from "../../types/admin/service";
-import { getPrevMatchInfo } from "../../api/admin/service";
+import { getPrevMatchInfo, controlService } from "../../api/admin/service";
 
 interface CareGiverModalProps {
   recruitId: number;
@@ -27,6 +27,24 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         console.log("구직", res.data.data.jobCondRes);
         console.log("구인", res.data.data.recruitCondRes);
         setPrevMatchData(res.data.data);
+      },
+      (err) => {
+        console.error("이전 매칭 정보 가져오기 실패:", err);
+      }
+    );
+  };
+
+  const triggerMatch = async (status: boolean) => {
+    if (!caregiver) return;
+
+    await controlService(
+      {
+        status: status,
+        jobId: caregiver.jobConditionId,
+        recruitId: recruitId
+      },
+      (res) => {
+        console.log(res)
       },
       (err) => {
         console.error("이전 매칭 정보 가져오기 실패:", err);
@@ -65,7 +83,6 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
     wheelchairAssist: "휠체어 보조",
   };
 
-  // 🔹 `prevMatchData.jobCondRes` 및 `prevMatchData.recruitCondRes`의 키 타입 정의
   type JobCondKeys = keyof typeof conditionMap;
 
   // 🔹 상태 스타일링 (POSSIBLE / NEGOTIABLE / IMPOSSIBLE)
@@ -135,7 +152,9 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         {/* 버튼 영역 */}
         <div className="flex justify-between gap-2 mt-4">
           <Btn text="닫기" color="red" onClick={onClose} />
-          <Btn text="요청 전송" color="green" onClick={onRequest} />
+          <Btn text="요청 전송" color="green" onClick={() => onRequest} />
+          <Btn text="서비스 시작" color="green" onClick={() => triggerMatch(true)} />
+          <Btn text="서비스 거절/종료" color="green" onClick={() => triggerMatch(false)} />
         </div>
       </div>
     </div>
