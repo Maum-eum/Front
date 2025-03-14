@@ -47,7 +47,7 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         console.log(res)
       },
       (err) => {
-        console.error("이전 매칭 정보 가져오기 실패:", err);
+        console.error(err);
       }
     );
   };
@@ -164,17 +164,17 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
           {/* 서비스 시작 버튼 (PENDING 상태일 때만 활성화) */}
           <Btn 
             text="서비스 시작"
-            color={caregiver.matchStatus === "WAITING" ? "green" : "disabled"} 
+            color={caregiver.matchStatus === "TUNING" ? "green" : "disabled"} 
             onClick={() => triggerMatch(true)} 
-            disabled={caregiver.matchStatus !== "WAITING"}
+            disabled={caregiver.matchStatus !== "TUNING"}
           />
 
           {/* 서비스 거절/종료 버튼 (PENDING 상태일 때만 활성화) */}
           <Btn 
             text="서비스 거절/종료" 
-            color={caregiver.matchStatus === "WAITING" ? "green" : "disabled"}  
+            color={caregiver.matchStatus === "TUNING" ? "green" : "disabled"}  
             onClick={() => triggerMatch(false)} 
-            disabled={caregiver.matchStatus !== "WAITING"}
+            disabled={caregiver.matchStatus !== "TUNING"}
           />
         </div>
 
