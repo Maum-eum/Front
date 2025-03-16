@@ -5,30 +5,26 @@ import type { Sido, Sigungu, Location } from '../../types/commons/regionData';
 interface RegionSelectProps {
   selectedLocations: number[];
   setSelectedLocations: React.Dispatch<React.SetStateAction<number[]>>;
-  initialLocations: number[]; // ✅ 이전에 선택한 지역 리스트 추가
+  initialLocations: number[];
 }
 
-export function RegionSelect({ selectedLocations, setSelectedLocations , initialLocations}: RegionSelectProps) {
+export function RegionSelect({ selectedLocations, setSelectedLocations, initialLocations }: RegionSelectProps) {
   const [sido, setSido] = useState<Sido[]>([]);
   const [sigungu, setSigungu] = useState<Sigungu[]>([]);
   const [location, setLocation] = useState<Location[]>([]);
   const [selectedSido, setSelectedSido] = useState<number | null>(null);
   const [selectedSigungu, setSelectedSigungu] = useState<number | null>(null);
- // ✅ selectedLocations의 초기값을 initialLocations으로 설정
- const [initialized, setInitialized] = useState(false);
-  
+  const [initialized, setInitialized] = useState(false); // 초기 선택 여부 플래그
 
-   
- useEffect(() => {
-	if (!initialized && initialLocations.length > 0) {
-	  console.log("🟢 초기 지역 설정:", initialLocations);
-	  setSelectedLocations(initialLocations);
-	  setInitialized(true); // ✅ 초기값 설정 완료 후 다시 실행되지 않도록 플래그 변경
-	}
+  // 초기 선택된 지역 설정
+  useEffect(() => {
+    if (!initialized && initialLocations.length > 0) {
+      setSelectedLocations(initialLocations);
+      setInitialized(true);
+    }
   }, [initialLocations, initialized, setSelectedLocations]);
 
-  
-  // ✅ 시/도 데이터 불러오기
+  // 시/도 데이터 불러오기
   useEffect(() => {
     const fetchSido = async () => {
       try {
@@ -43,13 +39,12 @@ export function RegionSelect({ selectedLocations, setSelectedLocations , initial
     fetchSido();
   }, []);
 
-
-  // ✅ 시/도 선택 시, 시/군/구 데이터 불러오기
+  // 시/도 선택 시 시/군/구 데이터 불러오기
   const handleSidoChange = async (sidoId: number) => {
-    if (selectedSido === sidoId) return; // 동일한 시/도를 다시 선택하면 무시
+    if (selectedSido === sidoId) return;
     setSelectedSido(sidoId);
     setSelectedSigungu(null);
-    setLocation([]); // 기존 동 데이터 초기화
+    setLocation([]);
 
     try {
       const response = await sigunguInfoApi(sidoId);
@@ -61,7 +56,7 @@ export function RegionSelect({ selectedLocations, setSelectedLocations , initial
     }
   };
 
-  // ✅ 시/군/구 선택 시, 동/읍/면 데이터 불러오기
+  // 시/군/구 선택 시 동/읍/면 데이터 불러오기
   const handleSigunguChange = async (sigunguId: number) => {
     setSelectedSigungu(sigunguId);
 
@@ -75,23 +70,24 @@ export function RegionSelect({ selectedLocations, setSelectedLocations , initial
     }
   };
 
-  
+  // 지역 선택/해제 핸들러
   const toggleLocation = (locationId: number | undefined) => {
-	if (!locationId) return; // ✅ undefined 값 방지
-  
-	setSelectedLocations((prev) => {
-	  if (prev.includes(locationId)) {
-		return prev.filter((id) => id !== locationId);
-	  }
-	  return prev.length < 5 ? [...prev, locationId] : prev;
-	});
+    if (!locationId) return;
+
+    setSelectedLocations((prev) => {
+      if (prev.includes(locationId)) {
+        return prev.filter((id) => id !== locationId);
+      }
+      return prev.length < 5 ? [...prev, locationId] : prev;
+    });
   };
+
   return (
     <div className="p-2 w-full max-w-3xl mx-auto">
       <h3 className="text-lg font-gtr-B mb-3 text-center">지역 선택</h3>
       <hr className="mx-1" />
 
-      {/* ✅ 시/도 & 시/군/구 선택 */}
+      {/* 시/도 & 시/군/구 선택 */}
       <div className="text-sm flex px-1">
         {/* 시/도 선택 */}
         <div className="w-1/2 border-l border-r px-3 pt-2">
@@ -130,7 +126,7 @@ export function RegionSelect({ selectedLocations, setSelectedLocations , initial
 
       <hr className="mx-1 mb-3" />
 
-      {/* ✅ 동/읍/면 선택 */}
+      {/* 동/읍/면 선택 */}
       <div className="w-full px-3">
         <h4 className="text-sm font-gtr-B mb-2 text-center">동/읍/면</h4>
         <hr />
@@ -147,22 +143,23 @@ export function RegionSelect({ selectedLocations, setSelectedLocations , initial
           ))}
         </ul>
       </div>
-			{/* 선택한 지역 표시 */}
-			<h4 className="text-sm font-gtr-B mb-1 pl-3 mt-4">선택한 지역 (최대 5개)</h4>
-			<div className="min-h-20 border mx-3 rounded-lg">
-			<div className="flex flex-wrap gap-2 px-3">
-				{selectedLocations
-				.filter((locId) => locId !== undefined && locId !== null) // 🔥 undefined 또는 null 제거
-				.map((locId) => {
-					const locName = location.find((el) => el.locationId === locId)?.dongName || "알 수 없음"; // 🔥 없는 지역명 방지
-					return (
-					<span key={locId} className="text-sm bg-gray-200 font-gtr-R px-5 py-1 mt-1 rounded-xl">
-						{locName}
-					</span>
-					);
-				})}
-			</div>
-			</div>
+
+      {/* 선택한 지역 표시 */}
+      <h4 className="text-sm font-gtr-B mb-1 pl-3 mt-4">선택한 지역 (최대 5개)</h4>
+      <div className="min-h-20 border mx-3 rounded-lg">
+        <div className="flex flex-wrap gap-2 px-3">
+          {selectedLocations
+            .filter((locId) => locId !== undefined && locId !== null) // undefined 또는 null 제거
+            .map((locId) => {
+              const locName = location.find((el) => el.locationId === locId)?.dongName || "알 수 없음"; // 없는 지역명 방지
+              return (
+                <span key={locId} className="text-sm bg-gray-200 font-gtr-R px-5 py-1 mt-1 rounded-xl">
+                  {locName}
+                </span>
+              );
+            })}
+        </div>
+      </div>
     </div>
   );
 }
