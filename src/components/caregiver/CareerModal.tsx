@@ -34,7 +34,7 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
       <div className="bg-white p-6 rounded-lg w-full max-w-xs sm:max-w-sm">
         <h2 className="text-lg font-bold text-black text-center mb-6">경력추가</h2>
 
-        {/* ✅ 일한 곳 입력 */}
+        {/* 일한 곳 입력 */}
         <label className="block text-item font-bold text-black mb-2">일한 곳</label>
         <input
           type="text"
@@ -44,7 +44,7 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
           onChange={(e) => setExperience({ ...experience, title: e.target.value })}
         />
 
-        {/* ✅ 했던 일 입력 */}
+        {/* 했던 일 입력 */}
         <label className="block text-item font-bold text-black mb-2">했던 일</label>
         <input
           type="text"
@@ -54,7 +54,7 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
           onChange={(e) => setExperience({ ...experience, description: e.target.value })}
         />
 
-        {/* ✅ 일한 기간 입력 */}
+        {/* 일한 기간 입력 */}
         <label className="block text-item font-bold text-black mb-2">일한 기간</label>
         <input
           type="text"
@@ -64,7 +64,7 @@ const CareerModal: React.FC<CareerModalProps> = ({ isOpen, onClose, onSave }) =>
           onChange={(e) => setExperience({ ...experience, duration: e.target.value })}
         />
 
-        {/* ✅ 버튼 - Btn.tsx 스타일 적용 */}
+        {/*  버튼 - Btn.tsx 스타일 적용 */}
         <div className="flex flex-col gap-2">
           <Btn text="이전으로" color="white" onClick={onClose} />
           <Btn text="완료" color="green" onClick={handleSave} />
