@@ -24,7 +24,7 @@ const SignupTest = () => {
   const handleSignup = async () => {
     if (loading) return;
     setLoading(true);
-    
+
     try {
       // 1. 회원가입 API 요청
       const response = await signUpCaregiver({
@@ -34,17 +34,11 @@ const SignupTest = () => {
         experienceRequestDTOList,
       });
   
-      console.log(" 회원가입 성공:", response);
-  
-      if (response.status === "success") {
-        alert("회원가입 성공!");
-  
+      if (response.status === "success") {  
         // 2. 회원가입 성공 후 자동 로그인 요청 (기존 데이터 초기화 후 로그인 진행)
         await Login(
           { username: signupData.username, password: signupData.password },
           (loginResponse) => {
-            console.log(" 로그인 응답 데이터:", JSON.stringify(loginResponse.data, null, 2));
-            console.log(" 로그인 응답 헤더:", loginResponse.headers);
             localStorage.clear();
   
             // Authorization 헤더에서 accessToken 가져오기
@@ -61,10 +55,8 @@ const SignupTest = () => {
               userId: loginResponse.data.data.userId,
               role: loginResponse.data.data.role,
             });
-  
-            console.log(" zustand에 저장된 사용자 정보:", useUserStore.getState());
-  
-            // 5. 필수 정보 등록 페이지로 이동
+
+            // 4. 필수 정보 등록 페이지로 이동
             alert("회원가입 성공! 필수 정보 등록으로 이동합니다.");
             navigate("/caregiver/signup/step3");
           },
@@ -78,7 +70,6 @@ const SignupTest = () => {
         alert("회원가입 실패! 다시 시도해주세요.");
       }
     } catch (error) {
-      console.error("❌ 회원가입 실패:", error);
   
       if (axios.isAxiosError(error)) {
         const serverMessage = error.response?.data?.message;
@@ -88,7 +79,6 @@ const SignupTest = () => {
         } else {
           alert("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
-  
         console.error("🛑 서버 응답 에러:", error.response?.data);
       } else {
         console.error("🛑 예상치 못한 에러:", (error as Error).message);
@@ -119,8 +109,7 @@ const SignupTest = () => {
   
   const handlePrev = () => {
     setSignupData({ ...signupData }); // ✅ 현재 상태를 저장해서 유지
-    console.log("📌 이전으로 이동 - 유지되는 데이터:", signupData);
-    
+  
     if (step === 2 && subStep === 2) {
       setSubStep(1); // Step 2의 하위 단계에서 필수 정보 입력으로 이동
     } else if (step === 2 && subStep === 1) {
@@ -190,7 +179,6 @@ const SignupTest = () => {
           </div>
         </div>
       )}
-
       
        {/* Step 2 - 필수 정보 입력 */}
        {step === 2 && subStep === 1 && (

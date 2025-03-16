@@ -35,9 +35,6 @@ export default function SignupStep3() {
 
   // 구직 조건 등록 요청
   const handleSubmit = async () => {
-    console.log("선택된 옵션:", selectedOptions);
-    console.log("시간 데이터:", timeData);
-    console.log("선택된 지역 ID:", selectedLocations);
 
     if (!timeData.length || !selectedLocations.length) {
       alert("근무 시간과 지역을 선택해주세요!");
@@ -82,12 +79,8 @@ export default function SignupStep3() {
       emotionalSupport: selectedOptions["emotionalSupport"] || "IMPOSSIBLE",
       cognitiveStimulation: selectedOptions["cognitiveStimulation"] || "IMPOSSIBLE",
     };
-
-    console.log("최종 요청 데이터:", requestData);
-
     try {
       const response = await registerJobCondition(requestData);
-      console.log("서버 응답:", response?.data);
       if (response?.status === "success") {
         alert("구직 조건이 등록되었습니다!");
         navigate("/");
