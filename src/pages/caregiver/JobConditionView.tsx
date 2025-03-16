@@ -96,15 +96,17 @@ const JobConditionView = () => {
         <h3 className="font-bold text-lg">📅 근무 요일 및 시간</h3>
         <p>요일: {dayOfWeekMapping(jobCondition.dayOfWeek)}</p>
         <p>시간: {convertTime(jobCondition.startTime)} ~ {convertTime(jobCondition.endTime)}</p>
-
         <h3 className="font-bold text-lg mt-4">📍 근무 지역</h3>
-        <ul>
-          {jobCondition.locationResponseDtoList.map((loc: any) => (
-            <li key={loc.workLocationId}>{loc.locationName}</li>
-          ))}
-        </ul>
-
-        <h3 className="font-bold text-lg mt-4">📝 지원 가능 항목</h3>
+        {jobCondition.locationResponseDtoList.length > 0 ? (
+          <ul>
+            {jobCondition.locationResponseDtoList.map((loc: any) => (
+              <li key={loc.workLocationId}>{loc.locationName}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>근무 지역을 선택해주세요!</p>
+        )}
+                <h3 className="font-bold text-lg mt-4">📝 지원 가능 항목</h3>
         <ul>
           {Object.entries(jobCondition).map(([key, value]) => (
             typeof value === "string" && value === "POSSIBLE" ? (

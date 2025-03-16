@@ -23,7 +23,8 @@ export default function SignupStep3() {
 
   // ✅ 단계 상태 추가 (1: 가능 여부 선택, 2: 시간 & 장소 선택)
   const [step, setStep] = useState<number>(1);
-
+  // ✅ 근무 조건 상태
+  const [jobCondition, setJobCondition] = useState<any>(null);
   // ✅ 선택된 데이터 저장
   const [selectedOptions, setSelectedOptions] = useState<Record<string, "POSSIBLE" | "NEGOTIABLE" | "IMPOSSIBLE">>({});
   const [timeData, setTimeData] = useState<{ dayofweek: string; starttime: number; endtime: number }[]>([]);
@@ -151,8 +152,13 @@ export default function SignupStep3() {
           {/* ✅ 근무 가능 요일 및 시간 선택 */}
           <TimeSelect setTimeData={setTimeData} />
 
-          {/* ✅ 지역 선택 */}
-          <RegionSelect selectedLocations={selectedLocations} setSelectedLocations={setSelectedLocations} />
+       
+          <RegionSelect 
+          selectedLocations={selectedLocations} 
+          setSelectedLocations={setSelectedLocations} 
+          initialLocations={jobCondition?.locationResponseDtoList?.map((loc: any) => loc.locationId) || []} // ✅ 기존 데이터 전달
+        />
+
           
           {/* ✅ 희망 시급 입력 */}
           <div className="mt-4 mb-4">

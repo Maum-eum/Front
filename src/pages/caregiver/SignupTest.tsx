@@ -83,17 +83,23 @@ const SignupTest = () => {
       console.error("❌ 회원가입 실패:", error);
   
       if (axios.isAxiosError(error)) {
+        const serverMessage = error.response?.data?.message;
+  
+        if (serverMessage === "해당 아이디가 이미 존재합니다.") {
+          alert("해당 아이디가 이미 존재합니다. 다른 아이디를 사용해주세요."); // ❗ 여기서 alert로 메시지 출력
+        } else {
+          alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        }
+  
         console.error("🛑 서버 응답 에러:", error.response?.data);
       } else {
         console.error("🛑 예상치 못한 에러:", (error as Error).message);
+        alert("회원가입 중 오류가 발생했습니다.");
       }
-  
-      alert("회원가입 실패");
     } finally {
       setLoading(false);
     }
   };
-  
   
   // ✅ 경력 추가 함수
   const addExperience = (newExperience: { title: string; duration: number; description: string }) => {
