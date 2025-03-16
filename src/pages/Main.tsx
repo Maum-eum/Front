@@ -22,6 +22,8 @@ const Main: React.FC = () => {
     password: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState(""); // ❗ 로그인 실패 메시지 상태 추가
+
   const loginDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginData((prev) => ({ ...prev, [name]: value }));
@@ -53,6 +55,7 @@ const Main: React.FC = () => {
       },
       (err) => {
         console.log(err.response?.data);
+        setErrorMessage("아이디 또는 비밀번호가 올바르지 않습니다."); // ❗ 로그인 실패 시 에러 메시지 설정
       }
     );
   };
@@ -87,6 +90,11 @@ const Main: React.FC = () => {
             value={loginData.password}
             onChange={loginDataChange}
           />
+         {errorMessage && (
+          <p className="text-center text-sm font-bold mt-2 text-inherit" style={{ color: "#FF0000" }}>
+            {errorMessage}
+          </p>
+        )}
           <Btn text="로그인" onClick={handleLogin} />
         </div>
       </div>

@@ -71,7 +71,7 @@ const JobConditionEdit = () => {
         // ✅ 기존 지역 데이터 유지하도록 수정
       setSelectedLocations((prev) =>
         data.locationResponseDtoList?.length > 0
-          ? data.locationResponseDtoList.map((loc: any) => loc.workLocationId)
+          ? data.locationResponseDtoList.map((loc: any) => loc.locationId)
           : prev ?? [] // 🔥 기존 데이터 유지
       );
           // ✅ 기존 시급 유지
@@ -84,65 +84,84 @@ const JobConditionEdit = () => {
       fetchJobCondition();
     }, []);
     
+    const handleUpdate = async () => {
+      if (!jobCondition) {
+        alert("근무 조건을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+    
+      // ✅ 근무 지역 선택 여부 확인 (시/도 포함)
+      if (!selectedLocations || selectedLocations.length === 0) {
+        alert("근무 지역을 선택해주세요!");
+        return;
+      }
+    
+      // ✅ 시/도만 선택하고 세부 지역을 선택하지 않은 경우 경고 추가
+      const isOnlySidoSelected = selectedLocations.every(
+        (id) => String(id).endsWith("000") // 시/도 ID는 일반적으로 "000"으로 끝남 (예: 11000)
+      );
+    
+      if (isOnlySidoSelected) {
+        alert("세부 근무 지역을 선택해주세요!");
+        return;
+      }
+    
+      // ✅ 변경 사항 체크
+      const isTimeChanged =
+        timeData.length > 0 &&
+        (timeData[0]?.dayofweek !== jobCondition.dayOfWeek ||
+          timeData[0]?.starttime !== jobCondition.startTime ||
+          timeData[0]?.endtime !== jobCondition.endTime);
+    
+      const isWageChanged = hourlyWage !== jobCondition.desiredHourlyWage;
+    
+      const isOptionsChanged = Object.keys(selectedOptions).some(
+        (key) => selectedOptions[key] !== jobCondition[key]
+      );
+    
+      const isLocationChanged =
+        selectedLocations.length > 0 &&
+        JSON.stringify(selectedLocations.sort()) !==
+          JSON.stringify(
+            jobCondition.locationResponseDtoList?.map((loc: any) => loc.locationId).sort()
+          );
+    
+      // ✅ 아무런 변경 사항이 없을 때 알림
+      if (!isTimeChanged && !isWageChanged && !isOptionsChanged && !isLocationChanged) {
+        alert("수정 사항을 선택해주세요!");
+        return;
+      }
+    
+      // ✅ 기존 지역 데이터 유지하면서 undefined/null 값 필터링
+      const locationRequestDTOList = selectedLocations
+        .filter((id) => id !== undefined && id !== null) // ✅ undefined, null 값 제거
+        .map((id) => ({ locationId: id }));
+    
+      console.log("🟢 최종 전송 locationRequestDTOList:", JSON.stringify(locationRequestDTOList, null, 2));
+    
+      const updatedData: JobConditionRequest = {
+        ...jobCondition,
+        ...selectedOptions,
+        desiredHourlyWage: isWageChanged ? hourlyWage : jobCondition.desiredHourlyWage,
+        dayOfWeek: isTimeChanged ? timeData[0]?.dayofweek : jobCondition.dayOfWeek,
+        startTime: isTimeChanged ? timeData[0]?.starttime : jobCondition.startTime,
+        endTime: isTimeChanged ? timeData[0]?.endtime : jobCondition.endTime,
+        locationRequestDTOList, // ✅ 필터링한 locationId 값만 전송
+      };
+    
+      console.log("🟢 [전송 데이터]:", JSON.stringify(updatedData, null, 2));
+    
+      try {
+        await updateJobCondition(updatedData);
+        alert("근무 조건이 수정되었습니다!");
+        const newData = await getJobCondition();
+        setJobCondition(newData);
+        navigate("/caregiver/main");
+      } catch (error) {
+        console.error("❌ 근무 조건 수정 실패:", error);
 
-// ✅ 근무 조건 수정 요청
-const handleUpdate = async () => {
-  if (!jobCondition) {
-    alert("근무 조건을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
-    return;
-  }
-
-  // ✅ 선택된 값이 없으면 기존 값 유지
-  const updatedData: JobConditionRequest = {
-    ...jobCondition, // 기존 데이터 유지
-    ...selectedOptions, // 선택된 옵션 반영
-
-    // ✅ 시급이 변경되지 않았으면 기존 값 유지
-    desiredHourlyWage: hourlyWage ?? jobCondition.desiredHourlyWage,
-
-    // ✅ `dayOfWeek`가 7자리 이진 문자열인지 확인하고, 아니라면 기존 값 유지
-    dayOfWeek:
-      timeData.length > 0 &&
-      typeof timeData[0]?.dayofweek === "string" &&
-      /^[01]{7}$/.test(timeData[0]?.dayofweek)
-        ? timeData[0].dayofweek
-        : jobCondition.dayOfWeek, // 기존 값 유지
-
-    startTime:
-      timeData.length > 0 && timeData[0]?.starttime !== undefined
-        ? timeData[0].starttime
-        : jobCondition.startTime,
-    endTime:
-      timeData.length > 0 && timeData[0]?.endtime !== undefined
-        ? timeData[0].endtime
-        : jobCondition.endTime,
-
-// ✅ 기존 값 유지 로직 적용
-locationRequestDTOList:
-  selectedLocations.length > 0
-    ? selectedLocations.map((id) => ({ locationId: id }))
-    : jobCondition.locationResponseDtoList && jobCondition.locationResponseDtoList.length > 0
-      ? jobCondition.locationResponseDtoList.map((loc: any) => ({ locationId: loc.workLocationId }))
-      : null, // 🔥 빈 배열이 아닌 `null`을 보내서 서버가 기본값을 할당하지 않도록 함.
-
-  };
-
-  console.log("🟢 [전송 데이터]:", updatedData); // 디버깅 로그
-
-  try {
-    await updateJobCondition(updatedData);
-    alert("근무 조건이 수정되었습니다!");
-
-    const newData = await getJobCondition();
-    setJobCondition(newData);
-    navigate("/caregiver/main");
-  } catch (error) {
-    console.error("❌ 근무 조건 수정 실패:", error);
-    alert("수정 실패! 다시 시도해주세요.");
-  }
-};
-
-
+      }
+    };
   return (
     <div className="p-6 w-full max-w-3xl overflow-auto mx-auto font-gtr-B">
       <h2 className="text-2xl font-bold text-center mb-6">근무 조건 수정</h2>
@@ -201,7 +220,11 @@ locationRequestDTOList:
       {step === 2 && (
         <>
           <TimeSelect setTimeData={setTimeData} />
-          <RegionSelect selectedLocations={selectedLocations} setSelectedLocations={setSelectedLocations} />
+          <RegionSelect 
+          selectedLocations={selectedLocations} 
+          setSelectedLocations={setSelectedLocations} 
+          initialLocations={jobCondition?.locationResponseDtoList?.map((loc: any) => loc.locationId) || []} 
+        />
 
           {/* ✅ 희망 시급 입력 */}
           <div className="mt-4">
