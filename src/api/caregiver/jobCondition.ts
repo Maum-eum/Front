@@ -44,6 +44,12 @@ export const registerJobCondition = async (data: JobConditionRequest) => {
 
 export const updateJobCondition = async (jobConditionData: JobConditionRequest) => {
   try {
+    // ✅ 근무 지역이 없을 경우 경고 메시지 띄우기
+    if (!jobConditionData.locationRequestDTOList || jobConditionData.locationRequestDTOList.length === 0) {
+      alert("근무 지역을 선택해주세요!");
+      throw new Error("❌ [업데이트 실패] 근무 지역이 선택되지 않음.");
+    }
+
     const token = getAuthToken(); // ✅ `useUserStore`에서 토큰 가져오기
 
     console.log("🟢 [API 요청] PUT:", API_URL);

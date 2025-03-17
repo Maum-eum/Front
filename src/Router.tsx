@@ -17,7 +17,7 @@ import AddServiceElder from "./pages/admin/AddServiceElder";
 
 
 //유저회원가입
-import SignupTest from "./pages/caregiver/SignupTest";
+import Signup from "./pages/caregiver/Signup";
 import SignupStep3 from "./pages/caregiver/SignupStep3";
 
 // 요양보호사 화면
@@ -63,7 +63,7 @@ export default function Router() {
 
       {/*요양보호사 전용*/}
       <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
-      <Route path="/caregiver/signup" element={<SignupTest />} />
+      <Route path="/caregiver/signup" element={<Signup/>} />
       <Route path="/caregiver/jobcondition/edit" element={<JobConditionEdit />} />
       <Route path="/caregiver/jobcondition" element={<JobConditionView />} />
       <Route path="/caregiver/edit/profile" element={<ProtectedRoute element={<EditProfile />} allowedRoles={["caregiver"]} />} />
