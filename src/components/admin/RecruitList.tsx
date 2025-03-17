@@ -1,5 +1,6 @@
 import React from "react";
 import { elderService } from "../../types/admin/service";
+import { useNavigate } from "react-router-dom";
 
 type RecruitListProps = {
   data: elderService[];
@@ -45,7 +46,8 @@ const timeMapping: { [key: number]: string } = {
 };
 
 const RecruitList: React.FC<RecruitListProps> = ({ data = [], onClick }) => {
-  /* 🔹 모집 요일 및 시간 포맷 함수 */
+
+  const navigate = useNavigate();
   const formatRecruitTimes = (recruitTimes: elderService["recruitTimes"]) => {
     if (!recruitTimes.length) return "없음";
     
@@ -78,6 +80,18 @@ const RecruitList: React.FC<RecruitListProps> = ({ data = [], onClick }) => {
               <p className="text-sm text-gray-600">
                 요일 & 시간: {formatRecruitTimes(elder.recruitTimes)}
               </p>
+              <button
+                className="ml-auto border border-green bg-pale-yellow px-3 rounded-lg font-gtr-B"
+                onClick={() => navigate(`/admin/elder/required/${elder.recruitConditionId}`)}
+                >
+                  조건 수정
+              </button>
+              <button
+                className="ml-auto border border-green bg-pale-red px-3 rounded-lg font-gtr-B"
+                onClick={() => navigate(`/admin/elder/required/${elder.recruitConditionId}`)}
+                >
+                  조건 삭제
+              </button>
             </div>
           ))
         ) : (
