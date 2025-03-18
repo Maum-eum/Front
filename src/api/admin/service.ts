@@ -26,6 +26,19 @@ export const getRecruitList = async (
   await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}`).then(Response).catch(Error);
 };
 
+// 구인 조건 조회
+export const getRecruitInfo = async (
+  params: {
+    centerId: number;
+    elderId: number;
+    recruit_id: number;
+  },
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderService[]>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}/${params.recruit_id}`).then(Response).catch(Error);
+};
+
 // 조건에 따른 요양보호사 리스트 조회
 export const getCaregiverList = async (
   params: {
