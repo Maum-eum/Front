@@ -8,11 +8,12 @@ import {
 import { ApiResponseDefault } from "../../types/commons/commons";
 import { elderInfo } from "../../types/admin/elderType";
 import type { Response } from "../../types/admin/recruitData";
+import { JobConditionResponseTmp } from "../../types/caregiver/jobCondition";
 
 /* 요양보호사 근무 요청 응답 */
-export const reponseToRecruit = async (params: RecruitRequest): Promise<boolean | null> => {
+export const reponseToRecruit = async (params: RecruitRequest): Promise<string | null> => {
   try {
-    const response: AxiosResponse<ApiResponseDefault<boolean | null>> = await privateApi.put(
+    const response: AxiosResponse<ApiResponseDefault<string | null>> = await privateApi.put(
       `/match/response`,
       params
     );
@@ -48,33 +49,13 @@ export const getRequests = async (): Promise<RequestsListResponse | null> => {
 };
 
 /* 요양보호사 근무 요청 상세 정보 조회 */
-export const getRequestDetails = async (
-  centerId: number,
-  elderId: number,
-  recruitId: number
-): Promise<Response | null> => {
+export const getJobConditionTmp = async (): Promise<JobConditionResponseTmp | null> => {
   try {
-    const response: AxiosResponse<ApiResponseDefault<Response | null>> = await privateApi.get(
-      `/admin/${centerId}/recruit/${elderId}/${recruitId}`
-    );
+    const response: AxiosResponse<ApiResponseDefault<JobConditionResponseTmp>> =
+      await privateApi.get(`/caregiver/jobcondition`);
     return response.data.data;
   } catch (error) {
-    console.error("Error getRequestDetails", error);
-    return null;
-  }
-};
-
-export const getElderDetails = async (
-  centerId: number,
-  elderId: number
-): Promise<elderInfo | null> => {
-  try {
-    const response: AxiosResponse<ApiResponseDefault<elderInfo | null>> = await privateApi.get(
-      `/admin/${centerId}/elders/${elderId}`
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error getElderDetails", error);
+    console.error("Error getJobConditionTmp", error);
     return null;
   }
 };

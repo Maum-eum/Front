@@ -2,17 +2,11 @@ import EmptyImg from "../../assets/image/empty.png";
 import CaregiverRequestCard from "../../components/caregiver/RequestCard";
 import ScrollListBox from "../../components/commons/ScrollListBox";
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
-import { MatchStatus } from "../../types/caregiver/stringType";
 
 type RequestListProps = {
   requests: WorkRequest[];
   tuneRequests: WorkRequest[];
-  onClick: (
-    recruitConditionId: number,
-    centerId: number,
-    elderId: number,
-    matchStatus: MatchStatus
-  ) => void;
+  onClick: (recruitConditionId: number, matchId: number, status: string) => void;
   onRefresh: () => void;
 };
 
@@ -31,8 +25,8 @@ const RequestList: React.FC<RequestListProps> = ({
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {requests.map((request) => (
-                <CaregiverRequestCard request={request} onClick={onClick} />
+              {requests.map((request, key) => (
+                <CaregiverRequestCard request={request} onClick={onClick} key={key} />
               ))}
             </div>
           </ScrollListBox>
@@ -45,8 +39,8 @@ const RequestList: React.FC<RequestListProps> = ({
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {tuneRequests.map((tuneRequest) => (
-                <CaregiverRequestCard request={tuneRequest} onClick={onClick} />
+              {tuneRequests.map((tuneRequest, key) => (
+                <CaregiverRequestCard request={tuneRequest} onClick={onClick} key={key} />
               ))}
             </div>
           </ScrollListBox>

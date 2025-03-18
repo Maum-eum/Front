@@ -1,16 +1,10 @@
 import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
-import { MatchStatus } from "../../types/caregiver/stringType";
 import AttributeCard from "./AttributeCard";
 import BasicBtn from "./BasicBtn";
 
 type CaregiverRequestCardProps = {
   request: WorkRequest;
-  onClick: (
-    recruitConditionId: number,
-    centerId: number,
-    elderId: number,
-    matchStatus: MatchStatus
-  ) => void;
+  onClick: (recruitConditionId: number, matchId: number, status: string) => void;
 };
 
 const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, onClick }) => {
@@ -47,14 +41,7 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
         label="상세 정보 보기"
         color="green"
         attribute="button"
-        onClick={() =>
-          onClick(
-            request.recruitConditionId,
-            request.centerId,
-            request.elderId,
-            request.matchStatus
-          )
-        }
+        onClick={() => onClick(request.recruitConditionId, request.matchId, request.status)}
       />
     </div>
   );

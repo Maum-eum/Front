@@ -5,7 +5,7 @@ import MatchCard from "./MatchCard";
 
 type MatchListProps = {
   matches: MatchedStatus[];
-  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
+  onClick: (recruitId: number, matchId: number) => void;
   onRefresh: () => void;
 };
 
@@ -19,8 +19,8 @@ const MatchList: React.FC<MatchListProps> = ({ matches, onClick, onRefresh }) =>
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {matches.map((match) => (
-                <MatchCard match={match} onClick={onClick} />
+              {matches.map((match, key) => (
+                <MatchCard match={match} onClick={onClick} key={key} />
               ))}
             </div>
           </ScrollListBox>
