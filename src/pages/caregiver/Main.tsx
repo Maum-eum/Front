@@ -109,7 +109,7 @@ const Main = () => {
   };
 
   /* 요양보호사 근무 요청 WAITING/TUNING 상세 보기 */
-  const handleClickRequest = (recruitConditionId: number, matchId: number, status: string) => {
+  const handleClickRequest = (status: string, recruitConditionId: number, matchId: number) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/caregiver/match/${status}/${recruitConditionId}/${matchId}`);
   };

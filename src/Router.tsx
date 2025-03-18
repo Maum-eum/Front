@@ -92,10 +92,6 @@ export default function Router() {
         element={<ProtectedRoute element={<EditProfile />} allowedRoles={["caregiver"]} />}
       />
 
-      <Route path="/caregiver/main" element={<CaregiverMain />} />
-      <Route path="/caregiver/match" element={<MatchSchedules />} />
-      <Route path="/caregiver/match/:recruitId/:centerId/:elderId" element={<RequestDetails />} />
-
       <Route
         path="/caregiver/main"
         element={<ProtectedRoute element={<CaregiverMain />} allowedRoles={["caregiver"]} />}

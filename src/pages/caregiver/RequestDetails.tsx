@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Alert from "../../components/commons/Alert";
 import { useNavigate, useParams } from "react-router-dom";
-import type { Response, ResponseData } from "../../types/admin/recruitData";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 import { getJobConditionTmp, reponseToRecruit } from "../../api/caregiver/caregiverRequest";
 import AttributeCard from "../../components/caregiver/AttributeCard";
-import { elderInfo } from "../../types/admin/elderType";
+import { elderInfo } from "../../types/admin/elder";
 import { useSignupStore } from "../../stores/caregiver/useSignupStore";
 import { matchInfoApi } from "../../api/admin/match";
 import { MatchInfoResponse, RecruitCond } from "../../types/admin/matchData";

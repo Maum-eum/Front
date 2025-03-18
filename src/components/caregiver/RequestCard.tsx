@@ -4,7 +4,7 @@ import BasicBtn from "./BasicBtn";
 
 type CaregiverRequestCardProps = {
   request: WorkRequest;
-  onClick: (recruitConditionId: number, matchId: number, status: string) => void;
+  onClick: (status: string, recruitConditionId: number, matchId: number) => void;
 };
 
 const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, onClick }) => {
@@ -41,7 +41,7 @@ const CaregiverRequestCard: React.FC<CaregiverRequestCardProps> = ({ request, on
         label="상세 정보 보기"
         color="green"
         attribute="button"
-        onClick={() => onClick(request.recruitConditionId, request.matchId, request.status)}
+        onClick={() => onClick(request.status, request.recruitConditionId, request.matchId)}
       />
     </div>
   );

@@ -6,7 +6,7 @@ import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 type RequestListProps = {
   requests: WorkRequest[];
   tuneRequests: WorkRequest[];
-  onClick: (recruitConditionId: number, matchId: number, status: string) => void;
+  onClick: (status: string, recruitConditionId: number, matchId: number) => void;
   onRefresh: () => void;
 };
 
