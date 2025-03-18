@@ -1,5 +1,5 @@
 export type Week = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
-export type ElderRate = "RATE1" | "RATE2" | "RATE3" | "RATE4" | "RATE5" | "RATE6";
+export type ElderRate = "RATE1" | "RATE2" | "RATE3" | "RATE4" | "RATE5" | "RATE6" | "NORATE";
 export type Sexual = "MALE" | "FEMALE";
 export type CareType =
   | "방문요양"

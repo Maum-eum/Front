@@ -10,21 +10,22 @@ import { changeStatus, getCaregiverInfo } from "../../api/caregiver/caregiver";
 import BasicBtn from "../../components/caregiver/BasicBtn";
 import { getRequests } from "../../api/caregiver/caregiverRequest";
 import { CaregiverInfoResponse } from "../../types/caregiver/caregiverType";
-import { useCaregiverStore } from "../../stores/caregiver/caregiverStore";
+import { useSignupStore } from "../../stores/caregiver/useSignupStore";
+import { useUserStore } from "../../stores/userStore";
 
 const Main = () => {
   const navigate = useNavigate();
 
   /* 요양보호사 정보 store */
-  const store = useCaregiverStore();
-
+  const caregiverStore = useSignupStore();
+  const userStore = useUserStore();
   const [caregiverInfo, setCaregiverInfo] = useState<CaregiverInfoResponse>();
-  const [requests, setRequests] = useState<WorkRequest[]>();
-  const [tuneRequests, setTuneRequests] = useState<WorkRequest[]>();
+  const [requests, setRequests] = useState<WorkRequest[]>([]);
 
   /* 모달 */
   const [isAlertOpen, setAlertOpen] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
+  const [flag, setFlag] = useState<string>("");
 
   /* 요양보호사 정보 조회 */
   const handleGetCaregiverInfo = async () => {
@@ -33,12 +34,14 @@ const Main = () => {
       if (response) {
         console.log("요양보호사 정보 조회 성공:", response);
         setCaregiverInfo(response);
-        store.setUserInfo(response.username, response.img);
+        caregiverStore.setSignupData({ username: response.username });
+        console.log("[data]" + caregiverStore.username + " " + caregiverStore.username);
       }
     } catch (error) {
       console.log("요양보호사 정보 조회 실패:", error);
-      setAlertMessage("조회에 실패했어요. 새로고침을 눌러 보세요!");
+      setAlertMessage("조회에 실패했어요.");
       setAlertOpen(true);
+      setFlag("RELOAD");
     }
   };
 
@@ -61,10 +64,13 @@ const Main = () => {
           };
         });
       }
+      setAlertMessage("구직 상태를 변경했어요.");
+      setAlertOpen(true);
     } catch (error) {
       console.log("구직 상태 변경 실패:", error);
-      setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
+      setAlertMessage("구직 상태 변경에 실패했어요.");
       setAlertOpen(true);
+      setFlag("RELOAD");
     }
   };
 
@@ -75,27 +81,42 @@ const Main = () => {
       if (response) {
         console.log("근무 요청 리스트 조회 성공:", response);
         if (response.list != null) {
-          setRequests((response.list as WorkRequest[]).filter((e) => e.matchStatus === "NONE"));
-          setTuneRequests(
-            (response.list as WorkRequest[]).filter((e) => e.matchStatus === "TUNING")
-          );
+          setRequests(response.list);
+          // setRequests(Object.values(response.list) as WorkRequest[]);
+          console.log("[requests]" + requests);
         }
       }
     } catch (error) {
       console.log("근무 요청 리스트 조회 실패:", error);
-      setAlertMessage("구직 상태 변경에 실패했어요. 새로고침 후 다시 시도해 보세요!");
+      setAlertMessage("구직 상태 변경에 실패했어요.");
       setAlertOpen(true);
+      setFlag("RELOAD");
     }
   };
 
-  /* 요양보호사 근무 요청 NONE/TUNING 상세 보기 */
-  const handleClickRequest = (recruitConditionId: number, centerId: number, elderId: number) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(`/caregiver/match/${recruitConditionId}/${centerId}/${elderId}`);
+  /* 알림 팝업 처리 */
+  const handleClosePopup = () => {
+    setAlertOpen(false);
+    if (flag == "BACK") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate(-1);
+      setFlag("");
+    } else if (flag == "RELOAD") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate(0);
+      setFlag("");
+    }
   };
 
+  /* 요양보호사 근무 요청 WAITING/TUNING 상세 보기 */
+  const handleClickRequest = (recruitConditionId: number, matchId: number, status: string) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(`/caregiver/match/${status}/${recruitConditionId}/${matchId}`);
+  };
+
+  /* 로그아웃 */
   const handleLogOut = async () => {
-    store.logout();
+    userStore.userLogout();
     navigate("/");
   };
 
@@ -135,8 +156,12 @@ const Main = () => {
               onClick={handleChangeStatus}
             />
             {/* 요양보호사 정보 변경 */}
-            <BasicBtn label="정보 변경" color="white" attribute="button" onClick={() => navigate("/caregiver/edit/profile")} />
-
+            <BasicBtn
+              label="정보 변경"
+              color="white"
+              attribute="button"
+              onClick={() => navigate("/caregiver/edit/profile")}
+            />
           </div>
         </div>
         {/* 메뉴 (화면 이동) */}
@@ -162,14 +187,14 @@ const Main = () => {
         </div>
         {/* 요청 리스트 조회 */}
         <RequestList
-          requests={requests ?? []}
-          tuneRequests={tuneRequests ?? []}
+          requests={requests.filter((e) => e.status === "WAITING") ?? []}
+          tuneRequests={requests.filter((e) => e.status === "TUNING") ?? []}
           onClick={handleClickRequest}
           onRefresh={handleGetRequests}
         />
       </div>
       {/* 알림 추가 */}
-      <Alert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)}>
+      <Alert isOpen={isAlertOpen} onClose={handleClosePopup}>
         <div>{alertMessage}</div>
       </Alert>
     </div>
