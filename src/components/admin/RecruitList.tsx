@@ -1,6 +1,8 @@
 import React from "react";
 import { elderService } from "../../types/admin/service";
 import { useNavigate } from "react-router-dom";
+import { deleteRecruit } from "../../api/admin/service";
+import { useAdminStore } from "../../stores/admin/adminStore";
 
 type RecruitListProps = {
   data: elderService[];
@@ -48,6 +50,7 @@ const timeMapping: { [key: number]: string } = {
 const RecruitList: React.FC<RecruitListProps> = ({ data = [], onClick }) => {
 
   const navigate = useNavigate();
+  const { centerId } = useAdminStore();
   const formatRecruitTimes = (recruitTimes: elderService["recruitTimes"]) => {
     if (!recruitTimes.length) return "없음";
     
@@ -58,6 +61,22 @@ const RecruitList: React.FC<RecruitListProps> = ({ data = [], onClick }) => {
 
   const clickEvent = (data:number) => {
     onClick(data)
+  }
+
+  const handleDeleteRecruit = async(elderId: number, recruit_id: number) => {
+    await deleteRecruit(
+      {
+        centerId: centerId,
+        elderId: elderId,
+        recruit_id: recruit_id
+      },
+      (res) => {
+        console.log(res)
+      },
+      (err) => {
+        console.log(err)
+      }
+    )
   }
 
   return (
@@ -82,13 +101,13 @@ const RecruitList: React.FC<RecruitListProps> = ({ data = [], onClick }) => {
               </p>
               <button
                 className="ml-auto border border-green bg-pale-yellow px-3 rounded-lg font-gtr-B"
-                onClick={() => navigate(`/admin/elder/required/${elder.recruitConditionId}`)}
+                onClick={() => navigate(`/admin/elder/required/${elder.elderId}/${elder.recruitConditionId}`)}
                 >
                   조건 수정
               </button>
               <button
                 className="ml-auto border border-green bg-pale-red px-3 rounded-lg font-gtr-B"
-                onClick={() => navigate(`/admin/elder/required/${elder.recruitConditionId}`)}
+                onClick={() => handleDeleteRecruit(elder.elderId, elder.recruitConditionId)}
                 >
                   조건 삭제
               </button>

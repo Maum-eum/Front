@@ -14,7 +14,7 @@ export const addElderService = async (
   await privateApi.post(`/admin/${params.centerId}/recruit/${params.elderId}`, params.data).then(Response).catch(Error);
 };
 
-// 구인 조건 조회
+// 구인 조건 리스트 조회
 export const getRecruitList = async (
   params: {
     centerId: number;
@@ -26,17 +26,44 @@ export const getRecruitList = async (
   await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}`).then(Response).catch(Error);
 };
 
-// 구인 조건 조회
-export const getRecruitInfo = async (
+// 구인 조건 상세 조회
+export const getRecruit = async (
+  params: {
+    centerId: number;
+    elderId: string;
+    recruit_id: string;
+  },
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderService>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}/${params.recruit_id}`).then(Response).catch(Error);
+};
+
+// 구인 조건 업데이트
+export const editRecruit = async (
+  params: {
+    centerId: number;
+    elderId: string;
+    recruit_id: string;
+    data: elderService;
+  },
+  Response: (Response: AxiosResponse<ApiResponseDefault<elderService[]>>) => void,
+  Error: (Error: AxiosError<null>) => void
+) => {
+  await privateApi.put(`/admin/${params.centerId}/recruit/${params.elderId}/${params.recruit_id}`, params.data).then(Response).catch(Error);
+};
+
+// 구인 조건 업데이트
+export const deleteRecruit = async (
   params: {
     centerId: number;
     elderId: number;
     recruit_id: number;
   },
-  Response: (Response: AxiosResponse<ApiResponseDefault<elderService[]>>) => void,
+  Response: (Response: AxiosResponse<ApiResponseDefault<null>>) => void,
   Error: (Error: AxiosError<null>) => void
 ) => {
-  await privateApi.get(`/admin/${params.centerId}/recruit/${params.elderId}/${params.recruit_id}`).then(Response).catch(Error);
+  await privateApi.delete(`/admin/${params.centerId}/recruit/${params.elderId}/${params.recruit_id}`).then(Response).catch(Error);
 };
 
 // 조건에 따른 요양보호사 리스트 조회

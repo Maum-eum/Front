@@ -14,6 +14,7 @@ import ModifyAdmin from "./pages/admin/ModifyAdmin";
 import DetailElder from "./pages/admin/DetailElder";
 import ModifyElder from "./pages/admin/ModifyElder";
 import AddServiceElder from "./pages/admin/AddServiceElder";
+import EditServiceElder from "./pages/admin/EditServiceElder";
 
 
 //유저회원가입
@@ -60,6 +61,7 @@ export default function Router() {
       <Route path="/admin/elder/detail/:elderId" element={<ProtectedRoute element={<DetailElder />} allowedRoles={["admin"]} />} />
       <Route path="/admin/elder/modify/:elderId/:temp" element={<ProtectedRoute element={<ModifyElder />} allowedRoles={["admin"]} />} />
       <Route path="/admin/elder/required/:elderId/" element={<ProtectedRoute element={<AddServiceElder />} allowedRoles={["admin"]} />} />
+      <Route path="/admin/elder/required/:elderId/:recruitConditionId" element={<ProtectedRoute element={<EditServiceElder />} allowedRoles={["admin"]} />} />
 
       {/*요양보호사 전용*/}
       <Route path="/caregiver/signup/step3" element={<SignupStep3 />} />
