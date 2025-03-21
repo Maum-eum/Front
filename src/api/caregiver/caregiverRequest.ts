@@ -6,11 +6,14 @@ import {
   RequestsListResponse,
 } from "../../types/caregiver/caregiverRequestType";
 import { ApiResponseDefault } from "../../types/commons/commons";
+import { elderInfo } from "../../types/admin/elderType";
+import type { Response } from "../../types/admin/recruitData";
+import { JobConditionResponseTmp } from "../../types/caregiver/jobCondition";
 
 /* 요양보호사 근무 요청 응답 */
-export const reponseToRecruit = async (params: RecruitRequest): Promise<boolean | null> => {
+export const reponseToRecruit = async (params: RecruitRequest): Promise<string | null> => {
   try {
-    const response: AxiosResponse<ApiResponseDefault<boolean | null>> = await privateApi.put(
+    const response: AxiosResponse<ApiResponseDefault<string | null>> = await privateApi.put(
       `/match/response`,
       params
     );
@@ -46,4 +49,13 @@ export const getRequests = async (): Promise<RequestsListResponse | null> => {
 };
 
 /* 요양보호사 근무 요청 상세 정보 조회 */
-//
+export const getJobConditionTmp = async (): Promise<JobConditionResponseTmp | null> => {
+  try {
+    const response: AxiosResponse<ApiResponseDefault<JobConditionResponseTmp>> =
+      await privateApi.get(`/caregiver/jobcondition`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error getJobConditionTmp", error);
+    return null;
+  }
+};

@@ -5,15 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { Login } from "../api/commons/User";
 import { useUserStore } from "../stores/userStore";
 import { useAdminStore } from "../stores/admin/adminStore";
-import { useCaregiverStore } from "../stores/caregiver/caregiverStore";
 import PoongImage from "../assets/image/logo.png";
-
 
 const Main: React.FC = () => {
   const navigate = useNavigate();
   const { setAccessToken, setUserInfo } = useUserStore();
   const { setAdminInfo } = useAdminStore();
-  const { setCaregiverInfo } = useCaregiverStore();
   const registerSectionRef = useRef<HTMLDivElement>(null);
   const topSectionRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +18,8 @@ const Main: React.FC = () => {
     username: "",
     password: "",
   });
+
+  const [errorMessage, setErrorMessage] = useState(""); // ❗ 로그인 실패 메시지 상태 추가
 
   const loginDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,7 +36,7 @@ const Main: React.FC = () => {
         const token = res.headers.authorization;
 
         //  2025-02-25 박병조 수정 공용스토어에 저장으로 변경
-        setAccessToken(token)
+        setAccessToken(token);
         setUserInfo(userId, role);
 
         if (role === "ROLE_ADMIN") {
@@ -45,7 +44,6 @@ const Main: React.FC = () => {
           setAdminInfo(name, centerId, centerName);
           navigate("/admin/main");
         } else if (role === "ROLE_CAREGIVER") {
-          setCaregiverInfo(userId, token);
           navigate("/caregiver/main");
         } else {
           console.log("알 수 없는 역할:", role);
@@ -53,6 +51,7 @@ const Main: React.FC = () => {
       },
       (err) => {
         console.log(err.response?.data);
+        setErrorMessage("아이디 또는 비밀번호가 올바르지 않습니다."); // ❗ 로그인 실패 시 에러 메시지 설정
       }
     );
   };
@@ -87,6 +86,11 @@ const Main: React.FC = () => {
             value={loginData.password}
             onChange={loginDataChange}
           />
+         {errorMessage && (
+          <p className="text-center text-sm font-bold mt-2 text-inherit" style={{ color: "#FF0000" }}>
+            {errorMessage}
+          </p>
+        )}
           <Btn text="로그인" onClick={handleLogin} />
         </div>
       </div>

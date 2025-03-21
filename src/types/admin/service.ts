@@ -76,7 +76,7 @@ export interface MatchInfo {
   matchId: number;
   adminContact: string;
   careGiverInfoDto: {
-    useranme: string;
+    username: string;
     img: string;
     careGiverId: number;
   },

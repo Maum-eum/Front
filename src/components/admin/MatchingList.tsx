@@ -95,7 +95,7 @@ const MatchingList: React.FC<MatchingListProps> = ({ data = [] }) => {
                 <p className="text-item font-bold">
                   어르신: {match.elderInfoDto.name}
                 </p>
-                <p className="text-item">요양보호사: {match.careGiverInfoDto.useranme}</p>
+                <p className="text-item">요양보호사: {match.careGiverInfoDto.username}</p>
               </div>
 
               {/* 매칭 상태 */}

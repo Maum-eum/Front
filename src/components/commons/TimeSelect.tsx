@@ -22,13 +22,13 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
   }, [initialTimeData]);
   
   
-  // ✅ 요일을 한글로 변환
+  // 요일을 한글로 변환
   const convertBinaryToDayArray = (binaryString: string): string[] => {
     const days = ["월", "화", "수", "목", "금", "토", "일"];
     return binaryString.split("").map((char, index) => (char === "1" ? days[index] : null)).filter(Boolean) as string[];
   };
 
-  // ✅ 요일 선택 핸들러
+  // 요일 선택 핸들러
   const handleDayOfWeekChange = (day: string) => {
     setSelectedDayOfWeek((prev) => {
       if (prev.includes(day)) {
@@ -39,7 +39,7 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
     });
   };
 
-  // ✅ 한글 요일을 이진 문자열로 변환
+  // 한글 요일을 이진 문자열로 변환
   const convertDayOfWeekToBinary = (selectedDays: string[]): string => {
     const dayMapping: { [key: string]: number } = {
       "월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6,
@@ -53,7 +53,7 @@ export function TimeSelect({ setTimeData, initialTimeData }: TimeSelectProps) {
     return binaryArray.join("");
   };
 
-  // ✅ 서버에서 받은 시간을 다시 UI에서 사용할 수 있도록 변환
+  // 서버에서 받은 시간을 다시 UI에서 사용할 수 있도록 변환
   const reverseTimeMapping = (serverTime: number) => {
     const reverseMap: { [key: number]: number } = {
       18: 9, 19: 9.5, 20: 10, 21: 10.5, 22: 11, 23: 11.5,

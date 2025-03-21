@@ -6,7 +6,7 @@ import { WorkRequest } from "../../types/caregiver/caregiverRequestType";
 type RequestListProps = {
   requests: WorkRequest[];
   tuneRequests: WorkRequest[];
-  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
+  onClick: (status: string, recruitConditionId: number, matchId: number) => void;
   onRefresh: () => void;
 };
 
@@ -21,12 +21,12 @@ const RequestList: React.FC<RequestListProps> = ({
       {/* 근무 요청 알림 */}
       {requests && requests.length > 0 && (
         <>
-          <label className="text-item font-bold mb-10">근무 요청이 있어요</label>
+          <label className="text-item font-bold mb-3">근무 요청이 있어요</label>
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {requests.map((request) => (
-                <CaregiverRequestCard request={request} onClick={onClick} />
+              {requests.map((request, key) => (
+                <CaregiverRequestCard request={request} onClick={onClick} key={key} />
               ))}
             </div>
           </ScrollListBox>
@@ -39,8 +39,8 @@ const RequestList: React.FC<RequestListProps> = ({
           <button onClick={onRefresh}>🔄️</button>
           <ScrollListBox>
             <div className="grid w-full gap-6 sm:grid-cols-2 mb-6">
-              {tuneRequests.map((tuneRequest) => (
-                <CaregiverRequestCard request={tuneRequest} onClick={onClick} />
+              {tuneRequests.map((tuneRequest, key) => (
+                <CaregiverRequestCard request={tuneRequest} onClick={onClick} key={key} />
               ))}
             </div>
           </ScrollListBox>

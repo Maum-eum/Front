@@ -14,8 +14,9 @@ export interface MatchedListResponse {
 export interface MatchedStatus {
   elderId: number;
   elderName: string;
-  recruitConditionId: number;
+  recruitId: number;
   centerId: number;
+  matchId: number;
   mealAssistance: boolean;
   toiletAssistance: boolean;
   moveAssistance: boolean;
@@ -52,15 +53,16 @@ export interface RequestsListResponse {
   list: WorkRequest[];
 }
 export interface WorkRequest {
-  elderId: number;
-  recruitConditionId: number;
+  age: number;
+  careTypes: CareType[];
   centerId: number;
   centerName: string;
-  imgUrl: string | null;
   desiredHourlyWage: number;
+  elderId: number;
+  imgUrl: string;
   rate: ElderRate;
-  age: number;
+  recruitConditionId: number;
   sexual: Sexual;
-  matchStatus: MatchStatus;
-  careTypes: CareType[];
+  status: MatchStatus;
+  matchId: number;
 }

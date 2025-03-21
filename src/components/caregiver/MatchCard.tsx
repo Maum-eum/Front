@@ -4,7 +4,7 @@ import BasicBtn from "./BasicBtn";
 
 type MatchCardProps = {
   match: MatchedStatus;
-  onClick: (recruitConditionId: number, centerId: number, elderId: number) => void;
+  onClick: (recruitId: number, matchId: number) => void;
 };
 
 const MatchCard: React.FC<MatchCardProps> = ({ match, onClick }) => {
@@ -47,7 +47,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, onClick }) => {
     <div className="flex flex-col h-auto shadow bg-white rounded-lg p-5 mb-4 transition cursor-pointer active:bg-point-pink">
       <div className="flex flex-col justify-start mb-3">
         <div className="flex">
-          <span className="text-content font-bold">#{match.recruitConditionId} [</span>
+          <span className="text-content font-bold">#{match.recruitId} [</span>
           <span className="text-content font-bold text-red">{match.elderName}</span>
           <span className="text-content font-bold">] 어르신</span>
         </div>
@@ -64,7 +64,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, onClick }) => {
         label="상세 정보 보기"
         color="green"
         attribute="button"
-        onClick={() => onClick(match.recruitConditionId, match.centerId, match.elderId)}
+        onClick={() => onClick(match.recruitId, match.matchId)}
       />
     </div>
   );

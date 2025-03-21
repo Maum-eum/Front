@@ -72,7 +72,6 @@ const Main: React.FC = () => {
       centerId,
       (res) => {
         setElderList(res.data.data);
-        console.log(res.data.data);
       },
       (err) => {
         console.log(err);

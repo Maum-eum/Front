@@ -3,15 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { getJobCondition } from "../../api/caregiver/jobCondition";
 import Btn from "../../components/commons/Btn";
 
-// ✅ 요일 이진 문자열 → 요일 리스트 변환 함수
+// 요일 이진 문자열 → 요일 리스트 변환 함수
 const dayOfWeekMapping = (dayOfWeekString: string) => {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
-  
   if (!dayOfWeekString) return "없음";
 
-  // ✅ 7자리 유지: 앞쪽에 0 채우기
-  const paddedDayOfWeek = dayOfWeekString.padStart(7, "0");
-
+  const paddedDayOfWeek = dayOfWeekString.padStart(7, "0"); // 7자리 유지
   return paddedDayOfWeek
     .split("")
     .map((char, index) => (char === "1" ? days[index] : null))
@@ -19,15 +16,14 @@ const dayOfWeekMapping = (dayOfWeekString: string) => {
     .join(", ") || "없음";
 };
 
-
-// ✅ 숫자 시간을 9시, 9시 30분 형식으로 변환
+// 숫자 시간을 "9시", "9시 30분" 형식으로 변환
 const convertTime = (time?: number) => {
-  if (typeof time !== "number" || isNaN(time) || time < 18 || time > 42) return "시간 없음"; // ✅ 유효 범위 검사 추가
+  if (typeof time !== "number" || isNaN(time) || time < 18 || time > 42) return "시간 없음";
   const mappedTime = timeMapping[time];
   return mappedTime ? `${Math.floor(mappedTime)}시${mappedTime % 1 === 0 ? "" : " 30분"}` : "시간 오류";
 };
 
-// ✅ 시간 변환 매핑 테이블
+// 시간 변환 매핑 테이블
 const timeMapping: { [key: number]: number } = {
   18: 9, 19: 9.5, 20: 10, 21: 10.5, 22: 11, 23: 11.5,
   24: 12, 25: 12.5, 26: 13, 27: 13.5, 28: 14, 29: 14.5,
@@ -35,7 +31,7 @@ const timeMapping: { [key: number]: number } = {
   36: 18, 37: 18.5, 38: 19, 39: 19.5, 40: 20, 41: 20.5, 42: 21,
 };
 
-// ✅ 지원 가능 항목 한글 변환 매핑
+// 지원 가능 항목 한글 변환 매핑
 const jobConditionLabels: { [key: string]: string } = {
   mealPreparation: "식사 차리기",
   cookingAssistance: "구토물 정리",
@@ -67,16 +63,15 @@ const JobConditionView = () => {
       try {
         const data = await getJobCondition();
         console.log("🟢 [조회한 데이터]:", data);
-  
-  
         setJobCondition(data);
       } catch (error) {
         console.error("❌ 근무 조건 조회 실패:", error);
       }
     };
+
     fetchJobCondition();
 
-    // ✅ 페이지가 포커스될 때 최신 데이터 가져오기
+    // 페이지가 포커스될 때 최신 데이터 가져오기
     window.addEventListener("focus", fetchJobCondition);
     return () => window.removeEventListener("focus", fetchJobCondition);
   }, []);
@@ -90,27 +85,31 @@ const JobConditionView = () => {
       <h2 className="text-2xl font-bold text-center mb-6">근무 조건 조회</h2>
 
       <div className="border p-4 rounded-lg bg-white shadow-sm">
-        <h3 className="font-bold text-lg">📌 희망 시급</h3>
+        <h3 className="font-bold text-lg">희망 시급</h3>
         <p className="mb-4">{jobCondition.desiredHourlyWage.toLocaleString()} 원</p>
 
-        <h3 className="font-bold text-lg">📅 근무 요일 및 시간</h3>
+        <h3 className="font-bold text-lg">근무 요일 및 시간</h3>
         <p>요일: {dayOfWeekMapping(jobCondition.dayOfWeek)}</p>
         <p>시간: {convertTime(jobCondition.startTime)} ~ {convertTime(jobCondition.endTime)}</p>
 
-        <h3 className="font-bold text-lg mt-4">📍 근무 지역</h3>
-        <ul>
-          {jobCondition.locationResponseDtoList.map((loc: any) => (
-            <li key={loc.workLocationId}>{loc.locationName}</li>
-          ))}
-        </ul>
+        <h3 className="font-bold text-lg mt-4">근무 지역</h3>
+        {jobCondition.locationResponseDtoList.length > 0 ? (
+          <ul>
+            {jobCondition.locationResponseDtoList.map((loc: any) => (
+              <li key={loc.workLocationId}>{loc.locationName}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>근무 지역을 선택해주세요!</p>
+        )}
 
-        <h3 className="font-bold text-lg mt-4">📝 지원 가능 항목</h3>
+        <h3 className="font-bold text-lg mt-4">지원 가능 항목</h3>
         <ul>
-          {Object.entries(jobCondition).map(([key, value]) => (
+          {Object.entries(jobCondition).map(([key, value]) =>
             typeof value === "string" && value === "POSSIBLE" ? (
               <li key={key}>{jobConditionLabels[key] || key}</li>
             ) : null
-          ))}
+          )}
         </ul>
       </div>
 
