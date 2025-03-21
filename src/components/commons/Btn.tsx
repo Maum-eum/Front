@@ -4,28 +4,29 @@ type BtnProps = {
   text?: string;
   color?: "green" | "red" | "white" | "blue" | "disabled" | "pale-green";
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-const Btn: React.FC<BtnProps> = ({ text = "다음", color = "green", onClick }) => {
+const Btn: React.FC<BtnProps> = ({ text = "다음", color = "green", onClick, disabled = false }) => {
   return (
-<button
-  className={clsx(
-    "w-full max-w-xs h-14 sm:h-16 rounded-lg font-gtr-B text-button",
-    "mt-2 flex justify-center items-center mx-auto", 
-    {
-      "border-2 bg-blue text-white border-blue": color === "blue",
-      "border-2 bg-disabled-gray text-white border-disabled-gray": color === "disabled",
-      "border-2 bg-pale-green text-white border-green": color === "pale-green",
-      "border-2 bg-green text-white border-green": color === "green",
-      "border-2 bg-red text-white border-red": color === "red",
-      "border bg-white text-green border-gray-300": color === "white",
-    }
-  )}
-  onClick={onClick}
->
-  <p className="text-inherit">{text}</p>
-</button>
-
+    <button
+      className={clsx(
+        "w-full max-w-xs h-14 sm:h-16 rounded-lg font-gtr-B text-button",
+        "mt-2 flex justify-center items-center mx-auto", 
+        {
+          "border-2 bg-blue text-white border-blue": color === "blue",
+          "border-2 bg-disabled-gray text-white border-disabled-gray": color === "disabled",
+          "border-2 bg-pale-green text-white border-green": color === "pale-green",
+          "border-2 bg-green text-white border-green": color === "green",
+          "border-2 bg-red text-white border-red": color === "red",
+          "border bg-white text-green border-gray-300": color === "white",
+        }
+      )}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <p className="text-inherit">{text}</p>
+    </button>
   );
 };
 

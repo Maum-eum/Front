@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ServiceTime } from "../../types/admin/service";
-
 interface TimeSelectProps {
-  setTimeData: (newTimeData: ServiceTime[]) => void;
+  timeData: ServiceTime[];
+  setTimeData: (data: ServiceTime[]) => void;
 }
 
-const TimeSelect: React.FC<TimeSelectProps> = ({ setTimeData }) => {
+const TimeSelect: React.FC<TimeSelectProps> = ({ setTimeData, timeData = [] }) => {
   const [selectedDayOfWeek, setSelectedDayOfWeek] = useState<string | null>(null);
   const [selectedStartTime, setSelectedStartTime] = useState<number | undefined>(undefined);
   const [selectedEndTime, setSelectedEndTime] = useState<number | undefined>(undefined);
-  const [timeList, setTimeList] = useState<ServiceTime[]>([]); // 선택된 시간 목록
+  const [timeList, setTimeList] = useState<ServiceTime[]>(timeData); // 선택된 시간 목록
+
+  useEffect(() => {
+    setTimeList(timeData); // 외부 변경 시 동기화
+  }, []);
 
   const dayMapping: { [key: string]: string } = {
     "월": "MON",

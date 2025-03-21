@@ -13,7 +13,7 @@ interface CareGiverModalProps {
 
 const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, onClose, caregiver, onRequest }) => {
   const [prevMatchData, setPrevMatchData] = useState<MatchInfo>();
-
+  console.log(caregiver)
   // 🔹 이전 매칭 정보 불러오기
   const getPrevMatch = async () => {
     if (!caregiver) return;
@@ -47,7 +47,7 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         console.log(res)
       },
       (err) => {
-        console.error("이전 매칭 정보 가져오기 실패:", err);
+        console.error(err);
       }
     );
   };
@@ -152,10 +152,32 @@ const CaregiverInfoModal: React.FC<CareGiverModalProps> = ({ recruitId, isOpen, 
         {/* 버튼 영역 */}
         <div className="flex justify-between gap-2 mt-4">
           <Btn text="닫기" color="red" onClick={onClose} />
-          <Btn text="요청 전송" color="green" onClick={() => onRequest} />
-          <Btn text="서비스 시작" color="green" onClick={() => triggerMatch(true)} />
-          <Btn text="서비스 거절/종료" color="green" onClick={() => triggerMatch(false)} />
+          
+          {/* 요청 전송 버튼 (NONE 상태일 때만 활성화) */}
+          <Btn 
+            text="요청 전송" 
+            color={caregiver.matchStatus === "NONE" ? "green" : "disabled"} 
+            onClick={onRequest} 
+            disabled={caregiver.matchStatus !== "NONE"}
+          />
+
+          {/* 서비스 시작 버튼 (PENDING 상태일 때만 활성화) */}
+          <Btn 
+            text="서비스 시작"
+            color={caregiver.matchStatus === "TUNING" ? "green" : "disabled"} 
+            onClick={() => triggerMatch(true)} 
+            disabled={caregiver.matchStatus !== "TUNING"}
+          />
+
+          {/* 서비스 거절/종료 버튼 (PENDING 상태일 때만 활성화) */}
+          <Btn 
+            text="서비스 거절/종료" 
+            color={caregiver.matchStatus === "TUNING" ? "green" : "disabled"}  
+            onClick={() => triggerMatch(false)} 
+            disabled={caregiver.matchStatus !== "TUNING"}
+          />
         </div>
+
       </div>
     </div>
   );
