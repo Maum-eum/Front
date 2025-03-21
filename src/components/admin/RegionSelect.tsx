@@ -5,9 +5,10 @@ import type { Sido, Sigungu, Location } from '../../types/commons/regionData';
 interface RegionSelectProps {
   selectedLocations: number[];
   setSelectedLocations: (data: number[]) => void;
+  disabled?: boolean;
 }
 
-const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLocations }) => {
+const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLocations, disabled = false }) => {
   const [sido, setSido] = useState<Sido[]>([]);
   const [sigungu, setSigungu] = useState<Sigungu[]>([]);
   const [location, setLocation] = useState<Location[]>([]);
@@ -29,6 +30,8 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
   }, []);
 
   const handleSidoChange = async (sidoId: number) => {
+    if (disabled) return;
+
     setSelectedSido(sidoId);
     setSelectedSigungu(undefined);
     setSelectedLocations([]);
@@ -43,6 +46,8 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
   };
 
   const handleSigunguChange = async (sigunguId: number) => {
+    if (disabled) return;
+
     setSelectedSigungu(sigunguId);
     setSelectedLocations([]);
     try {
@@ -56,6 +61,7 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
   };
 
   const toggleLocation = (locationId: number) => {
+    if (disabled) return;
     setSelectedLocations([locationId]);
   };
 
@@ -72,8 +78,10 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
             {sido?.map((el) => (
               <li
                 key={el.sidoId}
-                className={`p-2 cursor-pointer ${selectedSido === el.sidoId ? "bg-gray-100 font-gtr-B" : "hover:bg-gray-100 font-gtr-R"}`}
-                onClick={() => handleSidoChange(el.sidoId)}
+                className={`p-2 ${disabled ? "text-gray-400 cursor-not-allowed" : "cursor-pointer"} ${
+                  selectedSido === el.sidoId ? "bg-gray-100 font-gtr-B" : "hover:bg-gray-100 font-gtr-R"
+                }`}
+                onClick={() => !disabled && handleSidoChange(el.sidoId)}
               >
                 {el.sidoName}
               </li>
@@ -88,8 +96,10 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
             {sigungu?.map((el) => (
               <li
                 key={el.sigunguId}
-                className={`p-2 cursor-pointer ${selectedSigungu === el.sigunguId ? "bg-gray-100 font-gtr-B" : "hover:bg-gray-100 font-gtr-R"}`}
-                onClick={() => handleSigunguChange(el.sigunguId)}
+                className={`p-2 ${disabled ? "text-gray-400 cursor-not-allowed" : "cursor-pointer"} ${
+                  selectedSigungu === el.sigunguId ? "bg-gray-100 font-gtr-B" : "hover:bg-gray-100 font-gtr-R"
+                }`}
+                onClick={() => !disabled && handleSigunguChange(el.sigunguId)}
               >
                 {el.sigunguName}
               </li>
@@ -105,8 +115,20 @@ const RegionSelect: FC<RegionSelectProps> = ({ selectedLocations, setSelectedLoc
         <hr />
         <ul className="text-sm min-h-28 max-h-28 overflow-y-scroll p-2 grid grid-cols-2 gap-2 border-x border-b">
           {location?.map((el) => (
-            <li key={el.locationId} className="flex items-center p-2 font-gtr-R hover:bg-gray-100 cursor-pointer" onClick={() => toggleLocation(el.locationId)}>
-              <input type="checkbox" checked={selectedLocations.includes(el.locationId)} className="mr-2" readOnly />
+            <li
+              key={el.locationId}
+              className={`flex items-center p-2 font-gtr-R ${
+                disabled ? "text-gray-400 cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
+              }`}
+              onClick={() => !disabled && toggleLocation(el.locationId)}
+            >
+              <input
+                type="checkbox"
+                checked={selectedLocations.includes(el.locationId)}
+                className="mr-2"
+                readOnly
+                disabled={disabled}
+              />
               {el.dongName}
             </li>
           ))}

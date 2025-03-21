@@ -102,7 +102,6 @@ const AddServiceElder: React.FC = () => {
       navigate(-1);
       return;
     }
-    console.log(serviceData)
     await addElderService(
       {
         centerId: centerId,

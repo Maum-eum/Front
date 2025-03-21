@@ -182,6 +182,7 @@ const EditServiceElder: React.FC = () => {
                 <RegionSelect 
                   selectedLocations={[serviceData.recruitLocation]}
                   setSelectedLocations={handleSetLocation}
+                  disabled={true}
                 />
                 <div className="px-6">
                   <label className="text-lg font-gtr-B mb-3 text-center">상세 주소</label>
@@ -217,7 +218,10 @@ const EditServiceElder: React.FC = () => {
           </div>
           <div className="col-span-1 h-full bg-white shadow rounded-lg p-4 flex flex-col">
             {/* ✅ 시간 선택 컴포넌트 */}
-            <TimeSelect setTimeData={handleSetServiceTime} />
+            <TimeSelect
+             setTimeData={handleSetServiceTime}
+             timeData={serviceData.recruitTimes}
+             />
             <label className="text-lg font-gtr-B mb-1 m-4">추가 요청사항</label>
             <textarea
               className="resize-none m-2 p-2 border-2 bg-white focus:border-green focus:outline-none rounded-lg text-content sm:text-lg focus:ring-0"
